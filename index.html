@@ -1,3 +1,25 @@
-<head>
-  Alex Blog
-</head>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MY WEB -- HOME PAGE</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+  </head>
+  <body>
+    <ul>
+    <!--Some codes I've writen-->
+      <li><a href = "/mycodes">My Codes</a></li>
+    <!--My usually using websites' url-->
+      <li><a href = "/backend-dbweb">websites</a></li>
+    <!--I Love Study-->
+      <li><a href="/study">Study</a></li>
+    <!--Some Littel Games-->
+      <li><a href="/games">Games</a></li>
+    <!--Some collections-->
+      <li><a href = "/collections">Collections</li>
+    <!--Logout-->
+      <li><a href = "/logout">Logout</a></li>
+    </ul>
+  </body>
+</html>
