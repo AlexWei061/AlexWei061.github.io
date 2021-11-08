@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Flask JQuery -- MY RANDOM NUM GENERATOR</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+    <!-- 插入jquery -->
+    <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+  </head>
+  <br>
+
+  <!--四则运算-->
+    <h1>Hello</h1>
+    <p>This is a random num generator made by <strong>MYSELF</strong>. It'll give you a random number from 0 to 100</p>
+    <p>Random num here : <span id=result></span></p>
+    <p><input type="button" id="generate" value="generate"></p>
+
+  </body>
+  <script type=text/javascript>
+    var $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+  </script>
+  <script type=text/javascript>
+    //随机数生成器
+    $(function() {
+        function generate() {
+            console.log($SCRIPT_ROOT)
+            $.getJSON($SCRIPT_ROOT + '/api/generator', {
+            },
+            function(data) {
+                $('#result').text(data.result);
+            });
+        };
+        // 绑定click事件
+        $('#generate').bind('click', generate);
+    });
+</script>
+</html>

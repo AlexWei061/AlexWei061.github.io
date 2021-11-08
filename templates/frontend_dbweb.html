@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MY USUALLY USING WEBSITES</title>
+    <link rel="icon"  href="https://csdnimg.cn/public/favicon.ico" >
+    <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+  </head>
+  <body>
+    <div id="append_anchor">
+
+    </div>
+  </body>
+
+  <script type=text/javascript>
+    $(document).ready(function() {
+        $.getJSON(
+          '/api/collected_web',  //url to server
+
+          { /*parameters to server, no need in this case*/
+            Date: new Date()
+          },
+
+          //success call back function
+          function(result) {
+            var append_anchor = $("#append_anchor");
+            var webtags = result; // give data a expressive name
+            $.each( webtags, function(item) {
+              //append header and list framework
+              append_anchor.append(`<h2> ${webtags[item].tagname} </h2>`);
+              append_anchor.append(`<ol id=ol_${item}>`);
+
+              var ol_anchor = $(`#ol_${item}`);
+              var webs = webtags[item].webs
+              $.each( webs, function(item){
+                var website = `<li> <a href = ${webs[item].url} > ${webs[item].webname} </a></li>`
+                ol_anchor.append(website);
+              });
+            });
+          });
+    });
+  </script>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MY TRANSLATOR</title>
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <!-- 插入jquery -->
+    <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+</head>
+
+<body>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="input-group">
+          <input type="text" class="form-control" value="{{data['search_phrase']}}" placeholder="English word..." id="id_e">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" id="translate">Translate</button>
+          </span>
+        </div><!-- /input-group -->
+      </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+
+    <table class="table">
+      <tbody>
+        {% for pair in data['trans_table'] %}
+          <tr>
+              <td>{{pair['word']}}</td>
+              <td>{{pair['trans']}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</body>
+
+<script type=text/javascript>
+    var $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+</script>
+
+<script>
+    $("#translate").click(function(){
+        var search_phrase = $("#id_e").val();
+        search_phrase = search_phrase.trim();
+        if (search_phrase === ""){
+            return;
+        }
+        window.location.href = "translator?word=" + search_phrase;
+    });
+</script>
+
+</html>

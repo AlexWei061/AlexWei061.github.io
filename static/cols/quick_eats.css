@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans&family=Oswald:wght@400;500&display=swap");
+
+img {
+	height: 3rem;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	opacity: 40%;
+}
+
+* {
+	margin: 0;
+}
+
+body {
+	background: #c2f2ec;
+	display: flex;
+	height: 100vh;
+	margin: 0;
+}
+
+.background {
+	background: #e5fff3;
+	border-radius: 1rem;
+	margin: auto;
+	transform: rotate(10deg);
+}
+
+.whole-menu {
+	align-items: center;
+	border-radius: 1rem;
+	background: #c1ffd8;
+	display: grid;
+	gap: 0.8rem;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 24% 33% auto 18%;
+	height: 32.7rem;
+	transform: rotate(-10deg);
+	width: 25rem;
+}
+
+.header {
+	align-items: center;
+	background: #4b7b81;
+	border-radius: 1rem 0 0.65rem 0;
+	display: grid;
+	height: 100%;
+	justify-items: end;
+	width: 100%;
+}
+
+.logo {
+	font-family: "Oswald", sans-serif;
+	font-size: 3.125rem;
+	font-weight: 400;
+	letter-spacing: 0.4375rem;
+}
+
+.quick-logo {
+	color: #ffd370;
+	line-height: 0.9;
+	padding: 10px 0px 2px 0;
+}
+
+.eats-logo {
+	background: #ff9b9c;
+	bottom: 0.625rem;
+	border-radius: 1rem 0 0 1rem;
+	color: #4b7b81;
+	font-weight: 500;
+	line-height: 1.05;
+	padding: 0 0 0.3rem 0.875rem;
+	position: relative;
+}
+
+.hotdog-menu {
+	align-self: end;
+}
+
+.items {
+	color: #6a696a;
+	font-family: "Noto Sans", sans-serif;
+	font-size: 0.8125rem;
+	line-height: 1.7;
+	margin: 0;
+	padding: 0.5rem;
+}
+
+.left-spacer {
+	margin-left: 1rem;
+}
+
+.right-spacer {
+	margin-right: 1rem;
+}
+
+h2 {
+	background: #4b7b81;
+	color: #ffd370;
+	font-family: "Oswald", sans-serif;
+	font-size: 1rem;
+	font-weight: 400;
+	letter-spacing: 0.1rem;
+	margin: 0;
+	padding: 0.13rem 0.5rem 0 0;
+	text-align: end;
+	text-transform: uppercase;
+}
+
+.bar-title-hotdog {
+	border-radius: 1rem 0 0 1rem;
+	padding-right: 1.5em;
+}
+
+.bar-title-burgurs {
+	border-radius: 0 1rem 1rem 0;
+}
+
+.price {
+	float: right;
+}
+
+#sides {
+	background: #ff9b9c;
+	color: #4b7b81;
+}
+.sides-menu {
+	align-self: start;
+	background: #ff9b9c;
+	border-radius: 1rem;
+}
+
+.filled-items {
+	color: #6a696a;
+	font-size: 11px;
+	padding: 5px 12px 12px 12px;
+}
+
+.round-titles {
+	border-radius: 0.7rem 0.7rem 0 0;
+}
+
+#opposite-round {
+	border-radius: 0 0 0.7rem 0.7rem;
+}
+
+.outline-container {
+	border: 0.125rem solid #4b7b81;
+	border-radius: 1.1rem;
+}
+
+.combo-container {
+	align-items: center;
+	align-self: start;
+	background: #ff9b9c;
+	border-radius: 0 1rem 1rem 0;
+	display: grid;
+	grid-column: 1 / span 2;
+	grid-template-columns: 12.5rem auto;
+	height: 85%;
+	margin-right: 1rem;
+	padding-right: 0.8rem;
+}
+
+.combo {
+	color: #4b7b81;
+	font-family: "Oswald", sans-serif;
+	font-size: 2.5rem;
+	font-weight: 400;
+	letter-spacing: 0.4375rem;
+	text-align: end;
+}
+
+.combo-description {
+	color: #6a696a;
+	font-size: 0.75em;
+	font-family: "Noto Sans", sans-serif;
+	line-height: 1.3;
+	padding: 0 2em 0 1em;
+	text-align: center;
+}
+
+.price-sticker {
+	background: #fed370;
+	border-radius: 50%;
+	bottom: 3.5rem;
+	color: #4b7b81;
+	font-family: "chalkduster";
+	font-size: 1.5rem;
+	height: 3rem;
+	line-height: 3rem;
+	position: absolute;
+	right: 0.1875rem;
+	transform: rotate(25deg);
+	text-align: center;
+	width: 3rem;
+}
+
+/* colors ---
+
+dark green : #4b7b81
+dark grey for text : #6a696a
+yellow : #ffd370
+red : #ff9b9c
+
+*/
