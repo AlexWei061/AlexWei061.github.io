@@ -1,4 +1,4 @@
-const keys = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+const keys = [..."1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 
 const timestamps = [];
 
