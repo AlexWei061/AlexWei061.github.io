@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MY TOUR PLAN</title>
+  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+  <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+</head>
+
+<body>
+
+  <style>
+    body {
+    background: #EEE;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Navigation */
+
+  .navigation {
+    box-sizing: border-box;
+    background-color: #3587A4;
+    overflow: auto;
+    padding: 18px 50px;
+    position: relative;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    color: #FFF;
+    display: inline-block;
+    font-family: 'Oxygen', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 20px 18px 10px 18px;
+    text-transform: uppercase;
+  }
+
+  .active {
+    color: #88CCF1;
+  }
+
+  /* Table */
+
+  table {
+    height: 40%;
+    left: 10%;
+    margin: 20px auto;
+    overflow-y: scroll;
+    position: static;
+    width: 80%;
+  }
+
+  thead th {
+    background: #88CCF1;
+    color: #FFF;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 100;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  tr {
+    text-align: center;
+    background: #f4f7f8;
+    border-bottom: 1px solid #FFF;
+    margin-bottom: 5px;
+  }
+
+  td {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 20px;
+    width: 33.3333%;
+  }
+
+  th {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 50px;
+    width: 33.3333%;
+  }
+
+  .search {
+    background-color: #FFF;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    color: #AAA;
+    padding: 20px;
+    margin: 50px auto 0px auto;
+    width: 77%;
+  }
+</style>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th colspan="2">Time</th>
+        <th>Places</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+<!-- 第一天 -->
+    <tbody>
+      <tr>
+        <td>Morning</td>
+        <td>9:45 ~ 10:00</td>
+        <td>春熙路(大熊猫屁股底下集合)</td>
+        <td>/</td>
+      </tr>
+
+      <tr>
+        <td>ZaoShang</td>
+        <td>10:30 ~ 1:00</td>
+        <td>春熙路(某个地方玩剧本杀)</td>
+        <td>/</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>2:00 ~ 3:30</td>
+        <td>环球中心(某个餐厅吃午饭)</td>
+        <td>/</td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>/</td>
+        <td>/</td>
+        <td>/</td>
+      </tr>
+
+      <tr>
+        <td colspan="4" style="text-align:left">#备注1：要带的东西：<br>
+        1. 带上脑子 <br>
+        2. 带上没有 DICK 的甘李 <br>
+        3. 带上 DICK <br>
+        4. 带上手机和口罩(最好多带几个，因为我可能会忘记带)<br>
+        5. 
+      </tr>
+      <!-- <tr>
+        <td colspan="4" style="text-align:left">#备注2：To do<br>
+        1、买中国国家博物馆的门票(29号) ()<br>
+        2、买鸟巢和水立方的票(31号) ()<br>
+        3、买德云社的票(30号)　()<br>
+        4、颐和园 圆明园现场买票 ()<br>
+        5、订26 27 28 29 30 号的酒店 ()<br></td>
+      </tr> -->
+    </tbody>
+  </table>
+</body>
+</html>
