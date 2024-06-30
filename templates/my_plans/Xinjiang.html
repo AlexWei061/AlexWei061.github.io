@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MY TOUR PLAN</title>
+  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+  <script src="{{url_for('static', filename='jquery-3.4.1.js')}}"></script>
+</head>
+
+<body>
+
+  <style>
+    body {
+    background: #EEE;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Navigation */
+
+  .navigation {
+    box-sizing: border-box;
+    background-color: #3587A4;
+    overflow: auto;
+    padding: 18px 50px;
+    position: relative;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    color: #FFF;
+    display: inline-block;
+    font-family: 'Oxygen', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 20px 18px 10px 18px;
+    text-transform: uppercase;
+  }
+
+  .active {
+    color: #88CCF1;
+  }
+
+  /* Table */
+
+  table {
+    height: 40%;
+    left: 10%;
+    margin: 20px auto;
+    overflow-y: scroll;
+    position: static;
+    width: 80%;
+  }
+
+  thead th {
+    background: #88CCF1;
+    color: #FFF;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 100;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  tr {
+    text-align: center;
+    background: #f4f7f8;
+    border-bottom: 1px solid #FFF;
+    margin-bottom: 5px;
+  }
+
+  td {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 20px;
+    width: 33.3333%;
+  }
+
+  th {
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 50px;
+    width: 33.3333%;
+  }
+
+  .search {
+    background-color: #FFF;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    color: #AAA;
+    padding: 20px;
+    margin: 50px auto 0px auto;
+    width: 77%;
+  }
+</style>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th colspan="2">Time</th>
+        <th>Places</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+<!-- 第一天 -->
+    <tbody>
+      <tr>
+        <td rowspan="3">July 25th</td>
+        <td>Morning</td>
+        <td>高铁</td>
+        <td>7:00~3:00</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>八达岭长城附近</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>八达岭长城附近</td>
+        <td>(酒店(北京长城客栈 无早餐))</td>
+      </tr>
+<!-- 第二天 -->
+      <tr>
+        <td rowspan="3">July 26th</td>
+        <td>Morning</td>
+        <td>长城</td>
+        <td>(八达岭 需要3个小时左右(带好食物)) //买票(已购票 带身份证))</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>长城(八达岭)</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>清华北大附近</td>
+        <td>(酒店())</td>
+      </tr>
+<!-- 第三天 -->
+      <tr>
+        <td rowspan="3">July 27th
+        <td>Morning</td>
+        <td>清华大学</td>
+        <td>已预订</td>
+      </tr>
+      <tr>
+        <td>Afternoon</td>
+        <td>北京大学</td>
+        <td>已预订</td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>清华北大附近</td>
+        <td>(酒店())</td>
+      </tr>
+<!-- 第四天 -->
+      <tr>
+        <td rowspan="3">July 28th</td>
+        <td>Morning</td>
+        <td>颐和园</td>
+        <td>(现场手机扫码买票)</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>圆明园</td>
+        <td>(现场手机扫码买票)</td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>天安门广场附近</td>
+        <td>(酒店())</td>
+      </tr>
+<!-- 第五天 -->
+      <tr>
+        <td rowspan="3">July 29th</td>
+        <td>Morning</td>
+        <td>中国国家博物馆</td>
+        <td>(距天安门较近 9:00~17:00)</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>中国国家博物馆</td>
+        <td>(9:00~17:00)</td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>天安门广场附近</td>
+        <td>(酒店())</td>
+      </tr>
+<!-- 第六天 -->
+      <tr>
+      <td rowspan="3">July 30th</td>
+      <td>Morning</td>
+      <td>天安门广场附近</td>
+      <td>(看完升旗去故宫)</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>故宫</td>
+        <td>(8:30开门 17:00闭馆 已购票 大门票:60RMB(儿童(有学生证):20RMB) 珍宝馆和钟表馆:10RMB)</td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>天安门广场附近</td>
+        <td>(酒店() 德云社 老爸开会)</td>
+      </tr>
+
+<!-- 第七天 -->
+    <tr>
+        <td rowspan="3">July 31st</td>
+        <td>Morning</td>
+        <td>中国科技馆</td>
+        <td>(星期一闭馆 暂时定不了票)</td>
+      </tr>
+
+      <tr>
+        <td>Afternoon</td>
+        <td>水立方 鸟巢</td>
+        <td>(买票)</td>
+      </tr>
+
+      <tr>
+        <td>Evening</td>
+        <td>机场</td>
+        <td>8:00登记</td>
+      </tr>
+
+      <tr>
+        <td colspan="4" style="text-align:left">#备注1：要带的东西：<br>
+        1.出行用：充电宝 两根充电线 耳机 手机<br>
+        2.证件：身份证 学生证<br>
+        3.衣物：衣服 帽子 鞋(老爸：凉鞋 我：运动鞋)<br>
+        4.生活：牙刷 牙膏 防晒霜 刮胡刀 驱蚊(花露水) 药物(创可贴 藿香正气液 and so on)<br>
+      </tr>
+      <tr>
+        <td colspan="4" style="text-align:left">#备注2：To do<br>
+        1、买中国国家博物馆的门票(29号) ()<br>
+        2、买鸟巢和水立方的票(31号) ()<br>
+        3、买德云社的票(30号)　()<br>
+        4、颐和园 圆明园现场买票 ()<br>
+        5、订26 27 28 29 30 号的酒店 ()<br></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
