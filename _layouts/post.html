@@ -1,0 +1,42 @@
+---
+layout: default
+---
+
+<article class="post">
+  <header class="post-header">
+    <a class="back-link" href="{{ '/' | relative_url }}">Back to archive</a>
+    <p class="post-date">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
+    </p>
+    <h1>{{ page.title }}</h1>
+    {% if page.summary %}
+      <p class="post-summary">{{ page.summary }}</p>
+    {% endif %}
+    {% if page.tags.size > 0 %}
+      <div class="post-tags" aria-label="Post tags">
+        {% for tag in page.tags %}
+          <span>{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+</article>
+
+{% if page.math %}
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]],
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+{% endif %}
