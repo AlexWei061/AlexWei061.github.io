@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
@@ -17,6 +17,16 @@ async function exists(relativePath) {
 
 async function read(relativePath) {
   return readFile(path.join(root, relativePath), "utf8");
+}
+
+async function listFiles(relativePath) {
+  const base = path.join(root, relativePath);
+  const entries = await readdir(base, { recursive: true, withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile())
+    .map((entry) => path.join(entry.parentPath || entry.path, entry.name))
+    .map((filePath) => path.relative(base, filePath).replaceAll(path.sep, "/"))
+    .sort();
 }
 
 async function assertExists(relativePath) {
@@ -39,6 +49,9 @@ for (const legacyLabel of ["My Codes", "Study", "Games", "Collections", "My Tour
 const config = await read("_config.yml");
 assert.match(config, /title:\s+Alex's Blog/, "_config.yml should define the blog title");
 assert.match(config, /permalink:\s+\/posts\/:title\//, "_config.yml should define post permalinks");
+assert.match(config, /excerpt_separator:\s+"<!-- excerpt -->"/, "_config.yml should avoid Liquid raw excerpt warnings");
+assert.match(config, /exclude:[\s\S]*-\s+tests\//, "_config.yml should not publish source tests");
+assert.match(config, /exclude:[\s\S]*-\s+tools\//, "_config.yml should not publish migration tooling");
 
 await assertExists("_layouts/default.html");
 await assertExists("_layouts/post.html");
@@ -47,24 +60,68 @@ await assertExists("assets/js/search.js");
 await assertExists("search.json");
 await assertExists("static/favicon.ico");
 
-const post = await read("_posts/2021-11-13-fft.md");
+const css = await read("assets/css/main.css");
+assert.match(css, /overflow-x:\s*hidden/, "layout should prevent accidental mobile horizontal scrolling");
+assert.match(css, /width:\s*calc\(100% - 28px\)/, "mobile shell should use a valid calc width");
+assert.match(css, /\.tag-chip,[\s\S]*?max-width:\s*100%/, "long tag chips should stay within the mobile viewport");
+assert.match(css, /overflow-wrap:\s*anywhere/, "long migrated text and tags should be allowed to wrap");
+
+const postFiles = await listFiles("_posts");
+assert.equal(postFiles.filter((file) => file.endsWith(".md")).length, 156, "all migrated NOIP blog posts should be present");
+assert.equal(postFiles.includes("2021-11-13-fft.md"), false, "old FFT migration artifact should be replaced");
+assert.equal(postFiles.includes("2021-11-10-fft.md"), true, "FFT should keep the old blog history date and /posts/fft/ slug");
+
+const blogImages = await listFiles("assets/images/blog");
+assert.equal(blogImages.length, 92, "all blog images plus two external practice images should be copied");
+for (const imagePath of [
+  "BST1.png",
+  "KMP.png",
+  "MQDP1.png",
+  "TreeDE.png",
+  "TrieEg.png",
+  "binaryIndexTreeExample.png",
+]) {
+  assert.equal(blogImages.includes(imagePath), true, `${imagePath} should be available to posts`);
+}
+
+const post = await read("_posts/2021-11-10-fft.md");
 assert.match(post, /^---[\s\S]*layout:\s+post[\s\S]*---/, "FFT post should have post layout front matter");
-assert.match(post, /^---[\s\S]*title:\s+FFT[\s\S]*---/, "FFT post should keep its title");
-assert.match(post, /^---[\s\S]*date:\s+2021-11-13[\s\S]*---/, "FFT post should keep the original date");
-assert.match(post, /^---[\s\S]*tags:\s+\[algorithm,\s*fft\][\s\S]*---/, "FFT post should include algorithm and fft tags");
+assert.match(post, /^---[\s\S]*title:\s+"FFT"[\s\S]*---/, "FFT post should keep its title");
+assert.match(post, /^---[\s\S]*date:\s+2021-11-10[\s\S]*---/, "FFT post should use the old blog history date");
+assert.match(post, /^---[\s\S]*tags:\s+\["Math",\s*"caculus"\][\s\S]*---/, "FFT post should use folder-derived tags");
 assert.match(post, /^---[\s\S]*math:\s+true[\s\S]*---/, "FFT post should enable math rendering");
 assert.match(post, /# FFT/, "FFT content should be preserved");
 assert.match(post, /快速傅里叶变换/, "Chinese FFT article text should be preserved");
 assert.match(post, /\$O\(n \\log n\)\$/, "math notation should be preserved");
 
+const bstPostName = postFiles.find((file) => file.endsWith("-bst.md"));
+assert.ok(bstPostName, "BST post should be generated");
+const bstPost = await read(`_posts/${bstPostName}`);
+assert.match(bstPost, /tags:\s+\["DS",\s*"Tree",\s*"平衡树"\]/, "BST post should include all folder-level tags");
+assert.match(bstPost, /\/assets\/images\/blog\/BST1\.png/, "BST local images should be rewritten to blog assets");
+
+const kmpPostName = postFiles.find((file) => file.endsWith("-kmp.md"));
+assert.ok(kmpPostName, "KMP post should be generated");
+const kmpPost = await read(`_posts/${kmpPostName}`);
+assert.match(kmpPost, /\/assets\/images\/blog\/KMP\.png/, "KMP local image should be rewritten to blog assets");
+
+const liquidUnsafePost = await read("_posts/2021-11-17-勾股数组.md");
+assert.match(liquidUnsafePost, /\{\{k'_i\}/, "sample post should preserve Liquid-looking math text");
+assert.match(liquidUnsafePost, /^---[\s\S]*---\n\{% raw %\}/, "post body should be protected from Liquid parsing");
+assert.match(liquidUnsafePost, /\{% endraw %\}\s*$/, "post body should close Liquid raw protection");
+
 const searchJson = await read("search.json");
 assert.match(searchJson, /site\.posts/, "search index should be generated from Jekyll posts");
 assert.match(searchJson, /strip_html/, "search index should strip post HTML");
+assert.match(searchJson, /"excerpt":/, "search index should expose bounded excerpts");
+assert.match(searchJson, /truncate:\s*800/, "search index should keep migrated search data bounded");
+assert.doesNotMatch(searchJson, /"content":/, "search index should not include unbounded full post content");
 
 const searchJs = await read("assets/js/search.js");
 assert.match(searchJs, /blog-search/, "search script should bind the search input");
 assert.match(searchJs, /tag-filters/, "search script should bind tag filters");
 assert.match(searchJs, /fetch\(["']\/search\.json["']\)/, "search script should load the generated search index");
+assert.match(searchJs, /indexed\.excerpt/, "search script should query bounded excerpts");
 
 {
   const input = {

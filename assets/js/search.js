@@ -24,7 +24,7 @@
       const searchable = normalize([
         indexed.title,
         indexed.summary,
-        indexed.content,
+        indexed.excerpt || indexed.content,
         card.textContent
       ].join(" "));
 

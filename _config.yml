@@ -3,11 +3,16 @@ description: Technical notes, algorithms, and programming essays.
 url: "https://alexwei061.github.io"
 baseurl: ""
 permalink: /posts/:title/
+excerpt_separator: "<!-- excerpt -->"
 
 markdown: kramdown
 kramdown:
   input: GFM
   math_engine: mathjax
+
+exclude:
+  - tests/
+  - tools/
 
 defaults:
   - scope:

@@ -1,0 +1,301 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import html
+import re
+import shutil
+import subprocess
+import unicodedata
+from datetime import datetime
+from pathlib import Path
+from urllib.parse import quote, unquote, urlsplit
+
+
+SOURCE_ROOT = Path("/Users/alex/Alex/NOIP/blog")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+POSTS_DIR = REPO_ROOT / "_posts"
+IMAGE_DIR = REPO_ROOT / "assets" / "images" / "blog"
+GIT_DIR = SOURCE_ROOT / ".git_disabled"
+
+EXTRA_IMAGES = [
+    Path("/Users/alex/Alex/NOIP/practice/2021/August2021/20210802/TrieEg.png"),
+    Path("/Users/alex/Alex/NOIP/practice/2021/August2021/20210809/binaryIndexTreeExample.png"),
+]
+
+GENERIC_TITLES = re.compile(
+    r"^(?:t\d+|day\s*-?\d+|\d+\s*pts|100pts|50pts|40pts)$",
+    re.IGNORECASE,
+)
+
+
+def run_git(path: Path) -> list[str]:
+    if not GIT_DIR.exists():
+        return []
+    rel = path.relative_to(SOURCE_ROOT).as_posix()
+    result = subprocess.run(
+        [
+            "git",
+            f"--git-dir={GIT_DIR}",
+            f"--work-tree={SOURCE_ROOT}",
+            "log",
+            "--follow",
+            "--reverse",
+            "--format=%ad",
+            "--date=short",
+            "--",
+            rel,
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return []
+    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+
+def date_from_filename(path: Path) -> str | None:
+    text = path.stem
+    patterns = [
+        r"(?P<y>20\d{2})[.\-_](?P<m>\d{1,2})[.\-_](?P<d>\d{1,2})",
+        r"(?P<y>20\d{2})(?P<m>\d{2})(?P<d>\d{2})",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if not match:
+            continue
+        try:
+            return datetime(
+                int(match.group("y")),
+                int(match.group("m")),
+                int(match.group("d")),
+            ).strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+    return None
+
+
+def post_date(path: Path) -> str:
+    history = run_git(path)
+    if history:
+        return history[0]
+    named_date = date_from_filename(path)
+    if named_date:
+        return named_date
+    return datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d")
+
+
+def clean_title(value: str) -> str:
+    value = value.strip()
+    value = re.sub(r"^#+\s*", "", value)
+    value = re.sub(r"^[*_~`]+|[*_~`]+$", "", value)
+    value = re.sub(r"\s+", " ", value)
+    return value.strip()
+
+
+def title_from_content(path: Path, content: str) -> str:
+    for line in content.splitlines():
+        match = re.match(r"^\s{0,3}#{1,6}\s+(.+?)\s*$", line)
+        if not match:
+            continue
+        title = clean_title(match.group(1))
+        if title and not GENERIC_TITLES.match(title):
+            return title
+    return clean_title(path.stem) or path.stem
+
+
+def slugify(value: str) -> str:
+    value = unicodedata.normalize("NFKC", value).lower()
+    value = value.replace("&", " and ").replace("+", " plus ")
+    value = value.replace("'", "")
+    chars: list[str] = []
+    for char in value:
+        if char.isalnum():
+            chars.append(char)
+        else:
+            chars.append("-")
+    slug = re.sub(r"-+", "-", "".join(chars)).strip("-")
+    return slug
+
+
+def unique_slugs(paths: list[Path]) -> dict[Path, str]:
+    base_slugs: dict[Path, str] = {}
+    counts: dict[str, int] = {}
+    for path in paths:
+        base = slugify(path.stem)
+        if not base:
+            base = "post-" + hashlib.sha1(path.as_posix().encode()).hexdigest()[:8]
+        base_slugs[path] = base
+        counts[base] = counts.get(base, 0) + 1
+
+    used: set[str] = set()
+    slugs: dict[Path, str] = {}
+    for path in paths:
+        slug = base_slugs[path]
+        if counts[slug] > 1:
+            rel_without_suffix = path.relative_to(SOURCE_ROOT).with_suffix("").as_posix()
+            slug = slugify(rel_without_suffix)
+        if not slug:
+            slug = "post-" + hashlib.sha1(path.as_posix().encode()).hexdigest()[:8]
+        candidate = slug
+        suffix = 2
+        while candidate in used:
+            candidate = f"{slug}-{suffix}"
+            suffix += 1
+        used.add(candidate)
+        slugs[path] = candidate
+    return slugs
+
+
+def yaml_string(value: str) -> str:
+    value = value.replace("\r", " ").replace("\n", " ")
+    value = re.sub(r"\s+", " ", value).strip()
+    value = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{value}"'
+
+
+def strip_markdown(value: str) -> str:
+    value = html.unescape(value)
+    value = value.replace("&emsp;", " ").replace("&nbsp;", " ")
+    value = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", value)
+    value = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", value)
+    value = re.sub(r"`([^`]+)`", r"\1", value)
+    value = re.sub(r"<[^>]+>", " ", value)
+    value = value.replace("$", " ")
+    value = re.sub(r"[*_~#>]+", " ", value)
+    value = re.sub(r"\s+", " ", value).strip()
+    return value
+
+
+def summary_for(content: str, title: str) -> str:
+    in_code = False
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_code = not in_code
+            continue
+        if in_code or not stripped:
+            continue
+        if re.match(r"^\s*[-=]{3,}\s*$", stripped):
+            continue
+        if re.match(r"^\s*!\[[^\]]*\]\([^)]+\)\s*$", stripped):
+            continue
+        plain = strip_markdown(stripped)
+        if not plain or plain == title or GENERIC_TITLES.match(plain):
+            continue
+        if len(plain) > 180:
+            return plain[:177].rstrip() + "..."
+        return plain
+    return f"{title} 的算法笔记。"
+
+
+def has_math(content: str) -> bool:
+    if "$$" in content:
+        return True
+    return bool(re.search(r"(?<!\\)\$(?!\s)(?s:.+?)(?<!\s)(?<!\\)\$", content))
+
+
+def collect_images() -> dict[str, str]:
+    if IMAGE_DIR.exists():
+        shutil.rmtree(IMAGE_DIR)
+    IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+
+    image_sources = list((SOURCE_ROOT / "pic").iterdir()) + EXTRA_IMAGES
+    copied: dict[str, str] = {}
+    for source in image_sources:
+        if not source.is_file():
+            continue
+        target = IMAGE_DIR / source.name
+        shutil.copy2(source, target)
+        copied[source.name.lower()] = source.name
+    return copied
+
+
+def is_external_url(url: str) -> bool:
+    scheme = urlsplit(url).scheme.lower()
+    return scheme in {"http", "https", "data", "mailto"}
+
+
+def image_asset_url(filename: str) -> str:
+    return "/assets/images/blog/" + quote(filename, safe="._-()")
+
+
+def rewrite_image_url(url: str, image_map: dict[str, str], missing: set[str]) -> str:
+    url = url.strip()
+    if not url or is_external_url(url) or url.startswith("#"):
+        return url
+    clean_url = urlsplit(url).path
+    filename = Path(unquote(clean_url)).name
+    mapped = image_map.get(filename.lower())
+    if not mapped:
+        missing.add(url)
+        return url
+    return image_asset_url(mapped)
+
+
+def rewrite_images(content: str, image_map: dict[str, str], missing: set[str]) -> str:
+    def markdown_replacer(match: re.Match[str]) -> str:
+        return f"{match.group(1)}{rewrite_image_url(match.group(2), image_map, missing)}{match.group(3)}"
+
+    content = re.sub(r"(!\[[^\]]*\]\()([^)]+)(\))", markdown_replacer, content)
+
+    def html_replacer(match: re.Match[str]) -> str:
+        return f'{match.group(1)}{rewrite_image_url(match.group(2), image_map, missing)}{match.group(3)}'
+
+    return re.sub(r'(<img\b[^>]*\bsrc=["\'])([^"\']+)(["\'])', html_replacer, content, flags=re.IGNORECASE)
+
+
+def migrate() -> None:
+    if not SOURCE_ROOT.exists():
+        raise SystemExit(f"Source blog directory not found: {SOURCE_ROOT}")
+
+    markdown_paths = sorted(
+        path
+        for path in SOURCE_ROOT.rglob("*.md")
+        if ".git_disabled" not in path.parts and "pic" not in path.parts
+    )
+    slugs = unique_slugs(markdown_paths)
+    image_map = collect_images()
+
+    POSTS_DIR.mkdir(parents=True, exist_ok=True)
+    for existing in POSTS_DIR.glob("*.md"):
+        existing.unlink()
+
+    missing_images: set[str] = set()
+    for source_path in markdown_paths:
+        rel = source_path.relative_to(SOURCE_ROOT)
+        raw_content = source_path.read_text(encoding="utf-8-sig").replace("\r\n", "\n").replace("\r", "\n")
+        content = rewrite_images(raw_content, image_map, missing_images)
+        title = title_from_content(source_path, content)
+        date = post_date(source_path)
+        tags = [part for part in rel.parent.parts if part and part != "."]
+        slug = slugs[source_path]
+        summary = summary_for(content, title)
+        front_matter = "\n".join(
+            [
+                "---",
+                "layout: post",
+                f"title: {yaml_string(title)}",
+                f"date: {date}",
+                "tags: [" + ", ".join(yaml_string(tag) for tag in tags) + "]",
+                f"summary: {yaml_string(summary)}",
+                f"math: {'true' if has_math(content) else 'false'}",
+                "---",
+                "",
+            ]
+        )
+        body = "{% raw %}\n" + content.lstrip().rstrip() + "\n{% endraw %}\n"
+        target = POSTS_DIR / f"{date}-{slug}.md"
+        target.write_text(front_matter + body, encoding="utf-8")
+
+    print(f"Migrated {len(markdown_paths)} posts")
+    print(f"Copied {len(list(IMAGE_DIR.iterdir()))} images")
+    if missing_images:
+        print("Missing local images:")
+        for item in sorted(missing_images):
+            print(f"- {item}")
+
+
+if __name__ == "__main__":
+    migrate()
