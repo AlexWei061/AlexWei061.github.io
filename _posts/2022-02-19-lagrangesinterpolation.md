@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "拉格朗日插值"
+archive_title: "Lagrange'sInterpolation"
 date: 2022-02-19
 tags: ["Math", "NumberTheory"]
 summary: "朴素的拉格朗日插值"

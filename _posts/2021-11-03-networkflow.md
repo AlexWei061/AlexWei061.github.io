@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "网络流"
+archive_title: "networkFlow"
 date: 2021-11-03
 tags: ["GraghTheory", "NetworkFlow"]
 summary: "一些定义"

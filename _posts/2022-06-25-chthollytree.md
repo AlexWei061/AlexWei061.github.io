@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "珂朵莉树"
+archive_title: "ChthollyTree"
 date: 2022-06-25
 tags: ["DS", "Tree"]
 summary: "珂朵莉是世界上最幸福的女孩 qwq！！！"

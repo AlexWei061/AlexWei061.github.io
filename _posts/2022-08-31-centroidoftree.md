@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "关于树的重心"
+archive_title: "centroidOfTree"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "重心和直径"]
 summary: "一、定义"

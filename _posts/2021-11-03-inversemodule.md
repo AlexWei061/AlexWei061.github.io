@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "乘法逆元"
+archive_title: "inverseModule"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "前置知识：扩展欧几里得算法"

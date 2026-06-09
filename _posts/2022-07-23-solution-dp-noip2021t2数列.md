@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "题目大意"
+archive_title: "NOIP2021T2数列"
 date: 2022-07-23
 tags: ["Solution", "dp"]
 summary: "传送门：NOIP2021 T2 数列"

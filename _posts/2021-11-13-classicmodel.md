@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "线性 DP"
+archive_title: "classicModel"
 date: 2021-11-13
 tags: ["DP", "linearDp"]
 summary: "LIS"

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "高斯消元"
+archive_title: "GuasElimination"
 date: 2021-11-05
 tags: ["Math", "LinearAlgebra"]
 summary: "前置芝士：关于线性代数的基本知识"

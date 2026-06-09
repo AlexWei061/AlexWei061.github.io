@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "生成函数"
+archive_title: "generatingFunction"
 date: 2022-02-19
 tags: ["Math", "Sequence"]
 summary: "定义"

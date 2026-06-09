@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "傅里叶级数公式："
+archive_title: "AboutFourierTransform"
 date: 2021-11-03
 tags: ["Math", "caculus"]
 summary: "作者是个没有系统学习过高等数学的高中OIer，推导过程可能不严谨，有问题的地方望大家纠正一下qwq"

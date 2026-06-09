@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "CSP-S 2021 T2"
+archive_title: "CSP-S2021T2括号序列"
 date: 2021-11-15
 tags: ["DP", "rangeDp"]
 summary: "考场上没推出来，我太蒻了"

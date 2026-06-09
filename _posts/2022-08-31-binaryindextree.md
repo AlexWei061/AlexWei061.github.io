@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "树状数组 BIT"
+archive_title: "binaryIndexTree"
 date: 2022-08-31
 tags: ["DS", "Tree", "树状数组"]
 summary: "原理"

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "mathFormula"
+archive_title: "mathFormula"
 date: 2021-10-29
 tags: ["Math"]
 summary: "1. 平方差公式"

@@ -45,10 +45,11 @@ title: Archive
 
   <div id="post-list" class="post-list" aria-live="polite">
     {% for post in site.posts %}
+      {% assign archive_title = post.archive_title | default: post.title %}
       <article
         class="post-card"
         data-url="{{ post.url | relative_url }}"
-        data-title="{{ post.title | downcase | escape }}"
+        data-title="{{ archive_title | downcase | escape }}"
         data-tags="{{ post.tags | join: ' ' | downcase | escape }}"
       >
         <div class="post-meta">
@@ -57,7 +58,7 @@ title: Archive
             <span>{{ post.tags | join: " / " }}</span>
           {% endif %}
         </div>
-        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+        <h3><a href="{{ post.url | relative_url }}">{{ archive_title | escape }}</a></h3>
         <p>{{ post.summary | default: post.excerpt | strip_html | normalize_whitespace }}</p>
       </article>
     {% endfor %}

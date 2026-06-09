@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "模拟退火"
+archive_title: "simulatedAnnealing2"
 date: 2022-08-29
 tags: ["Algorithm"]
 summary: "上一篇的传送门：模拟退火"

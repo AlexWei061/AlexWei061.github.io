@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "微分"
+archive_title: "advancedMathematicsNote2"
 date: 2021-11-03
 tags: ["Math", "caculus"]
 summary: "定义"

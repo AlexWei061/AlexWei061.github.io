@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "回文"
+archive_title: "CSP2021T3回文"
 date: 2022-07-23
 tags: ["Solution", "NOIP", "CSP2021"]
 summary: "传送门：CSP2021 T3 回文"

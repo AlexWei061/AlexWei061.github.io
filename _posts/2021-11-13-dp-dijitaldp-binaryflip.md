@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "二进制翻转"
+archive_title: "binaryFlip"
 date: 2021-11-13
 tags: ["DP", "dijitalDp"]
 summary: "一道题"

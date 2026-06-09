@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "扩展欧几里得"
+archive_title: "extendEuclid"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "B\\acute{e}zout 定理"

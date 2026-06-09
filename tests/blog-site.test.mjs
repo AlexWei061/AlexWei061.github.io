@@ -92,6 +92,9 @@ assert.match(index, /Alex's Blog/, "homepage should use the new site identity");
 assert.match(index, /id="blog-search"/, "homepage should include search input");
 assert.match(index, /id="tag-filters"/, "homepage should include tag filters");
 assert.match(index, /id="post-list"/, "homepage should include a post list");
+assert.match(index, /assign archive_title = post\.archive_title \| default: post\.title/, "homepage should use archive titles when available");
+assert.match(index, /data-title="{{ archive_title \| downcase \| escape }}"/, "homepage search metadata should use archive titles");
+assert.match(index, /{{ archive_title \| escape }}/, "homepage post cards should render archive titles");
 for (const legacyLabel of ["My Codes", "Study", "Games", "Collections", "My Tour Plan"]) {
   assert.doesNotMatch(index, new RegExp(legacyLabel), `homepage should not show ${legacyLabel}`);
 }
@@ -172,6 +175,8 @@ assert.match(bstPost, /\/assets\/images\/blog\/BST1\.png/, "BST local images sho
 const kmpPostName = postFiles.find((file) => file.endsWith("-kmp.md"));
 assert.ok(kmpPostName, "KMP post should be generated");
 const kmpPost = await read(`_posts/${kmpPostName}`);
+assert.match(kmpPost, /^---[\s\S]*title:\s+"KMP 详解"[\s\S]*---/, "KMP post page title should keep its Markdown heading-derived title");
+assert.match(kmpPost, /^---[\s\S]*archive_title:\s+"KMP"[\s\S]*---/, "KMP archive title should use the original source filename");
 assert.match(kmpPost, /\/assets\/images\/blog\/KMP\.png/, "KMP local image should be rewritten to blog assets");
 
 const tarjanDccPost = await read("_posts/2021-11-03-tarjananddcc.md");
@@ -213,6 +218,8 @@ assert.match(liquidUnsafePost, /\{% endraw %\}\s*$/, "post body should close Liq
 
 const searchJson = await read("search.json");
 assert.match(searchJson, /site\.posts/, "search index should be generated from Jekyll posts");
+assert.match(searchJson, /"title":\s*{{ post\.archive_title \| default: post\.title \| jsonify }}/, "search index titles should use archive titles");
+assert.match(searchJson, /"post_title":\s*{{ post\.title \| jsonify }}/, "search index should retain post page titles");
 assert.match(searchJson, /strip_html/, "search index should strip post HTML");
 assert.match(searchJson, /"excerpt":/, "search index should expose bounded excerpts");
 assert.match(searchJson, /truncate:\s*800/, "search index should keep migrated search data bounded");

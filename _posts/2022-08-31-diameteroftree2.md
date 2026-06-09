@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "树的直径"
+archive_title: "diameterOfTree2"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "重心和直径"]
 summary: "设 d x 表示以 x 为根节点到这棵树中最远的距离，显然有："

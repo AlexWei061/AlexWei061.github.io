@@ -455,6 +455,7 @@ def migrate() -> None:
                 "---",
                 "layout: post",
                 f"title: {yaml_string(title)}",
+                f"archive_title: {yaml_string(source_path.stem)}",
                 f"date: {date}",
                 "tags: [" + ", ".join(yaml_string(tag) for tag in tags) + "]",
                 f"summary: {yaml_string(summary)}",

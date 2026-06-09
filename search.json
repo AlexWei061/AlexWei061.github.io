@@ -4,7 +4,8 @@ layout: null
 [
   {% for post in site.posts %}
     {
-      "title": {{ post.title | jsonify }},
+      "title": {{ post.archive_title | default: post.title | jsonify }},
+      "post_title": {{ post.title | jsonify }},
       "url": {{ post.url | relative_url | jsonify }},
       "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
       "tags": {{ post.tags | jsonify }},

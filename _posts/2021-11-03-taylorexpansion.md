@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "关于泰勒展开"
+archive_title: "TaylorExpansion"
 date: 2021-11-03
 tags: ["Math", "caculus"]
 summary: "提醒：本人是一个高一的蒟蒻，没有系统的学习过高等数学，所以本文关于泰勒展开的推导过程会及其不严谨，大家看着就当图个乐。"

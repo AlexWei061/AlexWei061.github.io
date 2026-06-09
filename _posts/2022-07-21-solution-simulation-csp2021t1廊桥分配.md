@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "廊桥分配"
+archive_title: "CSP2021T1廊桥分配"
 date: 2022-07-21
 tags: ["Solution", "simulation"]
 summary: "传送门：CSP2021 T1 廊桥分配"

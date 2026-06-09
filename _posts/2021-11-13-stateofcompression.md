@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "状压 DP"
+archive_title: "stateOfCompression"
 date: 2021-11-13
 tags: ["DP", "stateOfCompressionDp"]
 summary: "什么是状压"
