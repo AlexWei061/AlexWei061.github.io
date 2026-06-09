@@ -8,7 +8,7 @@ math: true
 ---
 {% raw %}
 # 乘法逆元
-&emsp; 前置知识：[扩展欧几里得算法](https://github.com/AlexWei061/OI/blob/main/Math/extendEuclid.md)
+&emsp; 前置知识：[扩展欧几里得算法](/posts/extendeuclid/)
 ### 定义：
 >乘法逆元，是指数学领域群G中任意一个元素a，都在G中有唯一的逆元a‘，具有性质a×a'=a'×a=e，其中e为该群的单位元
 

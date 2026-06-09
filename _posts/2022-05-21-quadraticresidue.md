@@ -9,7 +9,7 @@ math: true
 {% raw %}
 # 二次剩余
 
-&emsp; 前置芝士：[原根和阶的口胡笔记](https://blog.csdn.net/ID246783/article/details/124514022?spm=1001.2014.3001.5502)
+&emsp; 前置芝士：[原根和阶的口胡笔记](/posts/primitiveroot/)
 
 &emsp; 传送门：[P5491 模板 二次剩余](https://www.luogu.com.cn/problem/P5491)
 

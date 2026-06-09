@@ -8,7 +8,7 @@ math: true
 ---
 {% raw %}
 # 高斯消元
-&emsp; 前置芝士：[关于线性代数的基本知识](https://github.com/AlexWei061/OI/blob/main/Math/LinearAlgebra/linearAlgebra.md)
+&emsp; 前置芝士：[关于线性代数的基本知识](/posts/linearalgebra/)
 
 &emsp; 高斯消元是在数学中一种用去求解线性方程组的方法，并且这个算法还能用来求出矩阵的秩和矩阵的逆矩阵。在说高斯消元之前，我们先要说一下什么是矩阵的初等行变换。
 

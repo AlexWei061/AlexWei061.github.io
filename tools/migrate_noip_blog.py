@@ -28,6 +28,20 @@ GENERIC_TITLES = re.compile(
     re.IGNORECASE,
 )
 
+PERSONAL_CSDN_ARTICLE_URLS = {
+    "120826541": "/posts/mobiusinversion/",
+    "121114692": "/posts/bst/",
+    "121165070": "/posts/arithmeticfunction/",
+    "121363052": "/posts/simulatedannealing/",
+    "123307876": "/posts/splay1/",
+    "123446811": "/posts/kruskalreconstruction/",
+    "124514022": "/posts/primitiveroot/",
+}
+
+GITHUB_PATH_URL_ALIASES = {
+    "ds/tree/splay.md": "/posts/splay1/",
+}
+
 
 def run_git(path: Path) -> list[str]:
     if not GIT_DIR.exists():
@@ -308,6 +322,80 @@ def image_asset_url(filename: str) -> str:
     return "/assets/images/blog/" + quote(filename, safe="._-()")
 
 
+def post_url(slug: str) -> str:
+    return f"/posts/{slug}/"
+
+
+def normalized_article_path(value: str) -> str:
+    value = unicodedata.normalize("NFKC", unquote(value)).replace("\\", "/")
+    value = re.sub(r"/+", "/", value).strip("/")
+    return value.lower()
+
+
+def build_article_url_map(markdown_paths: list[Path], slugs: dict[Path, str]) -> dict[str, str]:
+    article_urls: dict[str, str] = {}
+    basename_counts: dict[str, int] = {}
+    for path in markdown_paths:
+        basename = normalized_article_path(path.name)
+        basename_counts[basename] = basename_counts.get(basename, 0) + 1
+
+    for path in markdown_paths:
+        url = post_url(slugs[path])
+        rel = path.relative_to(SOURCE_ROOT).as_posix()
+        article_urls[normalized_article_path(rel)] = url
+        basename = normalized_article_path(path.name)
+        if basename_counts[basename] == 1:
+            article_urls[basename] = url
+
+    article_urls.update(GITHUB_PATH_URL_ALIASES)
+    return article_urls
+
+
+def resolve_internal_article_url(url: str, article_urls: dict[str, str]) -> str | None:
+    stripped = url.strip()
+    if not stripped:
+        return None
+
+    parsed = urlsplit(stripped)
+    host = parsed.netloc.lower()
+    path = unquote(parsed.path)
+
+    if host == "github.com" and path.lower().startswith("/alexwei061/oi/blob/main/"):
+        rel = path[len("/AlexWei061/OI/blob/main/") :]
+        target = article_urls.get(normalized_article_path(rel))
+        if not target:
+            target = article_urls.get(normalized_article_path(Path(rel).name))
+        if target and parsed.fragment:
+            return target + "#" + parsed.fragment
+        return target
+
+    if host == "blog.csdn.net" and path.lower().startswith("/id246783/article/details/"):
+        article_id = path.rstrip("/").split("/")[-1]
+        return PERSONAL_CSDN_ARTICLE_URLS.get(article_id)
+
+    return None
+
+
+def rewrite_article_links(content: str, article_urls: dict[str, str]) -> str:
+    def markdown_replacer(match: re.Match[str]) -> str:
+        label = match.group(1)
+        url = match.group(2)
+        rewritten = resolve_internal_article_url(url, article_urls)
+        if not rewritten:
+            return match.group(0)
+        return f"[{label.replace(url, rewritten)}]({rewritten})"
+
+    content = re.sub(r"(?<!!)\[([^\]]+)\]\(([^)\n]+)\)", markdown_replacer, content)
+
+    def html_replacer(match: re.Match[str]) -> str:
+        rewritten = resolve_internal_article_url(match.group(2), article_urls)
+        if not rewritten:
+            return match.group(0)
+        return f"{match.group(1)}{rewritten}{match.group(3)}"
+
+    return re.sub(r'(<a\b[^>]*\bhref=["\'])([^"\']+)(["\'][^>]*>)', html_replacer, content, flags=re.IGNORECASE)
+
+
 def rewrite_image_url(url: str, image_map: dict[str, str], missing: set[str]) -> str:
     url = url.strip()
     if not url or is_external_url(url) or url.startswith("#"):
@@ -343,6 +431,7 @@ def migrate() -> None:
         if ".git_disabled" not in path.parts and "pic" not in path.parts
     )
     slugs = unique_slugs(markdown_paths)
+    article_urls = build_article_url_map(markdown_paths, slugs)
     image_map = collect_images()
 
     POSTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -354,6 +443,7 @@ def migrate() -> None:
         rel = source_path.relative_to(SOURCE_ROOT)
         raw_content = source_path.read_text(encoding="utf-8-sig").replace("\r\n", "\n").replace("\r", "\n")
         content = rewrite_images(raw_content, image_map, missing_images)
+        content = rewrite_article_links(content, article_urls)
         content = normalize_inline_math(content)
         title = title_from_content(source_path, content)
         date = post_date(source_path)

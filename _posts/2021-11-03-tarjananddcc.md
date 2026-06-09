@@ -15,7 +15,7 @@ math: true
 
 ----
 ## 二、Tarjan 求割点与割边
-&emsp; 我们在这里：[Tarjan求强连通分量](https://github.com/AlexWei061/OI/blob/main/GraghTheory/TarjanAndSCC.md) 已经说明过关于时间戳（dfn）和追溯值（low）的相关定义。这里就不做赘述了。下面说如何求解追溯值。
+&emsp; 我们在这里：[Tarjan求强连通分量](/posts/tarjanandscc/) 已经说明过关于时间戳（dfn）和追溯值（low）的相关定义。这里就不做赘述了。下面说如何求解追溯值。
 ### （1）搜索树（~~上一篇偷懒没说qwq~~ ）：
 
 &emsp; 在无向连通图中任意选择一个节点出发进行dfs，每个节点只访问一遍。把所有发生递归的边 (x，y)（也就是说从 x 到 y 是对 y 的第一次访问）连起来构成一棵树，这棵树就是该无向图的搜索树。（如下图）

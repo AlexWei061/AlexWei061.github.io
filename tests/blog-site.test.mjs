@@ -174,6 +174,38 @@ assert.ok(kmpPostName, "KMP post should be generated");
 const kmpPost = await read(`_posts/${kmpPostName}`);
 assert.match(kmpPost, /\/assets\/images\/blog\/KMP\.png/, "KMP local image should be rewritten to blog assets");
 
+const tarjanDccPost = await read("_posts/2021-11-03-tarjananddcc.md");
+assert.match(tarjanDccPost, /\[Tarjan求强连通分量\]\(\/posts\/tarjanandscc\/\)/, "old GitHub OI links should point at migrated posts");
+
+const spfaPost = await read("_posts/2021-11-03-spfa.md");
+assert.match(spfaPost, /\(\/posts\/dijkstra\/\)/, "moved old GitHub article paths should resolve by migrated article identity");
+
+const inversePost = await read("_posts/2021-11-03-inversemodule.md");
+assert.match(inversePost, /\[扩展欧几里得算法\]\(\/posts\/extendeuclid\/\)/, "old GitHub Math links should point at migrated posts");
+
+const linkCutTreePost = await read("_posts/2022-08-31-link-cut-tree.md");
+assert.match(linkCutTreePost, /\[树链剖分~~~\]\(\/posts\/heavypathdecomposition\/\)/, "old heavy path decomposition links should point at migrated posts");
+assert.match(linkCutTreePost, /\[Splay\]\(\/posts\/splay1\/\)/, "old generic Splay links should point at the first migrated Splay article");
+
+const quadraticResiduePost = await read("_posts/2022-05-21-quadraticresidue.md");
+assert.match(quadraticResiduePost, /\[原根和阶的口胡笔记\]\(\/posts\/primitiveroot\/\)/, "old personal CSDN links should point at migrated posts");
+assert.match(quadraticResiduePost, /https:\/\/www\.luogu\.com\.cn\/problem\/P5491/, "problem links should remain external");
+
+const splayPost = await read("_posts/2022-08-31-splay1.md");
+assert.match(splayPost, /\[关于二叉查找树\]\(\/posts\/bst\/\)/, "old personal CSDN prerequisite links should point at migrated posts");
+
+const noiReturnPost = await read("_posts/2022-05-28-noi2018day1t1return.md");
+assert.match(noiReturnPost, /\[kruskal 重构树\]\(\/posts\/kruskalreconstruction\/\)/, "old personal CSDN technique links should point at migrated posts");
+
+const numberTheoryExercisePost = await read("_posts/2021-11-08-数论函数-题.md");
+assert.match(numberTheoryExercisePost, /\[数论函数学习笔记\]\(\/posts\/arithmeticfunction\/\)/, "old personal CSDN note links should point at migrated posts");
+
+const allPostText = await Promise.all(postFiles.filter((file) => file.endsWith(".md")).map((file) => read(`_posts/${file}`)));
+const joinedPosts = allPostText.join("\n");
+assert.doesNotMatch(joinedPosts, /https:\/\/github\.com\/AlexWei061\/OI\/blob\/main\//, "old GitHub OI blog links should not remain in migrated posts");
+assert.doesNotMatch(joinedPosts, /https:\/\/blog\.csdn\.net\/ID246783\/article\/details\//, "old personal CSDN blog links should not remain in migrated posts");
+assert.match(joinedPosts, /https:\/\/www\.luogu\.com\.cn\/problem\/P3803/, "external problem links should not be rewritten");
+
 const liquidUnsafePost = await read("_posts/2021-11-17-勾股数组.md");
 assert.match(liquidUnsafePost, /\{\{k'_i\}/, "sample post should preserve Liquid-looking math text");
 assert.match(liquidUnsafePost, /^---[\s\S]*---\n\{% raw %\}/, "post body should be protected from Liquid parsing");
