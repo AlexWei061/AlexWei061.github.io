@@ -8,9 +8,10 @@ permalink: /oi/
 {% assign graph_posts = site.posts | where: "oi_category_slug", "graph" %}
 {% assign data_structure_posts = site.posts | where: "oi_category_slug", "data-structures" %}
 {% assign math_posts = site.posts | where: "oi_category_slug", "math" %}
+{% assign optimization_posts = site.posts | where: "oi_category_slug", "optimization" %}
 {% assign string_posts = site.posts | where: "oi_category_slug", "string" %}
 {% assign solution_posts = site.posts | where: "oi_category_slug", "solutions" %}
-{% assign algorithm_posts = site.posts | where: "oi_category_slug", "algorithm" %}
+{% assign sort_posts = site.posts | where: "oi_category_slug", "sort" %}
 
 <section class="hero">
   <p class="eyebrow">OI archive</p>
@@ -62,6 +63,15 @@ permalink: /oi/
       <p>Number theory, expectation, game theory, algebra, and formulas.</p>
     </a>
 
+    <a class="directory-card" href="{{ '/oi/optimization/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ optimization_posts | size }} post{% if optimization_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Optimization</h3>
+      <p>Annealing and heuristic optimization notes.</p>
+    </a>
+
     <a class="directory-card" href="{{ '/oi/string/' | relative_url }}">
       <div class="directory-meta">
         <span>OI</span>
@@ -80,13 +90,13 @@ permalink: /oi/
       <p>Problem solutions, simulation records, selected problems, and travel notes.</p>
     </a>
 
-    <a class="directory-card" href="{{ '/oi/algorithm/' | relative_url }}">
+    <a class="directory-card" href="{{ '/oi/sort/' | relative_url }}">
       <div class="directory-meta">
         <span>OI</span>
-        <span>{{ algorithm_posts | size }} post{% if algorithm_posts.size != 1 %}s{% endif %}</span>
+        <span>{{ sort_posts | size }} post{% if sort_posts.size != 1 %}s{% endif %}</span>
       </div>
-      <h3>Algorithm</h3>
-      <p>General algorithm techniques outside the other shelves.</p>
+      <h3>Sort</h3>
+      <p>Sorting notes and simple ordering techniques.</p>
     </a>
   </div>
 </section>

@@ -4,8 +4,8 @@ title: "字典树"
 archive_title: "Trie"
 section: "OI"
 section_slug: "oi"
-oi_category: "Data Structures"
-oi_category_slug: "data-structures"
+oi_category: "String"
+oi_category_slug: "string"
 date: 2022-08-31
 tags: ["DS", "Tree", "Trie"]
 summary: "Trie 树，（ 字典树 ）是一种用于实现字符串快速检索的多叉树数据结构。 Trie 的每个节点都包含若干字符指针，若在插入或检索字符串的时候扫描到一个字符 c ，就沿着当前节点的 c 字符指针，走向指针指向的节点。"

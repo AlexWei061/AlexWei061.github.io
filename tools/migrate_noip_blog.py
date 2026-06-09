@@ -21,7 +21,7 @@ MIGRATED_SECTION = "OI"
 MIGRATED_SECTION_SLUG = "oi"
 
 OI_CATEGORY_BY_TOP_LEVEL = {
-    "Algorithm": ("Algorithm", "algorithm"),
+    "Algorithm": ("Sort", "sort"),
     "DP": ("DP", "dp"),
     "DS": ("Data Structures", "data-structures"),
     "GraghTheory": ("Graph Theory", "graph"),
@@ -33,7 +33,12 @@ OI_CATEGORY_BY_TOP_LEVEL = {
 }
 
 OI_CATEGORY_OVERRIDES = {
+    "Algorithm/inspiringMerge.md": ("Data Structures", "data-structures"),
     "Algorithm/Mo'sAlgorithm.md": ("Data Structures", "data-structures"),
+    "Algorithm/simulatedAnnealing.md": ("Optimization", "optimization"),
+    "Algorithm/simulatedAnnealing2.md": ("Optimization", "optimization"),
+    "DS/Tree/Trie/Trie.md": ("String", "string"),
+    "DS/Tree/Trie/TrieCode.md": ("String", "string"),
 }
 
 EXTRA_IMAGES = [
@@ -65,6 +70,7 @@ ARCHIVE_TITLE_OVERRIDES = {
     "Algorithm/Mo'sAlgorithm.md": "莫队",
     "Algorithm/inspiringMerge.md": "启发式合并",
     "Algorithm/simulatedAnnealing.md": "模拟退火",
+    "Algorithm/simulatedAnnealing2.md": "模拟退火2",
     "Algorithm/sort.md": "插入排序",
     "DP/linearDp/LongestIncreasingSubsequence.md": "最长上升子序列",
     "DP/linearDp/classicModel.md": "线性 DP",

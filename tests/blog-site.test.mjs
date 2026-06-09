@@ -117,16 +117,18 @@ await assertExists("_layouts/post.html");
 await assertExists("assets/css/main.css");
 await assertExists("assets/js/search.js");
 await assertExists("oi.html");
-await assertExists("oi/algorithm.html");
 await assertExists("oi/data-structures.html");
 await assertExists("oi/dp.html");
 await assertExists("oi/graph.html");
 await assertExists("oi/math.html");
+await assertExists("oi/optimization.html");
 await assertExists("oi/solutions.html");
+await assertExists("oi/sort.html");
 await assertExists("oi/string.html");
 await assertExists("math.html");
 await assertExists("search.json");
 await assertExists("static/favicon.ico");
+await assertMissing("oi/algorithm.html");
 
 const archiveInclude = await read("_includes/archive.html");
 assert.match(archiveInclude, /where:\s*"section_slug",\s*include\.section_slug/, "archive include should filter posts by section");
@@ -143,7 +145,7 @@ assert.match(archiveInclude, /{{ archive_title \| escape }}/, "archive include p
 const oiPage = await read("oi.html");
 assert.match(oiPage, /permalink:\s+\/oi\//, "OI category directory should live at /oi/");
 assert.match(oiPage, /section-directory/, "OI page should render category directory links");
-assert.equal(countMatches(oiPage, /class="directory-card"/g), 7, "OI page should link to seven category archives");
+assert.equal(countMatches(oiPage, /class="directory-card"/g), 8, "OI page should link to eight category archives");
 assert.doesNotMatch(oiPage, /include archive\.html/, "OI page should not directly render the full archive");
 assert.doesNotMatch(oiPage, /id="blog-search"/, "OI page should not directly render archive search");
 for (const category of [
@@ -151,9 +153,10 @@ for (const category of [
   ["Graph Theory", "graph", "/oi/graph/"],
   ["Data Structures", "data-structures", "/oi/data-structures/"],
   ["Math", "math", "/oi/math/"],
+  ["Optimization", "optimization", "/oi/optimization/"],
   ["String", "string", "/oi/string/"],
   ["Solutions", "solutions", "/oi/solutions/"],
-  ["Algorithm", "algorithm", "/oi/algorithm/"],
+  ["Sort", "sort", "/oi/sort/"],
 ]) {
   const [label, slug, url] = category;
   assert.match(oiPage, new RegExp(`where:\\s*"oi_category_slug",\\s*"${slug}"`), `OI page should count ${label} posts`);
@@ -165,9 +168,10 @@ for (const categoryPage of [
   ["oi/graph.html", "Graph Theory", "graph", "/oi/graph/"],
   ["oi/data-structures.html", "Data Structures", "data-structures", "/oi/data-structures/"],
   ["oi/math.html", "Math", "math", "/oi/math/"],
+  ["oi/optimization.html", "Optimization", "optimization", "/oi/optimization/"],
   ["oi/string.html", "String", "string", "/oi/string/"],
   ["oi/solutions.html", "Solutions", "solutions", "/oi/solutions/"],
-  ["oi/algorithm.html", "Algorithm", "algorithm", "/oi/algorithm/"],
+  ["oi/sort.html", "Sort", "sort", "/oi/sort/"],
 ]) {
   const [file, label, slug, permalink] = categoryPage;
   const page = await read(file);
@@ -229,13 +233,14 @@ assert.deepEqual(categoryIssues, [], "all migrated OI posts should include an OI
 assert.deepEqual(
   categoryCounts,
   {
-    algorithm: 4,
-    "data-structures": 15,
+    "data-structures": 14,
     dp: 13,
     graph: 22,
     math: 37,
+    optimization: 2,
     solutions: 62,
-    string: 3,
+    sort: 1,
+    string: 5,
   },
   "migrated OI posts should be distributed into the expected categories",
 );
@@ -288,6 +293,27 @@ assert.match(bstPost, /\/assets\/images\/blog\/BST1\.png/, "BST local images sho
 
 const mosPost = await read("_posts/2022-02-19-mosalgorithm.md");
 assert.match(mosPost, /^---[\s\S]*oi_category:\s+"Data Structures"[\s\S]*oi_category_slug:\s+"data-structures"[\s\S]*---/, "Mo's algorithm should be categorized under OI data structures");
+
+const inspiringMergePost = await read("_posts/2022-04-11-inspiringmerge.md");
+assert.match(inspiringMergePost, /^---[\s\S]*archive_title:\s+"启发式合并"[\s\S]*---/, "inspiring merge archive title should stay localized");
+assert.match(inspiringMergePost, /^---[\s\S]*oi_category:\s+"Data Structures"[\s\S]*oi_category_slug:\s+"data-structures"[\s\S]*---/, "inspiring merge should be categorized under OI data structures");
+
+const simulatedAnnealingPost = await read("_posts/2021-11-16-simulatedannealing.md");
+assert.match(simulatedAnnealingPost, /^---[\s\S]*archive_title:\s+"模拟退火"[\s\S]*---/, "simulated annealing archive title should stay localized");
+assert.match(simulatedAnnealingPost, /^---[\s\S]*oi_category:\s+"Optimization"[\s\S]*oi_category_slug:\s+"optimization"[\s\S]*---/, "simulated annealing should be categorized under OI optimization");
+
+const simulatedAnnealing2Post = await read("_posts/2022-08-29-simulatedannealing2.md");
+assert.match(simulatedAnnealing2Post, /^---[\s\S]*archive_title:\s+"模拟退火2"[\s\S]*---/, "simulatedAnnealing2 archive title should be localized");
+assert.match(simulatedAnnealing2Post, /^---[\s\S]*oi_category:\s+"Optimization"[\s\S]*oi_category_slug:\s+"optimization"[\s\S]*---/, "simulated annealing 2 should be categorized under OI optimization");
+
+const sortPost = await read("_posts/2021-10-29-sort.md");
+assert.match(sortPost, /^---[\s\S]*oi_category:\s+"Sort"[\s\S]*oi_category_slug:\s+"sort"[\s\S]*---/, "sort should be categorized under OI sort");
+
+const dsTriePost = await read("_posts/2022-08-31-ds-tree-trie-trie.md");
+assert.match(dsTriePost, /^---[\s\S]*oi_category:\s+"String"[\s\S]*oi_category_slug:\s+"string"[\s\S]*---/, "DS Trie should be categorized under OI string");
+
+const trieCodePost = await read("_posts/2022-08-31-triecode.md");
+assert.match(trieCodePost, /^---[\s\S]*oi_category:\s+"String"[\s\S]*oi_category_slug:\s+"string"[\s\S]*---/, "TrieCode should be categorized under OI string");
 
 const kmpPostName = postFiles.find((file) => file.endsWith("-kmp.md"));
 assert.ok(kmpPostName, "KMP post should be generated");

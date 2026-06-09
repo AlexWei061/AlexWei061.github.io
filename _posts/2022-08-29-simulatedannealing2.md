@@ -1,11 +1,11 @@
 ---
 layout: post
 title: "模拟退火"
-archive_title: "simulatedAnnealing2"
+archive_title: "模拟退火2"
 section: "OI"
 section_slug: "oi"
-oi_category: "Algorithm"
-oi_category_slug: "algorithm"
+oi_category: "Optimization"
+oi_category_slug: "optimization"
 date: 2022-08-29
 tags: ["Algorithm"]
 summary: "上一篇的传送门：模拟退火"

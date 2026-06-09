@@ -4,8 +4,8 @@ title: "启发式合并"
 archive_title: "启发式合并"
 section: "OI"
 section_slug: "oi"
-oi_category: "Algorithm"
-oi_category_slug: "algorithm"
+oi_category: "Data Structures"
+oi_category_slug: "data-structures"
 date: 2022-04-11
 tags: ["Algorithm"]
 summary: "普通的启发式合并"
