@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "关于极限"
-archive_title: "advancedMathematicsNote1"
+archive_title: "极限"
 date: 2021-11-03
 tags: ["Math", "caculus"]
 summary: "二项式定理"

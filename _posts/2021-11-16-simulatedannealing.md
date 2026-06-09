@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "模拟退火"
-archive_title: "simulatedAnnealing"
+archive_title: "模拟退火"
 date: 2021-11-16
 tags: ["Algorithm"]
 summary: "首先，我们要知道，模拟退火是一种求解多峰函数全局最优解的算法。和爬山算法一样，模拟退火本质上也是一种贪心的算法，只是它在爬山的基础上增加了一个随机因子。使得他有一定的概率能够跳到比自己更不优的状态上去来增加跳到全局最优的概率。"

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SurfixArray"
-archive_title: "SurfixArray"
+archive_title: "后缀数组"
 date: 2022-03-12
 tags: ["String"]
 summary: "upd：20220317 更正了之前求解 lcp 的错误。"

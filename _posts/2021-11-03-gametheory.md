@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "博弈论之SG函数"
-archive_title: "GameTheory"
+archive_title: "博弈论"
 date: 2021-11-03
 tags: ["Math", "GameTheory"]
 summary: "在许多地方曾经流行过这样一个小游戏：分别包含 3 枚， 5 枚， 7 枚。两人轮流行动，每次可以选择任意一堆，从中取走任意多的硬币，可一把取光，但不可不取，取走最后一枚的人胜利。"

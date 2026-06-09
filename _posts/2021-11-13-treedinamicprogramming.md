@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "树型动态规划"
-archive_title: "treeDinamicProgramming"
+archive_title: "树形 DP"
 date: 2021-11-13
 tags: ["DP", "treeDp"]
 summary: "定义"

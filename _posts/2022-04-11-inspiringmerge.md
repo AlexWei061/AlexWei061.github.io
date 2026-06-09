@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "启发式合并"
-archive_title: "inspiringMerge"
+archive_title: "启发式合并"
 date: 2022-04-11
 tags: ["Algorithm"]
 summary: "普通的启发式合并"

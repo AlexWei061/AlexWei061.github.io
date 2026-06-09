@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "线段树"
-archive_title: "segmentTreeCode"
+archive_title: "线段树"
 date: 2022-08-31
 tags: ["DS", "Tree", "线段树"]
 summary: "线段树 的算法笔记。"

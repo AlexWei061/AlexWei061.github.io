@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Tarjan与无向图的连通性"
-archive_title: "TarjanAndDCC"
+archive_title: "Tarjan 与无向图连通性"
 date: 2021-11-03
 tags: ["GraghTheory", "Tarjan"]
 summary: "一、割点与割边"

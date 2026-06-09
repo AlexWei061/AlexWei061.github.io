@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "单调队列优化"
-archive_title: "monotonousQueue"
+archive_title: "单调队列优化"
 date: 2021-11-14
 tags: ["DP", "optmization"]
 summary: "一道题"

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "关于二分图"
-archive_title: "aboutBipartiteGragh"
+archive_title: "二分图"
 date: 2021-11-03
 tags: ["GraghTheory", "NetworkFlow"]
 summary: "二分图的定义（来自百度）"

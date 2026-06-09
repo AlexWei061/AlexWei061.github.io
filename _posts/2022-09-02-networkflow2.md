@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Flow Network"
-archive_title: "networkFlow2"
+archive_title: "网络流 2"
 date: 2022-09-02
 tags: ["GraghTheory", "NetworkFlow"]
 summary: "几个概念"

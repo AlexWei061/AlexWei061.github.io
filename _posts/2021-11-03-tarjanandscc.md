@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Tarjan 求强连通分量"
-archive_title: "TarjanAndSCC"
+archive_title: "Tarjan 求强连通分量"
 date: 2021-11-03
 tags: ["GraghTheory", "Tarjan"]
 summary: "强连通分量"

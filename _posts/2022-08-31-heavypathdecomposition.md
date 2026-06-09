@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "树链剖分"
-archive_title: "heavyPathDecomposition"
+archive_title: "树链剖分"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "树链剖分"]
 summary: "两个问题："

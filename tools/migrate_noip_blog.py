@@ -42,6 +42,54 @@ GITHUB_PATH_URL_ALIASES = {
     "ds/tree/splay.md": "/posts/splay1/",
 }
 
+# Homepage/search display names for old English source filenames.
+ARCHIVE_TITLE_OVERRIDES = {
+    "Algorithm/Mo'sAlgorithm.md": "莫队",
+    "Algorithm/inspiringMerge.md": "启发式合并",
+    "Algorithm/simulatedAnnealing.md": "模拟退火",
+    "Algorithm/sort.md": "插入排序",
+    "DP/linearDp/LongestIncreasingSubsequence.md": "最长上升子序列",
+    "DP/linearDp/classicModel.md": "线性 DP",
+    "DP/linearDp/knapsack.md": "背包问题",
+    "DP/optmization/monotonousQueue.md": "单调队列优化",
+    "DP/stateOfCompressionDp/stateOfCompression.md": "状压 DP",
+    "DP/treeDp/treeDinamicProgramming.md": "树形 DP",
+    "DS/Table/RMQST.md": "ST 表",
+    "DS/Tree/disjointSet.md": "并查集",
+    "DS/Tree/树状数组/binaryIndexTree.md": "树状数组",
+    "DS/Tree/线段树/durableSegTree.md": "主席树",
+    "DS/Tree/线段树/segmentTreeCode.md": "线段树",
+    "GraghTheory/NetworkFlow/aboutBipartiteGragh.md": "二分图",
+    "GraghTheory/NetworkFlow/networkFlow.md": "网络流",
+    "GraghTheory/NetworkFlow/networkFlow2.md": "网络流 2",
+    "GraghTheory/Tarjan/TarjanAndDCC.md": "Tarjan 与无向图连通性",
+    "GraghTheory/Tarjan/TarjanAndSCC.md": "Tarjan 求强连通分量",
+    "GraghTheory/Tree/kruskal/second-bestMinSpanningTree.md": "严格次小生成树",
+    "GraghTheory/Tree/lca/leastCommonAncestor.md": "最近公共祖先",
+    "GraghTheory/Tree/树链剖分/heavyPathDecomposition.md": "树链剖分",
+    "GraghTheory/Tree/重心和直径/centroidOfTree.md": "树的重心",
+    "GraghTheory/Tree/重心和直径/diameterOfTree.md": "树的直径",
+    "GraghTheory/topSort.md": "拓扑排序",
+    "Math/CombinatiorialEnmeration/CombinatiorialEnumeration.md": "组合计数",
+    "Math/GameTheory/GameTheory.md": "博弈论",
+    "Math/LinearAlgebra/GuasElimination.md": "高斯消元",
+    "Math/LinearAlgebra/linearAlgebra.md": "线性代数",
+    "Math/NumberTheory/EulerTheorem.md": "欧拉定理",
+    "Math/NumberTheory/MobiusInversion.md": "莫比乌斯反演",
+    "Math/NumberTheory/NumberTheory.md": "数论",
+    "Math/NumberTheory/arithmeticFunction.md": "数论函数",
+    "Math/NumberTheory/extendEuclid.md": "扩展欧几里得",
+    "Math/NumberTheory/inverseModule.md": "乘法逆元",
+    "Math/ProbabilityExpectation/Possibility&expectation.md": "概率与期望",
+    "Math/Sequence/FibonacciSequence.md": "斐波那契数列",
+    "Math/Sequence/generatingFunction.md": "生成函数",
+    "Math/caculus/TaylorExpansion.md": "泰勒展开",
+    "Math/caculus/aboutPi.md": "圆周率",
+    "Math/caculus/advancedMathematicsNote1.md": "极限",
+    "Math/caculus/advancedMathematicsNote2.md": "微分",
+    "String/SurfixArray.md": "后缀数组",
+}
+
 
 def run_git(path: Path) -> list[str]:
     if not GIT_DIR.exists():
@@ -117,6 +165,11 @@ def title_from_content(path: Path, content: str) -> str:
         if title and not GENERIC_TITLES.match(title):
             return title
     return clean_title(path.stem) or path.stem
+
+
+def archive_title_for(path: Path) -> str:
+    rel = path.relative_to(SOURCE_ROOT).as_posix()
+    return ARCHIVE_TITLE_OVERRIDES.get(rel, path.stem)
 
 
 def slugify(value: str) -> str:
@@ -455,7 +508,7 @@ def migrate() -> None:
                 "---",
                 "layout: post",
                 f"title: {yaml_string(title)}",
-                f"archive_title: {yaml_string(source_path.stem)}",
+                f"archive_title: {yaml_string(archive_title_for(source_path))}",
                 f"date: {date}",
                 "tags: [" + ", ".join(yaml_string(tag) for tag in tags) + "]",
                 f"summary: {yaml_string(summary)}",

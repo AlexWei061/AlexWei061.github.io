@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "并查集"
-archive_title: "disjointSet"
+archive_title: "并查集"
 date: 2021-11-03
 tags: ["DS", "Tree"]
 summary: "并查集 的算法笔记。"

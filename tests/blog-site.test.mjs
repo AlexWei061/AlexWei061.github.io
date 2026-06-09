@@ -179,6 +179,13 @@ assert.match(kmpPost, /^---[\s\S]*title:\s+"KMP 详解"[\s\S]*---/, "KMP post pa
 assert.match(kmpPost, /^---[\s\S]*archive_title:\s+"KMP"[\s\S]*---/, "KMP archive title should use the original source filename");
 assert.match(kmpPost, /\/assets\/images\/blog\/KMP\.png/, "KMP local image should be rewritten to blog assets");
 
+const fftPost = await read("_posts/2021-11-10-fft.md");
+assert.match(fftPost, /^---[\s\S]*archive_title:\s+"FFT"[\s\S]*---/, "FFT archive title should keep the standard acronym");
+
+const centroidPost = await read("_posts/2022-08-31-centroidoftree.md");
+assert.match(centroidPost, /^---[\s\S]*title:\s+"关于树的重心"[\s\S]*---/, "centroid post page title should keep the Markdown heading-derived title");
+assert.match(centroidPost, /^---[\s\S]*archive_title:\s+"树的重心"[\s\S]*---/, "centroid archive title should be localized for homepage display");
+
 const tarjanDccPost = await read("_posts/2021-11-03-tarjananddcc.md");
 assert.match(tarjanDccPost, /\[Tarjan求强连通分量\]\(\/posts\/tarjanandscc\/\)/, "old GitHub OI links should point at migrated posts");
 

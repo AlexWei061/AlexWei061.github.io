@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "组合计数"
-archive_title: "CombinatiorialEnumeration"
+archive_title: "组合计数"
 date: 2021-11-03
 tags: ["Math", "CombinatiorialEnmeration"]
 summary: "加法原理"

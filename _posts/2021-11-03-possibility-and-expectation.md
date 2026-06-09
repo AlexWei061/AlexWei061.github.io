@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "一些公式"
-archive_title: "Possibility&expectation"
+archive_title: "概率与期望"
 date: 2021-11-03
 tags: ["Math", "ProbabilityExpectation"]
 summary: "概率"
