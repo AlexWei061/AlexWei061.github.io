@@ -37,6 +37,56 @@ async function assertMissing(relativePath) {
   assert.equal(await exists(relativePath), false, `${relativePath} should be removed`);
 }
 
+function isEscaped(value, index) {
+  let slashes = 0;
+  for (let cursor = index - 1; cursor >= 0 && value[cursor] === "\\"; cursor--) {
+    slashes += 1;
+  }
+  return slashes % 2 === 1;
+}
+
+function stripCodeContent(value) {
+  return value
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`[^`\n]*`/g, "");
+}
+
+function inlineMathSegments(value) {
+  const segments = [];
+  for (let index = 0; index < value.length; index += 1) {
+    if (value.startsWith("$$", index) && !isEscaped(value, index)) {
+      const end = value.indexOf("$$", index + 2);
+      index = end === -1 ? value.length : end + 1;
+      continue;
+    }
+
+    if (value[index] === "$" && !isEscaped(value, index)) {
+      const end = (() => {
+        for (let cursor = index + 1; cursor < value.length; cursor += 1) {
+          if (value[cursor] === "$" && !isEscaped(value, cursor)) {
+            return cursor;
+          }
+        }
+        return -1;
+      })();
+      if (end !== -1) {
+        segments.push(value.slice(index + 1, end));
+        index = end;
+      }
+      continue;
+    }
+
+    if (value.startsWith("\\(", index) && !isEscaped(value, index)) {
+      const end = value.indexOf("\\)", index + 2);
+      if (end !== -1) {
+        segments.push(value.slice(index + 2, end));
+        index = end + 1;
+      }
+    }
+  }
+  return segments;
+}
+
 const index = await read("index.html");
 assert.match(index, /Alex's Blog/, "homepage should use the new site identity");
 assert.match(index, /id="blog-search"/, "homepage should include search input");
@@ -60,6 +110,10 @@ await assertExists("assets/js/search.js");
 await assertExists("search.json");
 await assertExists("static/favicon.ico");
 
+const postLayout = await read("_layouts/post.html");
+assert.match(postLayout, /\[tex\]\/color/, "MathJax should load color support for migrated textcolor formulas");
+assert.match(postLayout, /packages:[\s\S]*color/, "MathJax tex packages should include color support");
+
 const css = await read("assets/css/main.css");
 assert.match(css, /overflow-x:\s*hidden/, "layout should prevent accidental mobile horizontal scrolling");
 assert.match(css, /width:\s*calc\(100% - 28px\)/, "mobile shell should use a valid calc width");
@@ -70,6 +124,21 @@ const postFiles = await listFiles("_posts");
 assert.equal(postFiles.filter((file) => file.endsWith(".md")).length, 156, "all migrated NOIP blog posts should be present");
 assert.equal(postFiles.includes("2021-11-13-fft.md"), false, "old FFT migration artifact should be replaced");
 assert.equal(postFiles.includes("2021-11-10-fft.md"), true, "FFT should keep the old blog history date and /posts/fft/ slug");
+
+const inlineMathPipeIssues = [];
+for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
+  const content = stripCodeContent(await read(`_posts/${file}`));
+  for (const segment of inlineMathSegments(content)) {
+    if (segment.includes("|")) {
+      inlineMathPipeIssues.push(`${file}: ${segment.replace(/\s+/g, " ").trim().slice(0, 100)}`);
+    }
+  }
+}
+assert.deepEqual(
+  inlineMathPipeIssues,
+  [],
+  "inline math should not contain raw | characters because kramdown can parse them as table separators",
+);
 
 const blogImages = await listFiles("assets/images/blog");
 assert.equal(blogImages.length, 92, "all blog images plus two external practice images should be copied");

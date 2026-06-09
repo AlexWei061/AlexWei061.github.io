@@ -29,7 +29,11 @@ layout: default
 {% if page.math %}
   <script>
     window.MathJax = {
+      loader: {
+        load: ["[tex]/color"]
+      },
       tex: {
+        packages: {"[+]": ["color"]},
         inlineMath: [["$", "$"], ["\\(", "\\)"]],
         displayMath: [["$$", "$$"], ["\\[", "\\]"]]
       },

@@ -197,7 +197,7 @@ $$
 $$
 
 -----
-9. 设 $\lbrace x_n \rbrace$ 是无穷大量， $|y_n| \geq \delta > 0$，证明 $\lbrace x_ny_n \rbrace$ 是无穷大量。
+9. 设 $\lbrace x_n \rbrace$ 是无穷大量， $&#124;y_n&#124; \geq \delta > 0$，证明 $\lbrace x_ny_n \rbrace$ 是无穷大量。
 
 
 ## 导数 

@@ -196,6 +196,93 @@ def has_math(content: str) -> bool:
     return bool(re.search(r"(?<!\\)\$(?!\s)(?s:.+?)(?<!\s)(?<!\\)\$", content))
 
 
+def is_escaped(value: str, index: int) -> bool:
+    slashes = 0
+    cursor = index - 1
+    while cursor >= 0 and value[cursor] == "\\":
+        slashes += 1
+        cursor -= 1
+    return slashes % 2 == 1
+
+
+def find_unescaped(value: str, needle: str, start: int) -> int:
+    cursor = start
+    while True:
+        index = value.find(needle, cursor)
+        if index == -1 or not is_escaped(value, index):
+            return index
+        cursor = index + len(needle)
+
+
+def normalize_inline_math(content: str) -> str:
+    result: list[str] = []
+    index = 0
+    while index < len(content):
+        if content.startswith("```", index):
+            end = content.find("```", index + 3)
+            if end == -1:
+                result.append(content[index:])
+                break
+            result.append(content[index : end + 3])
+            index = end + 3
+            continue
+
+        if content[index] == "`":
+            end = content.find("`", index + 1)
+            if end == -1:
+                result.append(content[index:])
+                break
+            result.append(content[index : end + 1])
+            index = end + 1
+            continue
+
+        if content.startswith("$$", index) and not is_escaped(content, index):
+            end = find_unescaped(content, "$$", index + 2)
+            if end == -1:
+                result.append(content[index:])
+                break
+            result.append(content[index : end + 2])
+            index = end + 2
+            continue
+
+        if content.startswith("\\[", index) and not is_escaped(content, index):
+            end = find_unescaped(content, "\\]", index + 2)
+            if end == -1:
+                result.append(content[index:])
+                break
+            result.append(content[index : end + 2])
+            index = end + 2
+            continue
+
+        if content[index] == "$" and not is_escaped(content, index):
+            end = find_unescaped(content, "$", index + 1)
+            if end == -1:
+                result.append(content[index])
+                index += 1
+                continue
+            result.append("$")
+            result.append(content[index + 1 : end].replace("|", "&#124;"))
+            result.append("$")
+            index = end + 1
+            continue
+
+        if content.startswith("\\(", index) and not is_escaped(content, index):
+            end = find_unescaped(content, "\\)", index + 2)
+            if end == -1:
+                result.append(content[index])
+                index += 1
+                continue
+            result.append("\\(")
+            result.append(content[index + 2 : end].replace("|", "&#124;"))
+            result.append("\\)")
+            index = end + 2
+            continue
+
+        result.append(content[index])
+        index += 1
+    return "".join(result)
+
+
 def collect_images() -> dict[str, str]:
     if IMAGE_DIR.exists():
         shutil.rmtree(IMAGE_DIR)
@@ -267,6 +354,7 @@ def migrate() -> None:
         rel = source_path.relative_to(SOURCE_ROOT)
         raw_content = source_path.read_text(encoding="utf-8-sig").replace("\r\n", "\n").replace("\r", "\n")
         content = rewrite_images(raw_content, image_map, missing_images)
+        content = normalize_inline_math(content)
         title = title_from_content(source_path, content)
         date = post_date(source_path)
         tags = [part for part in rel.parent.parts if part and part != "."]

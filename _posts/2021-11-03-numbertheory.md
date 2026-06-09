@@ -8,7 +8,7 @@ math: true
 ---
 {% raw %}
 ## 约数
- 若 $n$ 除以整数 $d$ 的余数为 $0$ ，即 $d$ 能整除 $n$，计为 $d|n$ <br>
+ 若 $n$ 除以整数 $d$ 的余数为 $0$ ，即 $d$ 能整除 $n$，计为 $d&#124;n$ <br>
 
 ----
 
@@ -64,7 +64,7 @@ $$\forall a, b \in N, b \neq 0 \rightarrow gcd(a, b) = gcd(b, a\mod{b})$$
 ### 证明：
 &emsp; 若 $a < b$，则 $gcd(b, a\mod{b}) = gcd(b, a) = gcd(a, b)$。命题显然成立<br>
 
-&emsp; 若 $a \geq b$，不妨设 $a=q \times b + r$，其中 $0 \leq r \leq b$，显然 $r = a\mod b$。对于 $a, b$的任意公约数 $d$， 因为 $d|a, d|qb$，故 $d|(a-qb)$，即 $d|r$，因此 $d$也是 $b, r$的公约数。反之亦然成立。故 $a, b$的公约数集合与 $b, a\mod b$的公约数集合相同。于是他们的最大公约数也自然相等。<br>
+&emsp; 若 $a \geq b$，不妨设 $a=q \times b + r$，其中 $0 \leq r \leq b$，显然 $r = a\mod b$。对于 $a, b$的任意公约数 $d$， 因为 $d&#124;a, d&#124;qb$，故 $d&#124;(a-qb)$，即 $d&#124;r$，因此 $d$也是 $b, r$的公约数。反之亦然成立。故 $a, b$的公约数集合与 $b, a\mod b$的公约数集合相同。于是他们的最大公约数也自然相等。<br>
 
 证毕
 
@@ -103,8 +103,8 @@ $$ N - \frac{N}{p} - \frac{N}{q} + \frac{N}{pq} = N \times \bigg( 1 - \frac{1}{p
 &emsp; 如果当 $a, b$ 互质时，有 $f(ab) = f(a) \times f(b)$，则称函数 $f$ 为积性函数
 
 3. 若 $f$ 为积性函数，且在算术基本定理中 $n = \prod_{i=1}^{m}p_i^{c_i}$，则 $f(n) = \prod_{i=1}^{m}f(p_i^{c_i})$
-4. 设 $p$ 为质数，若 $p|n$ 且 $p^2\mid n$，则 $\phi(n) = \phi(\frac{n}{p})\times p$
-5. 设 $p$ 为质数，若 $p|n$ 且 $p^2\nmid n$，则 $\phi(n)=\phi(\frac{n}{p})\times (p-1)$
+4. 设 $p$ 为质数，若 $p&#124;n$ 且 $p^2\mid n$，则 $\phi(n) = \phi(\frac{n}{p})\times p$
+5. 设 $p$ 为质数，若 $p&#124;n$ 且 $p^2\nmid n$，则 $\phi(n)=\phi(\frac{n}{p})\times (p-1)$
 6. $\sum_{d \mid n}\phi(d) = n$
 
 ----
