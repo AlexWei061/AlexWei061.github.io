@@ -2,6 +2,8 @@
 layout: post
 title: "并查集"
 archive_title: "并查集"
+section: "OI"
+section_slug: "oi"
 date: 2021-11-03
 tags: ["DS", "Tree"]
 summary: "并查集 的算法笔记。"

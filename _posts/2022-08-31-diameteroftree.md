@@ -2,6 +2,8 @@
 layout: post
 title: "树的直径"
 archive_title: "树的直径"
+section: "OI"
+section_slug: "oi"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "重心和直径"]
 summary: "一、定义"

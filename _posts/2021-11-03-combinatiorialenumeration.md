@@ -2,6 +2,8 @@
 layout: post
 title: "组合计数"
 archive_title: "组合计数"
+section: "OI"
+section_slug: "oi"
 date: 2021-11-03
 tags: ["Math", "CombinatiorialEnmeration"]
 summary: "加法原理"

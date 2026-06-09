@@ -17,6 +17,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 POSTS_DIR = REPO_ROOT / "_posts"
 IMAGE_DIR = REPO_ROOT / "assets" / "images" / "blog"
 GIT_DIR = SOURCE_ROOT / ".git_disabled"
+MIGRATED_SECTION = "OI"
+MIGRATED_SECTION_SLUG = "oi"
 
 EXTRA_IMAGES = [
     Path("/Users/alex/Alex/NOIP/practice/2021/August2021/20210802/TrieEg.png"),
@@ -509,6 +511,8 @@ def migrate() -> None:
                 "layout: post",
                 f"title: {yaml_string(title)}",
                 f"archive_title: {yaml_string(archive_title_for(source_path))}",
+                f"section: {yaml_string(MIGRATED_SECTION)}",
+                f"section_slug: {yaml_string(MIGRATED_SECTION_SLUG)}",
                 f"date: {date}",
                 "tags: [" + ", ".join(yaml_string(tag) for tag in tags) + "]",
                 f"summary: {yaml_string(summary)}",

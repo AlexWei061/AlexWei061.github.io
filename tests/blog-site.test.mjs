@@ -89,12 +89,13 @@ function inlineMathSegments(value) {
 
 const index = await read("index.html");
 assert.match(index, /Alex's Blog/, "homepage should use the new site identity");
-assert.match(index, /id="blog-search"/, "homepage should include search input");
-assert.match(index, /id="tag-filters"/, "homepage should include tag filters");
-assert.match(index, /id="post-list"/, "homepage should include a post list");
-assert.match(index, /assign archive_title = post\.archive_title \| default: post\.title/, "homepage should use archive titles when available");
-assert.match(index, /data-title="{{ archive_title \| downcase \| escape }}"/, "homepage search metadata should use archive titles");
-assert.match(index, /{{ archive_title \| escape }}/, "homepage post cards should render archive titles");
+assert.match(index, /section-directory/, "homepage should render section directory links");
+assert.match(index, /where:\s*"section_slug",\s*"oi"/, "homepage should count OI posts by section");
+assert.match(index, /where:\s*"section_slug",\s*"math"/, "homepage should count Math posts by section");
+assert.match(index, /href="{{ '\/oi\/' \| relative_url }}"/, "homepage should link to the OI archive");
+assert.match(index, /href="{{ '\/math\/' \| relative_url }}"/, "homepage should link to the Math archive");
+assert.doesNotMatch(index, /id="blog-search"/, "homepage should not directly render archive search");
+assert.doesNotMatch(index, /class="post-card"/, "homepage should not directly render post cards");
 for (const legacyLabel of ["My Codes", "Study", "Games", "Collections", "My Tour Plan"]) {
   assert.doesNotMatch(index, new RegExp(legacyLabel), `homepage should not show ${legacyLabel}`);
 }
@@ -106,20 +107,49 @@ assert.match(config, /excerpt_separator:\s+"<!-- excerpt -->"/, "_config.yml sho
 assert.match(config, /exclude:[\s\S]*-\s+tests\//, "_config.yml should not publish source tests");
 assert.match(config, /exclude:[\s\S]*-\s+tools\//, "_config.yml should not publish migration tooling");
 
+await assertExists("_includes/archive.html");
 await assertExists("_layouts/default.html");
 await assertExists("_layouts/post.html");
 await assertExists("assets/css/main.css");
 await assertExists("assets/js/search.js");
+await assertExists("oi.html");
+await assertExists("math.html");
 await assertExists("search.json");
 await assertExists("static/favicon.ico");
 
+const archiveInclude = await read("_includes/archive.html");
+assert.match(archiveInclude, /where:\s*"section_slug",\s*include\.section_slug/, "archive include should filter posts by section");
+assert.match(archiveInclude, /id="blog-search"/, "archive include should include search input");
+assert.match(archiveInclude, /id="tag-filters"/, "archive include should include tag filters");
+assert.match(archiveInclude, /id="post-list"/, "archive include should include a post list");
+assert.match(archiveInclude, /assign archive_title = post\.archive_title \| default: post\.title/, "archive include should use archive titles when available");
+assert.match(archiveInclude, /data-title="{{ archive_title \| downcase \| escape }}"/, "archive include search metadata should use archive titles");
+assert.match(archiveInclude, /{{ archive_title \| escape }}/, "archive include post cards should render archive titles");
+
+const oiPage = await read("oi.html");
+assert.match(oiPage, /permalink:\s+\/oi\//, "OI archive should live at /oi/");
+assert.match(oiPage, /include archive\.html[\s\S]*section_slug="oi"/, "OI archive should use the shared archive include");
+
+const mathPage = await read("math.html");
+assert.match(mathPage, /permalink:\s+\/math\//, "Math archive should live at /math/");
+assert.match(mathPage, /include archive\.html[\s\S]*section_slug="math"/, "Math archive should use the shared archive include");
+
+const defaultLayout = await read("_layouts/default.html");
+assert.match(defaultLayout, /href="{{ '\/' \| relative_url }}">Home<\/a>/, "header should link to Home");
+assert.match(defaultLayout, /href="{{ '\/oi\/' \| relative_url }}">OI<\/a>/, "header should link to OI");
+assert.match(defaultLayout, /href="{{ '\/math\/' \| relative_url }}">Math<\/a>/, "header should link to Math");
+
 const postLayout = await read("_layouts/post.html");
+assert.match(postLayout, /page\.section_slug \| default:\s*"oi"/, "post layout should derive its archive return link from section_slug");
+assert.match(postLayout, /Back to {{ post_section }}/, "post layout should label the return link with the post section");
 assert.match(postLayout, /\[tex\]\/color/, "MathJax should load color support for migrated textcolor formulas");
 assert.match(postLayout, /packages:[\s\S]*color/, "MathJax tex packages should include color support");
 
 const css = await read("assets/css/main.css");
 assert.match(css, /overflow-x:\s*hidden/, "layout should prevent accidental mobile horizontal scrolling");
 assert.match(css, /width:\s*calc\(100% - 28px\)/, "mobile shell should use a valid calc width");
+assert.match(css, /\.section-directory/, "homepage section directory should be styled");
+assert.match(css, /\.directory-card/, "homepage directory cards should be styled");
 assert.match(css, /\.tag-chip,[\s\S]*?max-width:\s*100%/, "long tag chips should stay within the mobile viewport");
 assert.match(css, /overflow-wrap:\s*anywhere/, "long migrated text and tags should be allowed to wrap");
 
@@ -127,6 +157,15 @@ const postFiles = await listFiles("_posts");
 assert.equal(postFiles.filter((file) => file.endsWith(".md")).length, 156, "all migrated NOIP blog posts should be present");
 assert.equal(postFiles.includes("2021-11-13-fft.md"), false, "old FFT migration artifact should be replaced");
 assert.equal(postFiles.includes("2021-11-10-fft.md"), true, "FFT should keep the old blog history date and /posts/fft/ slug");
+
+const sectionIssues = [];
+for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
+  const content = await read(`_posts/${file}`);
+  if (!/^---[\s\S]*section:\s+"OI"[\s\S]*section_slug:\s+"oi"[\s\S]*---/.test(content)) {
+    sectionIssues.push(file);
+  }
+}
+assert.deepEqual(sectionIssues, [], "all migrated posts should belong to the OI root section");
 
 const inlineMathPipeIssues = [];
 for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
@@ -227,6 +266,8 @@ const searchJson = await read("search.json");
 assert.match(searchJson, /site\.posts/, "search index should be generated from Jekyll posts");
 assert.match(searchJson, /"title":\s*{{ post\.archive_title \| default: post\.title \| jsonify }}/, "search index titles should use archive titles");
 assert.match(searchJson, /"post_title":\s*{{ post\.title \| jsonify }}/, "search index should retain post page titles");
+assert.match(searchJson, /"section":\s*{{ post\.section \| default:\s*"OI" \| jsonify }}/, "search index should expose root sections");
+assert.match(searchJson, /"section_slug":\s*{{ post\.section_slug \| default:\s*"oi" \| jsonify }}/, "search index should expose root section slugs");
 assert.match(searchJson, /strip_html/, "search index should strip post HTML");
 assert.match(searchJson, /"excerpt":/, "search index should expose bounded excerpts");
 assert.match(searchJson, /truncate:\s*800/, "search index should keep migrated search data bounded");

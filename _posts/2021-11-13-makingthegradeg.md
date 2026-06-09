@@ -2,6 +2,8 @@
 layout: post
 title: "Making The Grade G"
 archive_title: "MakingTheGradeG"
+section: "OI"
+section_slug: "oi"
 date: 2021-11-13
 tags: ["DP", "linearDp"]
 summary: "原题传送门： luogu P2893 USACO08FEB"

@@ -6,6 +6,8 @@ layout: null
     {
       "title": {{ post.archive_title | default: post.title | jsonify }},
       "post_title": {{ post.title | jsonify }},
+      "section": {{ post.section | default: "OI" | jsonify }},
+      "section_slug": {{ post.section_slug | default: "oi" | jsonify }},
       "url": {{ post.url | relative_url | jsonify }},
       "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
       "tags": {{ post.tags | jsonify }},

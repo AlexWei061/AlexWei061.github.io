@@ -2,6 +2,8 @@
 layout: post
 title: "阶和原根"
 archive_title: "PrimitiveRoot"
+section: "OI"
+section_slug: "oi"
 date: 2022-04-30
 tags: ["Math", "NumberTheory"]
 summary: "阶"

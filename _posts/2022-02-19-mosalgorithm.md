@@ -2,6 +2,8 @@
 layout: post
 title: "莫队"
 archive_title: "莫队"
+section: "OI"
+section_slug: "oi"
 date: 2022-02-19
 tags: ["Algorithm"]
 summary: "这真是一种非常神奇的算法啊"

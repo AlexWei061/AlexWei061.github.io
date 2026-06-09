@@ -2,6 +2,8 @@
 layout: post
 title: "Data Structure"
 archive_title: "NOIPPracticeRecordings"
+section: "OI"
+section_slug: "oi"
 date: 2022-05-28
 tags: ["Solution", "NOIP"]
 summary: "segment tree"

@@ -2,6 +2,8 @@
 layout: post
 title: "木棒交叉 Intersect"
 archive_title: "木棒交叉Intersect"
+section: "OI"
+section_slug: "oi"
 date: 2021-11-13
 tags: ["DP"]
 summary: "原题大意如下："

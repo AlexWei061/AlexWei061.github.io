@@ -1,68 +1,41 @@
 ---
 layout: default
-title: Archive
+title: Home
 ---
 
+{% assign oi_posts = site.posts | where: "section_slug", "oi" %}
+{% assign math_posts = site.posts | where: "section_slug", "math" %}
+
 <section class="hero">
-  <p class="eyebrow">Technical archive</p>
+  <p class="eyebrow">Technical notebooks</p>
   <h1>Alex's Blog</h1>
   <p class="hero-copy">
-    Notes on algorithms, programming, and the small pieces of understanding
-    that are worth keeping searchable.
+    Notes organized by root topic, with contest programming in OI and a quiet
+    home ready for future math writing.
   </p>
 </section>
 
-<section class="archive-panel" aria-labelledby="archive-title">
-  <div class="archive-heading">
-    <div>
-      <p class="section-kicker">Archive</p>
-      <h2 id="archive-title">All posts</h2>
-    </div>
-    <p class="post-count">{{ site.posts | size }} post{% if site.posts.size != 1 %}s{% endif %}</p>
+<section class="section-directory" aria-labelledby="directories-title">
+  <p class="section-kicker">Roots</p>
+  <h2 id="directories-title">Choose a notebook</h2>
+
+  <div class="directory-grid">
+    <a class="directory-card" href="{{ '/oi/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Root</span>
+        <span>{{ oi_posts | size }} post{% if oi_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>OI</h3>
+      <p>Algorithms, contest notes, data structures, and the migrated NOIP archive.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/math/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Root</span>
+        <span>{{ math_posts | size }} post{% if math_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Math</h3>
+      <p>A future home for math essays and notes outside the OI archive.</p>
+    </a>
   </div>
-
-  <div class="controls" aria-label="Blog filters">
-    <label class="search-label" for="blog-search">Search articles</label>
-    <input
-      id="blog-search"
-      class="search-input"
-      type="search"
-      placeholder="Try FFT, algorithm, 傅里叶, 多项式"
-      autocomplete="off"
-    >
-
-    <div id="tag-filters" class="tag-filters" aria-label="Filter posts by tag">
-      <button class="tag-chip is-active" type="button" data-tag="">All</button>
-      {% assign sorted_tags = site.tags | sort %}
-      {% for tag in sorted_tags %}
-        {% assign tag_name = tag[0] %}
-        <button class="tag-chip" type="button" data-tag="{{ tag_name | escape }}">
-          {{ tag_name }}
-        </button>
-      {% endfor %}
-    </div>
-  </div>
-
-  <div id="post-list" class="post-list" aria-live="polite">
-    {% for post in site.posts %}
-      {% assign archive_title = post.archive_title | default: post.title %}
-      <article
-        class="post-card"
-        data-url="{{ post.url | relative_url }}"
-        data-title="{{ archive_title | downcase | escape }}"
-        data-tags="{{ post.tags | join: ' ' | downcase | escape }}"
-      >
-        <div class="post-meta">
-          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
-          {% if post.tags.size > 0 %}
-            <span>{{ post.tags | join: " / " }}</span>
-          {% endif %}
-        </div>
-        <h3><a href="{{ post.url | relative_url }}">{{ archive_title | escape }}</a></h3>
-        <p>{{ post.summary | default: post.excerpt | strip_html | normalize_whitespace }}</p>
-      </article>
-    {% endfor %}
-  </div>
-
-  <p id="no-results" class="empty-state" hidden>No posts match this search.</p>
 </section>

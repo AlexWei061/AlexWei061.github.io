@@ -2,6 +2,8 @@
 layout: post
 title: "数位 DP"
 archive_title: "数字计数"
+section: "OI"
+section_slug: "oi"
 date: 2022-03-17
 tags: ["Solution", "dp"]
 summary: "本篇主要内容是一片题解传送门：luogu P2602 数字计数"

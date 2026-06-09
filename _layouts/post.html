@@ -2,9 +2,12 @@
 layout: default
 ---
 
+{% assign post_section = page.section | default: "OI" %}
+{% assign post_section_slug = page.section_slug | default: "oi" %}
+
 <article class="post">
   <header class="post-header">
-    <a class="back-link" href="{{ '/' | relative_url }}">Back to archive</a>
+    <a class="back-link" href="{{ '/' | append: post_section_slug | append: '/' | relative_url }}">Back to {{ post_section }}</a>
     <p class="post-date">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
     </p>

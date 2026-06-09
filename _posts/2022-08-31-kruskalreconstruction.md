@@ -2,6 +2,8 @@
 layout: post
 title: "Kruskal 重构树"
 archive_title: "kruskalReconstruction"
+section: "OI"
+section_slug: "oi"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "kruskal"]
 summary: "kruskal 最小生成树算法相信大家已经很熟悉了，所以这里就不介绍了。顾名思义 kruskal 重构树就是根据 kruskal 改造一下衍生出来的算法。它能解决下面这样的一个问题："

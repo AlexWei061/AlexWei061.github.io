@@ -2,6 +2,8 @@
 layout: post
 title: "回文"
 archive_title: "CSP2021T3回文"
+section: "OI"
+section_slug: "oi"
 date: 2022-07-21
 tags: ["Solution", "DS"]
 summary: "传送门：CSP2021 T3 回文"

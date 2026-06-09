@@ -1,0 +1,73 @@
+{% assign section_posts = site.posts | where: "section_slug", include.section_slug %}
+
+<section class="hero archive-hero">
+  <p class="eyebrow">{{ include.eyebrow | default: "Archive" }}</p>
+  <h1>{{ include.title | default: include.section_title }}</h1>
+  <p class="hero-copy">
+    {{ include.description | default: "Browse notes by keyword, tag, and date." }}
+  </p>
+</section>
+
+<section class="archive-panel" aria-labelledby="archive-title">
+  <div class="archive-heading">
+    <div>
+      <p class="section-kicker">{{ include.section_title }}</p>
+      <h2 id="archive-title">{{ include.heading | default: "Posts" }}</h2>
+    </div>
+    <p class="post-count">{{ section_posts | size }} post{% if section_posts.size != 1 %}s{% endif %}</p>
+  </div>
+
+  <div class="controls" aria-label="Blog filters">
+    <label class="search-label" for="blog-search">Search {{ include.section_title }} articles</label>
+    <input
+      id="blog-search"
+      class="search-input"
+      type="search"
+      placeholder="{{ include.placeholder | default: 'Try FFT, algorithm, 傅里叶, 多项式' }}"
+      autocomplete="off"
+    >
+
+    <div id="tag-filters" class="tag-filters" aria-label="Filter posts by tag">
+      <button class="tag-chip is-active" type="button" data-tag="">All</button>
+      {% assign sorted_tags = site.tags | sort %}
+      {% for tag in sorted_tags %}
+        {% assign tag_name = tag[0] %}
+        {% assign tagged_section_posts = tag[1] | where: "section_slug", include.section_slug %}
+        {% if tagged_section_posts.size > 0 %}
+          <button class="tag-chip" type="button" data-tag="{{ tag_name | escape }}">
+            {{ tag_name }}
+          </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div id="post-list" class="post-list" aria-live="polite">
+    {% for post in section_posts %}
+      {% assign archive_title = post.archive_title | default: post.title %}
+      <article
+        class="post-card"
+        data-url="{{ post.url | relative_url }}"
+        data-title="{{ archive_title | downcase | escape }}"
+        data-tags="{{ post.tags | join: ' ' | downcase | escape }}"
+      >
+        <div class="post-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+          {% if post.tags.size > 0 %}
+            <span>{{ post.tags | join: " / " }}</span>
+          {% endif %}
+        </div>
+        <h3><a href="{{ post.url | relative_url }}">{{ archive_title | escape }}</a></h3>
+        <p>{{ post.summary | default: post.excerpt | strip_html | normalize_whitespace }}</p>
+      </article>
+    {% endfor %}
+  </div>
+
+  <p id="no-results" class="empty-state"{% if section_posts.size > 0 %} hidden{% endif %}>
+    {% if section_posts.size > 0 %}
+      No posts match this search.
+    {% else %}
+      No posts in this section yet.
+    {% endif %}
+  </p>
+</section>

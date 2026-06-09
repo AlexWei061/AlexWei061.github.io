@@ -2,6 +2,8 @@
 layout: post
 title: "主席树"
 archive_title: "主席树"
+section: "OI"
+section_slug: "oi"
 date: 2022-08-31
 tags: ["DS", "Tree", "线段树"]
 summary: "可持久化数据结构"

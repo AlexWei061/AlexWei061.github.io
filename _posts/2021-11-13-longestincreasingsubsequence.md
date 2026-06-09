@@ -2,6 +2,8 @@
 layout: post
 title: "最长不下降子序列 LIS"
 archive_title: "最长上升子序列"
+section: "OI"
+section_slug: "oi"
 date: 2021-11-13
 tags: ["DP", "linearDp"]
 summary: "Longest Increasing Subsequence"

@@ -2,6 +2,8 @@
 layout: post
 title: "Lucas 定理"
 archive_title: "LucasTheorem"
+section: "OI"
+section_slug: "oi"
 date: 2022-04-05
 tags: ["Math", "NumberTheory"]
 summary: "结论"

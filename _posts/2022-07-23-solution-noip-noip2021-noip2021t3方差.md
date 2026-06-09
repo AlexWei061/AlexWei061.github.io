@@ -2,6 +2,8 @@
 layout: post
 title: "题目大意"
 archive_title: "NOIP2021T3方差"
+section: "OI"
+section_slug: "oi"
 date: 2022-07-23
 tags: ["Solution", "NOIP", "NOIP2021"]
 summary: "传送门：NOIP2021 T3"
