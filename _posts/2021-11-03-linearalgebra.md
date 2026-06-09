@@ -4,6 +4,8 @@ title: "线性代数"
 archive_title: "线性代数"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "LinearAlgebra"]
 summary: "关于这部分内容，作者 也就是我 是本着了解竞赛相关知识而学习的。所以文章中的理解大部分是我个人的，如有错误请大家指出。（本文为学习笔记，会不定时更新一些内容）"

@@ -8,6 +8,8 @@ layout: null
       "post_title": {{ post.title | jsonify }},
       "section": {{ post.section | default: "OI" | jsonify }},
       "section_slug": {{ post.section_slug | default: "oi" | jsonify }},
+      "oi_category": {{ post.oi_category | default: "" | jsonify }},
+      "oi_category_slug": {{ post.oi_category_slug | default: "" | jsonify }},
       "url": {{ post.url | relative_url | jsonify }},
       "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
       "tags": {{ post.tags | jsonify }},

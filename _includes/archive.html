@@ -1,4 +1,10 @@
 {% assign section_posts = site.posts | where: "section_slug", include.section_slug %}
+{% if include.oi_category_slug %}
+  {% assign category_posts = section_posts | where: "oi_category_slug", include.oi_category_slug %}
+  {% assign archive_posts = category_posts %}
+{% else %}
+  {% assign archive_posts = section_posts %}
+{% endif %}
 
 <section class="hero archive-hero">
   <p class="eyebrow">{{ include.eyebrow | default: "Archive" }}</p>
@@ -14,7 +20,7 @@
       <p class="section-kicker">{{ include.section_title }}</p>
       <h2 id="archive-title">{{ include.heading | default: "Posts" }}</h2>
     </div>
-    <p class="post-count">{{ section_posts | size }} post{% if section_posts.size != 1 %}s{% endif %}</p>
+    <p class="post-count">{{ archive_posts | size }} post{% if archive_posts.size != 1 %}s{% endif %}</p>
   </div>
 
   <div class="controls" aria-label="Blog filters">
@@ -33,6 +39,9 @@
       {% for tag in sorted_tags %}
         {% assign tag_name = tag[0] %}
         {% assign tagged_section_posts = tag[1] | where: "section_slug", include.section_slug %}
+        {% if include.oi_category_slug %}
+          {% assign tagged_section_posts = tagged_section_posts | where: "oi_category_slug", include.oi_category_slug %}
+        {% endif %}
         {% if tagged_section_posts.size > 0 %}
           <button class="tag-chip" type="button" data-tag="{{ tag_name | escape }}">
             {{ tag_name }}
@@ -43,7 +52,7 @@
   </div>
 
   <div id="post-list" class="post-list" aria-live="polite">
-    {% for post in section_posts %}
+    {% for post in archive_posts %}
       {% assign archive_title = post.archive_title | default: post.title %}
       <article
         class="post-card"
@@ -63,8 +72,8 @@
     {% endfor %}
   </div>
 
-  <p id="no-results" class="empty-state"{% if section_posts.size > 0 %} hidden{% endif %}>
-    {% if section_posts.size > 0 %}
+  <p id="no-results" class="empty-state"{% if archive_posts.size > 0 %} hidden{% endif %}>
+    {% if archive_posts.size > 0 %}
       No posts match this search.
     {% else %}
       No posts in this section yet.

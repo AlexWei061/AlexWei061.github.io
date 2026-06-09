@@ -4,6 +4,8 @@ title: "网络流"
 archive_title: "网络流"
 section: "OI"
 section_slug: "oi"
+oi_category: "Graph Theory"
+oi_category_slug: "graph"
 date: 2021-11-03
 tags: ["GraghTheory", "NetworkFlow"]
 summary: "一些定义"

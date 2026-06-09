@@ -4,6 +4,8 @@ title: "阶和原根"
 archive_title: "PrimitiveRoot"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2022-04-30
 tags: ["Math", "NumberTheory"]
 summary: "阶"

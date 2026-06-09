@@ -4,6 +4,8 @@ title: "木棒交叉 Intersect"
 archive_title: "木棒交叉Intersect"
 section: "OI"
 section_slug: "oi"
+oi_category: "DP"
+oi_category_slug: "dp"
 date: 2021-11-13
 tags: ["DP"]
 summary: "原题大意如下："

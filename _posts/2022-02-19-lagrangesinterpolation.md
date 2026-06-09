@@ -4,6 +4,8 @@ title: "拉格朗日插值"
 archive_title: "Lagrange'sInterpolation"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2022-02-19
 tags: ["Math", "NumberTheory"]
 summary: "朴素的拉格朗日插值"

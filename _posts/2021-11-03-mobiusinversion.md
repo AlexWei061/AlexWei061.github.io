@@ -4,6 +4,8 @@ title: "$M\\ddot{o}bius$ 反演"
 archive_title: "莫比乌斯反演"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "M\\ddot{o}bius 反演"

@@ -4,6 +4,8 @@ title: "数论函数"
 archive_title: "数论函数"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-05
 tags: ["Math", "NumberTheory"]
 summary: "定义在整数域上的实值或复值函数叫做数论函数"

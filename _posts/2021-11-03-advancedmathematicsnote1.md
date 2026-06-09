@@ -4,6 +4,8 @@ title: "关于极限"
 archive_title: "极限"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "caculus"]
 summary: "二项式定理"

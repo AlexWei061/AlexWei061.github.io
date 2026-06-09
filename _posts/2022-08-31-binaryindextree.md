@@ -4,6 +4,8 @@ title: "树状数组 BIT"
 archive_title: "树状数组"
 section: "OI"
 section_slug: "oi"
+oi_category: "Data Structures"
+oi_category_slug: "data-structures"
 date: 2022-08-31
 tags: ["DS", "Tree", "树状数组"]
 summary: "原理"

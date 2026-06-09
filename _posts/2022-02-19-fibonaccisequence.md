@@ -4,6 +4,8 @@ title: "关于斐波那契数列"
 archive_title: "斐波那契数列"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2022-02-19
 tags: ["Math", "Sequence"]
 summary: "友情提醒：由于本人很蒻，所以文章中的一些推导会有一些不严谨，大家看着就当图个乐qwq。（ 好像也没人会看这个东西来图个乐哈 ）"

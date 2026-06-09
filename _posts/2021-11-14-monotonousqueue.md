@@ -4,6 +4,8 @@ title: "单调队列优化"
 archive_title: "单调队列优化"
 section: "OI"
 section_slug: "oi"
+oi_category: "DP"
+oi_category_slug: "dp"
 date: 2021-11-14
 tags: ["DP", "optmization"]
 summary: "一道题"

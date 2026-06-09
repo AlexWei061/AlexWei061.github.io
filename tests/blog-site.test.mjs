@@ -37,6 +37,10 @@ async function assertMissing(relativePath) {
   assert.equal(await exists(relativePath), false, `${relativePath} should be removed`);
 }
 
+function countMatches(value, pattern) {
+  return Array.from(value.matchAll(pattern)).length;
+}
+
 function isEscaped(value, index) {
   let slashes = 0;
   for (let cursor = index - 1; cursor >= 0 && value[cursor] === "\\"; cursor--) {
@@ -113,12 +117,22 @@ await assertExists("_layouts/post.html");
 await assertExists("assets/css/main.css");
 await assertExists("assets/js/search.js");
 await assertExists("oi.html");
+await assertExists("oi/algorithm.html");
+await assertExists("oi/data-structures.html");
+await assertExists("oi/dp.html");
+await assertExists("oi/graph.html");
+await assertExists("oi/math.html");
+await assertExists("oi/solutions.html");
+await assertExists("oi/string.html");
 await assertExists("math.html");
 await assertExists("search.json");
 await assertExists("static/favicon.ico");
 
 const archiveInclude = await read("_includes/archive.html");
 assert.match(archiveInclude, /where:\s*"section_slug",\s*include\.section_slug/, "archive include should filter posts by section");
+assert.match(archiveInclude, /if include\.oi_category_slug/, "archive include should optionally filter OI posts by category");
+assert.match(archiveInclude, /where:\s*"oi_category_slug",\s*include\.oi_category_slug/, "archive include should filter posts by OI category when requested");
+assert.match(archiveInclude, /assign archive_posts = category_posts/, "archive include should render category-filtered posts");
 assert.match(archiveInclude, /id="blog-search"/, "archive include should include search input");
 assert.match(archiveInclude, /id="tag-filters"/, "archive include should include tag filters");
 assert.match(archiveInclude, /id="post-list"/, "archive include should include a post list");
@@ -127,8 +141,40 @@ assert.match(archiveInclude, /data-title="{{ archive_title \| downcase \| escape
 assert.match(archiveInclude, /{{ archive_title \| escape }}/, "archive include post cards should render archive titles");
 
 const oiPage = await read("oi.html");
-assert.match(oiPage, /permalink:\s+\/oi\//, "OI archive should live at /oi/");
-assert.match(oiPage, /include archive\.html[\s\S]*section_slug="oi"/, "OI archive should use the shared archive include");
+assert.match(oiPage, /permalink:\s+\/oi\//, "OI category directory should live at /oi/");
+assert.match(oiPage, /section-directory/, "OI page should render category directory links");
+assert.equal(countMatches(oiPage, /class="directory-card"/g), 7, "OI page should link to seven category archives");
+assert.doesNotMatch(oiPage, /include archive\.html/, "OI page should not directly render the full archive");
+assert.doesNotMatch(oiPage, /id="blog-search"/, "OI page should not directly render archive search");
+for (const category of [
+  ["DP", "dp", "/oi/dp/"],
+  ["Graph Theory", "graph", "/oi/graph/"],
+  ["Data Structures", "data-structures", "/oi/data-structures/"],
+  ["Math", "math", "/oi/math/"],
+  ["String", "string", "/oi/string/"],
+  ["Solutions", "solutions", "/oi/solutions/"],
+  ["Algorithm", "algorithm", "/oi/algorithm/"],
+]) {
+  const [label, slug, url] = category;
+  assert.match(oiPage, new RegExp(`where:\\s*"oi_category_slug",\\s*"${slug}"`), `OI page should count ${label} posts`);
+  assert.match(oiPage, new RegExp(`href="{{ '${url}' \\| relative_url }}"`), `OI page should link to ${label}`);
+}
+
+for (const categoryPage of [
+  ["oi/dp.html", "DP", "dp", "/oi/dp/"],
+  ["oi/graph.html", "Graph Theory", "graph", "/oi/graph/"],
+  ["oi/data-structures.html", "Data Structures", "data-structures", "/oi/data-structures/"],
+  ["oi/math.html", "Math", "math", "/oi/math/"],
+  ["oi/string.html", "String", "string", "/oi/string/"],
+  ["oi/solutions.html", "Solutions", "solutions", "/oi/solutions/"],
+  ["oi/algorithm.html", "Algorithm", "algorithm", "/oi/algorithm/"],
+]) {
+  const [file, label, slug, permalink] = categoryPage;
+  const page = await read(file);
+  assert.match(page, new RegExp(`permalink:\\s+${permalink.replaceAll("/", "\\/")}`), `${label} archive should live at ${permalink}`);
+  assert.match(page, /include archive\.html[\s\S]*section_slug="oi"/, `${label} archive should use the shared archive include`);
+  assert.match(page, new RegExp(`oi_category_slug="${slug}"`), `${label} archive should filter by category slug`);
+}
 
 const mathPage = await read("math.html");
 assert.match(mathPage, /permalink:\s+\/math\//, "Math archive should live at /math/");
@@ -144,7 +190,8 @@ assert.match(defaultLayout, /href="{{ '\/math\/' \| relative_url }}">Math<\/a>/,
 
 const postLayout = await read("_layouts/post.html");
 assert.match(postLayout, /page\.section_slug \| default:\s*"oi"/, "post layout should derive its archive return link from section_slug");
-assert.match(postLayout, /Back to {{ post_section }}/, "post layout should label the return link with the post section");
+assert.match(postLayout, /page\.oi_category_slug/, "post layout should prefer OI category return links when available");
+assert.match(postLayout, /Back to {{ archive_label }}/, "post layout should label the return link with the resolved archive label");
 assert.match(postLayout, /\[tex\]\/color/, "MathJax should load color support for migrated textcolor formulas");
 assert.match(postLayout, /packages:[\s\S]*color/, "MathJax tex packages should include color support");
 
@@ -162,13 +209,36 @@ assert.equal(postFiles.includes("2021-11-13-fft.md"), false, "old FFT migration 
 assert.equal(postFiles.includes("2021-11-10-fft.md"), true, "FFT should keep the old blog history date and /posts/fft/ slug");
 
 const sectionIssues = [];
+const categoryIssues = [];
+const categoryCounts = {};
 for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
   const content = await read(`_posts/${file}`);
   if (!/^---[\s\S]*section:\s+"OI"[\s\S]*section_slug:\s+"oi"[\s\S]*---/.test(content)) {
     sectionIssues.push(file);
   }
+  const category = content.match(/^oi_category:\s+"(.+)"$/m)?.[1];
+  const categorySlug = content.match(/^oi_category_slug:\s+"(.+)"$/m)?.[1];
+  if (!category || !categorySlug) {
+    categoryIssues.push(file);
+  } else {
+    categoryCounts[categorySlug] = (categoryCounts[categorySlug] || 0) + 1;
+  }
 }
 assert.deepEqual(sectionIssues, [], "all migrated posts should belong to the OI root section");
+assert.deepEqual(categoryIssues, [], "all migrated OI posts should include an OI category");
+assert.deepEqual(
+  categoryCounts,
+  {
+    algorithm: 4,
+    "data-structures": 15,
+    dp: 13,
+    graph: 22,
+    math: 37,
+    solutions: 62,
+    string: 3,
+  },
+  "migrated OI posts should be distributed into the expected categories",
+);
 
 const inlineMathPipeIssues = [];
 for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
@@ -201,6 +271,7 @@ for (const imagePath of [
 const post = await read("_posts/2021-11-10-fft.md");
 assert.match(post, /^---[\s\S]*layout:\s+post[\s\S]*---/, "FFT post should have post layout front matter");
 assert.match(post, /^---[\s\S]*title:\s+"FFT"[\s\S]*---/, "FFT post should keep its title");
+assert.match(post, /^---[\s\S]*oi_category:\s+"Math"[\s\S]*oi_category_slug:\s+"math"[\s\S]*---/, "FFT should be categorized under OI math");
 assert.match(post, /^---[\s\S]*date:\s+2021-11-10[\s\S]*---/, "FFT post should use the old blog history date");
 assert.match(post, /^---[\s\S]*tags:\s+\["Math",\s*"caculus"\][\s\S]*---/, "FFT post should use folder-derived tags");
 assert.match(post, /^---[\s\S]*math:\s+true[\s\S]*---/, "FFT post should enable math rendering");
@@ -211,14 +282,19 @@ assert.match(post, /\$O\(n \\log n\)\$/, "math notation should be preserved");
 const bstPostName = postFiles.find((file) => file.endsWith("-bst.md"));
 assert.ok(bstPostName, "BST post should be generated");
 const bstPost = await read(`_posts/${bstPostName}`);
+assert.match(bstPost, /^---[\s\S]*oi_category:\s+"Data Structures"[\s\S]*oi_category_slug:\s+"data-structures"[\s\S]*---/, "BST should be categorized under OI data structures");
 assert.match(bstPost, /tags:\s+\["DS",\s*"Tree",\s*"平衡树"\]/, "BST post should include all folder-level tags");
 assert.match(bstPost, /\/assets\/images\/blog\/BST1\.png/, "BST local images should be rewritten to blog assets");
+
+const mosPost = await read("_posts/2022-02-19-mosalgorithm.md");
+assert.match(mosPost, /^---[\s\S]*oi_category:\s+"Data Structures"[\s\S]*oi_category_slug:\s+"data-structures"[\s\S]*---/, "Mo's algorithm should be categorized under OI data structures");
 
 const kmpPostName = postFiles.find((file) => file.endsWith("-kmp.md"));
 assert.ok(kmpPostName, "KMP post should be generated");
 const kmpPost = await read(`_posts/${kmpPostName}`);
 assert.match(kmpPost, /^---[\s\S]*title:\s+"KMP 详解"[\s\S]*---/, "KMP post page title should keep its Markdown heading-derived title");
 assert.match(kmpPost, /^---[\s\S]*archive_title:\s+"KMP"[\s\S]*---/, "KMP archive title should use the original source filename");
+assert.match(kmpPost, /^---[\s\S]*oi_category:\s+"String"[\s\S]*oi_category_slug:\s+"string"[\s\S]*---/, "KMP should be categorized under OI string");
 assert.match(kmpPost, /\/assets\/images\/blog\/KMP\.png/, "KMP local image should be rewritten to blog assets");
 
 const fftPost = await read("_posts/2021-11-10-fft.md");
@@ -227,6 +303,7 @@ assert.match(fftPost, /^---[\s\S]*archive_title:\s+"FFT"[\s\S]*---/, "FFT archiv
 const centroidPost = await read("_posts/2022-08-31-centroidoftree.md");
 assert.match(centroidPost, /^---[\s\S]*title:\s+"关于树的重心"[\s\S]*---/, "centroid post page title should keep the Markdown heading-derived title");
 assert.match(centroidPost, /^---[\s\S]*archive_title:\s+"树的重心"[\s\S]*---/, "centroid archive title should be localized for homepage display");
+assert.match(centroidPost, /^---[\s\S]*oi_category:\s+"Graph Theory"[\s\S]*oi_category_slug:\s+"graph"[\s\S]*---/, "centroid should be categorized under OI graph theory");
 
 const tarjanDccPost = await read("_posts/2021-11-03-tarjananddcc.md");
 assert.match(tarjanDccPost, /\[Tarjan求强连通分量\]\(\/posts\/tarjanandscc\/\)/, "old GitHub OI links should point at migrated posts");
@@ -271,6 +348,8 @@ assert.match(searchJson, /"title":\s*{{ post\.archive_title \| default: post\.ti
 assert.match(searchJson, /"post_title":\s*{{ post\.title \| jsonify }}/, "search index should retain post page titles");
 assert.match(searchJson, /"section":\s*{{ post\.section \| default:\s*"OI" \| jsonify }}/, "search index should expose root sections");
 assert.match(searchJson, /"section_slug":\s*{{ post\.section_slug \| default:\s*"oi" \| jsonify }}/, "search index should expose root section slugs");
+assert.match(searchJson, /"oi_category":\s*{{ post\.oi_category \| default:\s*"" \| jsonify }}/, "search index should expose OI categories");
+assert.match(searchJson, /"oi_category_slug":\s*{{ post\.oi_category_slug \| default:\s*"" \| jsonify }}/, "search index should expose OI category slugs");
 assert.match(searchJson, /strip_html/, "search index should strip post HTML");
 assert.match(searchJson, /"excerpt":/, "search index should expose bounded excerpts");
 assert.match(searchJson, /truncate:\s*800/, "search index should keep migrated search data bounded");

@@ -4,6 +4,8 @@ title: "关于树的重心"
 archive_title: "树的重心"
 section: "OI"
 section_slug: "oi"
+oi_category: "Graph Theory"
+oi_category_slug: "graph"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "重心和直径"]
 summary: "一、定义"

@@ -4,6 +4,8 @@ title: "生成函数"
 archive_title: "生成函数"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2022-02-19
 tags: ["Math", "Sequence"]
 summary: "定义"

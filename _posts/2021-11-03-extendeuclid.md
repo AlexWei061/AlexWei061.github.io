@@ -4,6 +4,8 @@ title: "扩展欧几里得"
 archive_title: "扩展欧几里得"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "B\\acute{e}zout 定理"

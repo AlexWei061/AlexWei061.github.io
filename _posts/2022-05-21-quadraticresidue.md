@@ -4,6 +4,8 @@ title: "二次剩余"
 archive_title: "QuadraticResidue"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2022-05-21
 tags: ["Math", "NumberTheory"]
 summary: "前置芝士：原根和阶的口胡笔记"

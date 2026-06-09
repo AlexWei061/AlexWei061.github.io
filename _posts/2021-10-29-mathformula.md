@@ -4,6 +4,8 @@ title: "mathFormula"
 archive_title: "mathFormula"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-10-29
 tags: ["Math"]
 summary: "1. 平方差公式"

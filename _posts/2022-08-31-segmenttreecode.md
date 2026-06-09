@@ -4,6 +4,8 @@ title: "线段树"
 archive_title: "线段树"
 section: "OI"
 section_slug: "oi"
+oi_category: "Data Structures"
+oi_category_slug: "data-structures"
 date: 2022-08-31
 tags: ["DS", "Tree", "线段树"]
 summary: "线段树 的算法笔记。"

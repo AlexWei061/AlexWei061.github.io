@@ -4,6 +4,8 @@ title: "二进制翻转"
 archive_title: "binaryFlip"
 section: "OI"
 section_slug: "oi"
+oi_category: "DP"
+oi_category_slug: "dp"
 date: 2021-11-13
 tags: ["DP", "dijitalDp"]
 summary: "一道题"

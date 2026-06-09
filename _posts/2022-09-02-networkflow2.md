@@ -4,6 +4,8 @@ title: "Flow Network"
 archive_title: "网络流 2"
 section: "OI"
 section_slug: "oi"
+oi_category: "Graph Theory"
+oi_category_slug: "graph"
 date: 2022-09-02
 tags: ["GraghTheory", "NetworkFlow"]
 summary: "几个概念"

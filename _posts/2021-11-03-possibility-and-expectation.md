@@ -4,6 +4,8 @@ title: "一些公式"
 archive_title: "概率与期望"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "ProbabilityExpectation"]
 summary: "概率"

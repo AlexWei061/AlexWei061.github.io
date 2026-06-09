@@ -4,6 +4,8 @@ title: "严格次小生成树"
 archive_title: "严格次小生成树"
 section: "OI"
 section_slug: "oi"
+oi_category: "Graph Theory"
+oi_category_slug: "graph"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "kruskal"]
 summary: "板子题传送门：luogu P4180"

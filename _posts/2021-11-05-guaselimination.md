@@ -4,6 +4,8 @@ title: "高斯消元"
 archive_title: "高斯消元"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-05
 tags: ["Math", "LinearAlgebra"]
 summary: "前置芝士：关于线性代数的基本知识"

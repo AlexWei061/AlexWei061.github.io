@@ -4,6 +4,8 @@ title: "SurfixArray"
 archive_title: "后缀数组"
 section: "OI"
 section_slug: "oi"
+oi_category: "String"
+oi_category_slug: "string"
 date: 2022-03-12
 tags: ["String"]
 summary: "upd：20220317 更正了之前求解 lcp 的错误。"

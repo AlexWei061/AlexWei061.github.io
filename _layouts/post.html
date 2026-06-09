@@ -4,10 +4,17 @@ layout: default
 
 {% assign post_section = page.section | default: "OI" %}
 {% assign post_section_slug = page.section_slug | default: "oi" %}
+{% if post_section_slug == "oi" and page.oi_category_slug %}
+  {% assign archive_label = page.oi_category | default: post_section %}
+  {% assign archive_href = "/oi/" | append: page.oi_category_slug | append: "/" %}
+{% else %}
+  {% assign archive_label = post_section %}
+  {% assign archive_href = "/" | append: post_section_slug | append: "/" %}
+{% endif %}
 
 <article class="post">
   <header class="post-header">
-    <a class="back-link" href="{{ '/' | append: post_section_slug | append: '/' | relative_url }}">Back to {{ post_section }}</a>
+    <a class="back-link" href="{{ archive_href | relative_url }}">Back to {{ archive_label }}</a>
     <p class="post-date">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
     </p>

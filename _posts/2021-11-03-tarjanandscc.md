@@ -4,6 +4,8 @@ title: "Tarjan 求强连通分量"
 archive_title: "Tarjan 求强连通分量"
 section: "OI"
 section_slug: "oi"
+oi_category: "Graph Theory"
+oi_category_slug: "graph"
 date: 2021-11-03
 tags: ["GraghTheory", "Tarjan"]
 summary: "强连通分量"

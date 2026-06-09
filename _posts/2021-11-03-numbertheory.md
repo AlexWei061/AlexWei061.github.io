@@ -4,6 +4,8 @@ title: "约数"
 archive_title: "数论"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "若 n 除以整数 d 的余数为 0 ，即 d 能整除 n ，计为 d|n"

@@ -4,6 +4,8 @@ title: "莫队"
 archive_title: "莫队"
 section: "OI"
 section_slug: "oi"
+oi_category: "Data Structures"
+oi_category_slug: "data-structures"
 date: 2022-02-19
 tags: ["Algorithm"]
 summary: "这真是一种非常神奇的算法啊"

@@ -4,6 +4,8 @@ title: "错排数问题"
 archive_title: "错排数问题"
 section: "OI"
 section_slug: "oi"
+oi_category: "Solutions"
+oi_category_slug: "solutions"
 date: 2022-03-17
 tags: ["Solution", "math"]
 summary: "有 n 个箱子，颜色分别为 1\\cdots n 还有 n 个球，颜色也分别为 1\\cdots n 。现在要将每一个球分别放入一个箱子里，并且一个箱子里只能放一个球。"

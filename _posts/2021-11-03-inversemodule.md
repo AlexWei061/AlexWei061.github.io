@@ -4,6 +4,8 @@ title: "乘法逆元"
 archive_title: "乘法逆元"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "前置知识：扩展欧几里得算法"

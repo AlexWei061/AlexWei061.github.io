@@ -4,6 +4,8 @@ title: "Link-Cut-Tree"
 archive_title: "Link-Cut-Tree"
 section: "OI"
 section_slug: "oi"
+oi_category: "Graph Theory"
+oi_category_slug: "graph"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "树链剖分"]
 summary: "模板传送门：luogu P3690"

@@ -4,12 +4,89 @@ title: OI
 permalink: /oi/
 ---
 
-{% include archive.html
-  section_slug="oi"
-  section_title="OI"
-  eyebrow="OI archive"
-  title="OI"
-  heading="All OI posts"
-  description="Algorithms, data structures, contest solutions, and migrated NOIP notes."
-  placeholder="Try FFT, 树状数组, NOIP2021, 模拟赛"
-%}
+{% assign dp_posts = site.posts | where: "oi_category_slug", "dp" %}
+{% assign graph_posts = site.posts | where: "oi_category_slug", "graph" %}
+{% assign data_structure_posts = site.posts | where: "oi_category_slug", "data-structures" %}
+{% assign math_posts = site.posts | where: "oi_category_slug", "math" %}
+{% assign string_posts = site.posts | where: "oi_category_slug", "string" %}
+{% assign solution_posts = site.posts | where: "oi_category_slug", "solutions" %}
+{% assign algorithm_posts = site.posts | where: "oi_category_slug", "algorithm" %}
+
+<section class="hero">
+  <p class="eyebrow">OI archive</p>
+  <h1>OI</h1>
+  <p class="hero-copy">
+    Algorithms, data structures, contest solutions, and migrated NOIP notes,
+    now grouped into smaller shelves.
+  </p>
+</section>
+
+<section class="section-directory" aria-labelledby="oi-categories-title">
+  <p class="section-kicker">Categories</p>
+  <h2 id="oi-categories-title">Choose an OI category</h2>
+
+  <div class="directory-grid">
+    <a class="directory-card" href="{{ '/oi/dp/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ dp_posts | size }} post{% if dp_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>DP</h3>
+      <p>Dynamic programming notes and optimization patterns.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/oi/graph/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ graph_posts | size }} post{% if graph_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Graph Theory</h3>
+      <p>Shortest paths, trees, flows, connectivity, and related graph topics.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/oi/data-structures/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ data_structure_posts | size }} post{% if data_structure_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Data Structures</h3>
+      <p>Trees, tables, persistent structures, and implementation notes.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/oi/math/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ math_posts | size }} post{% if math_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Math</h3>
+      <p>Number theory, expectation, game theory, algebra, and formulas.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/oi/string/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ string_posts | size }} post{% if string_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>String</h3>
+      <p>KMP, Trie, suffix arrays, and string processing notes.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/oi/solutions/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ solution_posts | size }} post{% if solution_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Solutions</h3>
+      <p>Problem solutions, simulation records, selected problems, and travel notes.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/oi/algorithm/' | relative_url }}">
+      <div class="directory-meta">
+        <span>OI</span>
+        <span>{{ algorithm_posts | size }} post{% if algorithm_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Algorithm</h3>
+      <p>General algorithm techniques outside the other shelves.</p>
+    </a>
+  </div>
+</section>

@@ -4,6 +4,8 @@ title: "一、互质与欧拉函数"
 archive_title: "欧拉定理"
 section: "OI"
 section_slug: "oi"
+oi_category: "Math"
+oi_category_slug: "math"
 date: 2021-11-03
 tags: ["Math", "NumberTheory"]
 summary: "互质："

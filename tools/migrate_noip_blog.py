@@ -20,6 +20,22 @@ GIT_DIR = SOURCE_ROOT / ".git_disabled"
 MIGRATED_SECTION = "OI"
 MIGRATED_SECTION_SLUG = "oi"
 
+OI_CATEGORY_BY_TOP_LEVEL = {
+    "Algorithm": ("Algorithm", "algorithm"),
+    "DP": ("DP", "dp"),
+    "DS": ("Data Structures", "data-structures"),
+    "GraghTheory": ("Graph Theory", "graph"),
+    "Math": ("Math", "math"),
+    "Solution": ("Solutions", "solutions"),
+    "String": ("String", "string"),
+    "一些口胡": ("Math", "math"),
+    "游记": ("Solutions", "solutions"),
+}
+
+OI_CATEGORY_OVERRIDES = {
+    "Algorithm/Mo'sAlgorithm.md": ("Data Structures", "data-structures"),
+}
+
 EXTRA_IMAGES = [
     Path("/Users/alex/Alex/NOIP/practice/2021/August2021/20210802/TrieEg.png"),
     Path("/Users/alex/Alex/NOIP/practice/2021/August2021/20210809/binaryIndexTreeExample.png"),
@@ -172,6 +188,15 @@ def title_from_content(path: Path, content: str) -> str:
 def archive_title_for(path: Path) -> str:
     rel = path.relative_to(SOURCE_ROOT).as_posix()
     return ARCHIVE_TITLE_OVERRIDES.get(rel, path.stem)
+
+
+def oi_category_for(path: Path) -> tuple[str, str]:
+    rel = path.relative_to(SOURCE_ROOT)
+    override = OI_CATEGORY_OVERRIDES.get(rel.as_posix())
+    if override:
+        return override
+    top_level = rel.parts[0]
+    return OI_CATEGORY_BY_TOP_LEVEL[top_level]
 
 
 def slugify(value: str) -> str:
@@ -503,6 +528,7 @@ def migrate() -> None:
         title = title_from_content(source_path, content)
         date = post_date(source_path)
         tags = [part for part in rel.parent.parts if part and part != "."]
+        oi_category, oi_category_slug = oi_category_for(source_path)
         slug = slugs[source_path]
         summary = summary_for(content, title)
         front_matter = "\n".join(
@@ -513,6 +539,8 @@ def migrate() -> None:
                 f"archive_title: {yaml_string(archive_title_for(source_path))}",
                 f"section: {yaml_string(MIGRATED_SECTION)}",
                 f"section_slug: {yaml_string(MIGRATED_SECTION_SLUG)}",
+                f"oi_category: {yaml_string(oi_category)}",
+                f"oi_category_slug: {yaml_string(oi_category_slug)}",
                 f"date: {date}",
                 "tags: [" + ", ".join(yaml_string(tag) for tag in tags) + "]",
                 f"summary: {yaml_string(summary)}",

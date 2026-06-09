@@ -4,6 +4,8 @@ title: "二进制翻转"
 archive_title: "binaryFlip"
 section: "OI"
 section_slug: "oi"
+oi_category: "Solutions"
+oi_category_slug: "solutions"
 date: 2022-03-17
 tags: ["Solution", "dp"]
 summary: "一道题"
