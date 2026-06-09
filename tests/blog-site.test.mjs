@@ -135,6 +135,9 @@ assert.match(mathPage, /permalink:\s+\/math\//, "Math archive should live at /ma
 assert.match(mathPage, /include archive\.html[\s\S]*section_slug="math"/, "Math archive should use the shared archive include");
 
 const defaultLayout = await read("_layouts/default.html");
+assert.match(defaultLayout, /assign asset_version = site\.time \| date:\s*"%s"/, "default layout should derive an asset cache-busting version from the Jekyll build time");
+assert.match(defaultLayout, /href="{{ '\/assets\/css\/main\.css' \| relative_url }}\?v={{ asset_version }}"/, "stylesheet URL should include the asset version");
+assert.match(defaultLayout, /src="{{ '\/assets\/js\/search\.js' \| relative_url }}\?v={{ asset_version }}"/, "search script URL should include the asset version");
 assert.match(defaultLayout, /href="{{ '\/' \| relative_url }}">Home<\/a>/, "header should link to Home");
 assert.match(defaultLayout, /href="{{ '\/oi\/' \| relative_url }}">OI<\/a>/, "header should link to OI");
 assert.match(defaultLayout, /href="{{ '\/math\/' \| relative_url }}">Math<\/a>/, "header should link to Math");
