@@ -5,6 +5,15 @@
 {% else %}
   {% assign archive_posts = section_posts %}
 {% endif %}
+{% if include.math_category_slug %}
+  {% assign archive_posts = archive_posts | where: "math_category_slug", include.math_category_slug %}
+{% endif %}
+{% if include.math_chapter_slug %}
+  {% assign archive_posts = archive_posts | where: "math_chapter_slug", include.math_chapter_slug %}
+{% endif %}
+{% if include.sort_by == "series_order" %}
+  {% assign archive_posts = archive_posts | sort: "series_order" %}
+{% endif %}
 
 <section class="hero archive-hero">
   <p class="eyebrow">{{ include.eyebrow | default: "Archive" }}</p>
@@ -41,6 +50,12 @@
         {% assign tagged_section_posts = tag[1] | where: "section_slug", include.section_slug %}
         {% if include.oi_category_slug %}
           {% assign tagged_section_posts = tagged_section_posts | where: "oi_category_slug", include.oi_category_slug %}
+        {% endif %}
+        {% if include.math_category_slug %}
+          {% assign tagged_section_posts = tagged_section_posts | where: "math_category_slug", include.math_category_slug %}
+        {% endif %}
+        {% if include.math_chapter_slug %}
+          {% assign tagged_section_posts = tagged_section_posts | where: "math_chapter_slug", include.math_chapter_slug %}
         {% endif %}
         {% if tagged_section_posts.size > 0 %}
           <button class="tag-chip" type="button" data-tag="{{ tag_name | escape }}">

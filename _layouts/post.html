@@ -7,6 +7,12 @@ layout: default
 {% if post_section_slug == "oi" and page.oi_category_slug %}
   {% assign archive_label = page.oi_category | default: post_section %}
   {% assign archive_href = "/oi/" | append: page.oi_category_slug | append: "/" %}
+{% elsif post_section_slug == "math" and page.math_chapter_slug %}
+  {% assign archive_label = page.math_chapter | default: page.math_category | default: post_section %}
+  {% assign archive_href = "/math/" | append: page.math_category_slug | append: "/" | append: page.math_chapter_slug | append: "/" %}
+{% elsif post_section_slug == "math" and page.math_category_slug %}
+  {% assign archive_label = page.math_category | default: post_section %}
+  {% assign archive_href = "/math/" | append: page.math_category_slug | append: "/" %}
 {% else %}
   {% assign archive_label = post_section %}
   {% assign archive_href = "/" | append: post_section_slug | append: "/" %}

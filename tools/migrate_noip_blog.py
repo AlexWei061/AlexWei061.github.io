@@ -7,18 +7,50 @@ import re
 import shutil
 import subprocess
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timedelta
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit
 
 
-SOURCE_ROOT = Path("/Users/alex/Alex/NOIP/blog")
 REPO_ROOT = Path(__file__).resolve().parents[1]
+BLOG_ROOT = REPO_ROOT.parent
+SOURCE_ROOT = Path("/Users/alex/Alex/NOIP/blog")
+MACHINE_LEARNING_ROOT = BLOG_ROOT / "Machine learning"
+REAL_ANALYSIS_ROOT = BLOG_ROOT / "RealAnalysis"
 POSTS_DIR = REPO_ROOT / "_posts"
-IMAGE_DIR = REPO_ROOT / "assets" / "images" / "blog"
+OI_IMAGE_DIR = REPO_ROOT / "assets" / "images" / "blog"
+MACHINE_LEARNING_IMAGE_DIR = REPO_ROOT / "assets" / "images" / "machine-learning"
+REAL_ANALYSIS_IMAGE_DIR = REPO_ROOT / "assets" / "images" / "real-analysis"
+IMAGE_DIR = OI_IMAGE_DIR
 GIT_DIR = SOURCE_ROOT / ".git_disabled"
 MIGRATED_SECTION = "OI"
 MIGRATED_SECTION_SLUG = "oi"
+MACHINE_LEARNING_SECTION = "Machine Learning"
+MACHINE_LEARNING_SECTION_SLUG = "machine-learning"
+MATH_SECTION = "Math"
+MATH_SECTION_SLUG = "math"
+REAL_ANALYSIS_CATEGORY = "Real Analysis"
+REAL_ANALYSIS_CATEGORY_SLUG = "real-analysis"
+
+IMAGE_EXTENSIONS = {".gif", ".jpeg", ".jpg", ".png", ".webp"}
+
+MACHINE_LEARNING_ORDER = {
+    "SupervisedLearning/LinearRegression.md": 1,
+    "SupervisedLearning/LogisticRegression.md": 2,
+    "SupervisedLearning/SupportVectorMachine_linear.md": 3,
+    "SupervisedLearning/NeuralNetwork.md": 4,
+    "SupervisedLearning/BackPropagation.md": 5,
+    "SupervisedLearning/Nets/LeNet.md": 6,
+    "SupervisedLearning/Nets/AlexNet.md": 7,
+    "SupervisedLearning/Nets/VGG.md": 8,
+    "UnsupervisedLearning/K-means.md": 9,
+}
+
+REAL_ANALYSIS_CHAPTERS = {
+    "CH0--数系的构建": ("Chapter 0", "ch0", "数系的构建"),
+    "CH1--测度理论": ("Chapter 1", "ch1", "测度理论"),
+}
 
 OI_CATEGORY_BY_TOP_LEVEL = {
     "Algorithm": ("Sort", "sort"),
@@ -59,6 +91,7 @@ PERSONAL_CSDN_ARTICLE_URLS = {
     "123307876": "/posts/splay1/",
     "123446811": "/posts/kruskalreconstruction/",
     "124514022": "/posts/primitiveroot/",
+    "142171944": "/posts/neuralnetwork/",
 }
 
 GITHUB_PATH_URL_ALIASES = {
@@ -113,6 +146,36 @@ ARCHIVE_TITLE_OVERRIDES = {
     "Math/caculus/advancedMathematicsNote2.md": "微分",
     "String/SurfixArray.md": "后缀数组",
 }
+
+
+@dataclass(frozen=True)
+class MigratedArticle:
+    path: Path
+    source_root: Path
+    source_key: str
+    section: str
+    section_slug: str
+    asset_prefix: str
+    image_map: dict[str, str]
+    article_urls: dict[str, str]
+    title: str
+    archive_title: str
+    date: str
+    tags: list[str]
+    extra_front_matter: list[tuple[str, str | int]]
+
+
+def source_relative_path(path: Path) -> Path:
+    for root in [SOURCE_ROOT, MACHINE_LEARNING_ROOT, REAL_ANALYSIS_ROOT]:
+        try:
+            return path.relative_to(root)
+        except ValueError:
+            continue
+    raise ValueError(f"Unknown source root for {path}")
+
+
+def source_relative_key(path: Path) -> str:
+    return source_relative_path(path).as_posix()
 
 
 def run_git(path: Path) -> list[str]:
@@ -234,14 +297,16 @@ def unique_slugs(paths: list[Path]) -> dict[Path, str]:
     for path in paths:
         slug = base_slugs[path]
         if counts[slug] > 1:
-            rel_without_suffix = path.relative_to(SOURCE_ROOT).with_suffix("").as_posix()
+            rel_without_suffix = source_relative_path(path).with_suffix("").as_posix()
             slug = slugify(rel_without_suffix)
         if not slug:
             slug = "post-" + hashlib.sha1(path.as_posix().encode()).hexdigest()[:8]
         candidate = slug
         suffix = 2
         while candidate in used:
-            candidate = f"{slug}-{suffix}"
+            rel_without_suffix = source_relative_path(path).with_suffix("").as_posix()
+            source_slug = slugify(rel_without_suffix) or slug
+            candidate = f"{source_slug}-{suffix}"
             suffix += 1
         used.add(candidate)
         slugs[path] = candidate
@@ -383,11 +448,14 @@ def normalize_inline_math(content: str) -> str:
     return "".join(result)
 
 
-def collect_images() -> dict[str, str]:
-    if IMAGE_DIR.exists():
-        shutil.rmtree(IMAGE_DIR)
-    IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+def reset_image_dir(image_dir: Path) -> None:
+    if image_dir.exists():
+        shutil.rmtree(image_dir)
+    image_dir.mkdir(parents=True, exist_ok=True)
 
+
+def collect_images() -> dict[str, str]:
+    reset_image_dir(IMAGE_DIR)
     image_sources = list((SOURCE_ROOT / "pic").iterdir()) + EXTRA_IMAGES
     copied: dict[str, str] = {}
     for source in image_sources:
@@ -399,13 +467,38 @@ def collect_images() -> dict[str, str]:
     return copied
 
 
+def collect_tree_images(source_root: Path, image_dir: Path) -> dict[str, str]:
+    reset_image_dir(image_dir)
+    image_sources = [
+        source
+        for source in source_root.rglob("*")
+        if source.is_file() and source.suffix.lower() in IMAGE_EXTENSIONS
+    ]
+    basename_counts: dict[str, int] = {}
+    for source in image_sources:
+        basename = normalized_article_path(source.name)
+        basename_counts[basename] = basename_counts.get(basename, 0) + 1
+
+    copied: dict[str, str] = {}
+    for source in image_sources:
+        rel = source.relative_to(source_root).as_posix()
+        target = image_dir / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+        copied[normalized_article_path(rel)] = rel
+        basename = normalized_article_path(source.name)
+        if basename_counts[basename] == 1:
+            copied[basename] = rel
+    return copied
+
+
 def is_external_url(url: str) -> bool:
     scheme = urlsplit(url).scheme.lower()
     return scheme in {"http", "https", "data", "mailto"}
 
 
-def image_asset_url(filename: str) -> str:
-    return "/assets/images/blog/" + quote(filename, safe="._-()")
+def image_asset_url(filename: str, asset_prefix: str = "/assets/images/blog/") -> str:
+    return asset_prefix + quote(filename, safe="/._-()")
 
 
 def post_url(slug: str) -> str:
@@ -482,43 +575,227 @@ def rewrite_article_links(content: str, article_urls: dict[str, str]) -> str:
     return re.sub(r'(<a\b[^>]*\bhref=["\'])([^"\']+)(["\'][^>]*>)', html_replacer, content, flags=re.IGNORECASE)
 
 
-def rewrite_image_url(url: str, image_map: dict[str, str], missing: set[str]) -> str:
+def image_lookup_keys(url: str, source_path: Path | None, source_root: Path | None) -> list[str]:
+    clean_url = urlsplit(url).path
+    decoded = unquote(clean_url).replace("\\", "/")
+    keys: list[str] = []
+    if source_path and source_root:
+        local_path = Path(decoded)
+        if local_path.is_absolute():
+            keys.append(normalized_article_path(decoded.lstrip("/")))
+        else:
+            try:
+                rel = (source_path.parent / local_path).resolve().relative_to(source_root.resolve()).as_posix()
+                keys.append(normalized_article_path(rel))
+            except ValueError:
+                pass
+    keys.append(normalized_article_path(decoded))
+    keys.append(normalized_article_path(Path(decoded).name))
+    deduped: list[str] = []
+    for key in keys:
+        if key and key not in deduped:
+            deduped.append(key)
+    return deduped
+
+
+def rewrite_image_url(
+    url: str,
+    image_map: dict[str, str],
+    missing: set[str],
+    source_path: Path | None = None,
+    source_root: Path | None = None,
+    asset_prefix: str = "/assets/images/blog/",
+) -> str:
     url = url.strip()
     if not url or is_external_url(url) or url.startswith("#"):
         return url
-    clean_url = urlsplit(url).path
-    filename = Path(unquote(clean_url)).name
-    mapped = image_map.get(filename.lower())
-    if not mapped:
-        missing.add(url)
-        return url
-    return image_asset_url(mapped)
+    for key in image_lookup_keys(url, source_path, source_root):
+        mapped = image_map.get(key)
+        if mapped:
+            return image_asset_url(mapped, asset_prefix)
+    missing.add(url)
+    return url
 
 
-def rewrite_images(content: str, image_map: dict[str, str], missing: set[str]) -> str:
+def rewrite_images(
+    content: str,
+    image_map: dict[str, str],
+    missing: set[str],
+    source_path: Path | None = None,
+    source_root: Path | None = None,
+    asset_prefix: str = "/assets/images/blog/",
+) -> str:
     def markdown_replacer(match: re.Match[str]) -> str:
-        return f"{match.group(1)}{rewrite_image_url(match.group(2), image_map, missing)}{match.group(3)}"
+        rewritten = rewrite_image_url(match.group(2), image_map, missing, source_path, source_root, asset_prefix)
+        return f"{match.group(1)}{rewritten}{match.group(3)}"
 
     content = re.sub(r"(!\[[^\]]*\]\()([^)]+)(\))", markdown_replacer, content)
 
     def html_replacer(match: re.Match[str]) -> str:
-        return f'{match.group(1)}{rewrite_image_url(match.group(2), image_map, missing)}{match.group(3)}'
+        rewritten = rewrite_image_url(match.group(2), image_map, missing, source_path, source_root, asset_prefix)
+        return f'{match.group(1)}{rewritten}{match.group(3)}'
 
     return re.sub(r'(<img\b[^>]*\bsrc=["\'])([^"\']+)(["\'])', html_replacer, content, flags=re.IGNORECASE)
+
+
+def ordered_date(base: datetime, order: int) -> str:
+    return (base + timedelta(days=order - 1)).strftime("%Y-%m-%d")
+
+
+def machine_learning_order(path: Path) -> int:
+    rel = path.relative_to(MACHINE_LEARNING_ROOT).as_posix()
+    return MACHINE_LEARNING_ORDER.get(rel, 1000)
+
+
+def real_analysis_order(path: Path) -> int:
+    match = re.search(r"实分析入门（(?P<order>\d+)）", path.stem)
+    if match:
+        return int(match.group("order"))
+    return 1000
+
+
+def real_analysis_chapter(path: Path) -> tuple[str, str, str]:
+    rel = path.relative_to(REAL_ANALYSIS_ROOT)
+    return REAL_ANALYSIS_CHAPTERS.get(rel.parts[0], ("Chapter", "chapter", rel.parts[0]))
+
+
+def front_matter_text(article: MigratedArticle, content: str, summary: str) -> str:
+    lines = [
+        "---",
+        "layout: post",
+        f"title: {yaml_string(article.title)}",
+        f"archive_title: {yaml_string(article.archive_title)}",
+        f"section: {yaml_string(article.section)}",
+        f"section_slug: {yaml_string(article.section_slug)}",
+    ]
+    for key, value in article.extra_front_matter:
+        if isinstance(value, int):
+            lines.append(f"{key}: {value}")
+        else:
+            lines.append(f"{key}: {yaml_string(value)}")
+    lines.extend(
+        [
+            f"date: {article.date}",
+            "tags: [" + ", ".join(yaml_string(tag) for tag in article.tags) + "]",
+            f"summary: {yaml_string(summary)}",
+            f"math: {'true' if has_math(content) else 'false'}",
+            "---",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def build_oi_article(path: Path, image_map: dict[str, str], article_urls: dict[str, str], content: str) -> MigratedArticle:
+    rel = path.relative_to(SOURCE_ROOT)
+    oi_category, oi_category_slug = oi_category_for(path)
+    return MigratedArticle(
+        path=path,
+        source_root=SOURCE_ROOT,
+        source_key="oi",
+        section=MIGRATED_SECTION,
+        section_slug=MIGRATED_SECTION_SLUG,
+        asset_prefix="/assets/images/blog/",
+        image_map=image_map,
+        article_urls=article_urls,
+        title=title_from_content(path, content),
+        archive_title=archive_title_for(path),
+        date=post_date(path),
+        tags=[part for part in rel.parent.parts if part and part != "."],
+        extra_front_matter=[
+            ("oi_category", oi_category),
+            ("oi_category_slug", oi_category_slug),
+        ],
+    )
+
+
+def build_machine_learning_article(path: Path, image_map: dict[str, str], content: str) -> MigratedArticle:
+    rel = path.relative_to(MACHINE_LEARNING_ROOT)
+    order = machine_learning_order(path)
+    title = title_from_content(path, content)
+    return MigratedArticle(
+        path=path,
+        source_root=MACHINE_LEARNING_ROOT,
+        source_key="machine-learning",
+        section=MACHINE_LEARNING_SECTION,
+        section_slug=MACHINE_LEARNING_SECTION_SLUG,
+        asset_prefix="/assets/images/machine-learning/",
+        image_map=image_map,
+        article_urls={},
+        title=title,
+        archive_title=title,
+        date=ordered_date(datetime(2026, 1, 1), order),
+        tags=[part for part in rel.parent.parts if part and part != "."],
+        extra_front_matter=[
+            ("series_order", order),
+        ],
+    )
+
+
+def build_real_analysis_article(path: Path, image_map: dict[str, str]) -> MigratedArticle:
+    rel = path.relative_to(REAL_ANALYSIS_ROOT)
+    order = real_analysis_order(path)
+    chapter, chapter_slug, chapter_title = real_analysis_chapter(path)
+    title = clean_title(path.stem)
+    return MigratedArticle(
+        path=path,
+        source_root=REAL_ANALYSIS_ROOT,
+        source_key="real-analysis",
+        section=MATH_SECTION,
+        section_slug=MATH_SECTION_SLUG,
+        asset_prefix="/assets/images/real-analysis/",
+        image_map=image_map,
+        article_urls={},
+        title=title,
+        archive_title=title,
+        date=ordered_date(datetime(2026, 2, 1), order),
+        tags=[REAL_ANALYSIS_CATEGORY, chapter, chapter_title],
+        extra_front_matter=[
+            ("math_category", REAL_ANALYSIS_CATEGORY),
+            ("math_category_slug", REAL_ANALYSIS_CATEGORY_SLUG),
+            ("math_chapter", chapter),
+            ("math_chapter_slug", chapter_slug),
+            ("series_order", order),
+        ],
+    )
 
 
 def migrate() -> None:
     if not SOURCE_ROOT.exists():
         raise SystemExit(f"Source blog directory not found: {SOURCE_ROOT}")
+    if not MACHINE_LEARNING_ROOT.exists():
+        raise SystemExit(f"Source blog directory not found: {MACHINE_LEARNING_ROOT}")
+    if not REAL_ANALYSIS_ROOT.exists():
+        raise SystemExit(f"Source blog directory not found: {REAL_ANALYSIS_ROOT}")
 
-    markdown_paths = sorted(
+    oi_markdown_paths = sorted(
         path
         for path in SOURCE_ROOT.rglob("*.md")
         if ".git_disabled" not in path.parts and "pic" not in path.parts
     )
+    machine_learning_paths = sorted(
+        (
+            path
+            for path in MACHINE_LEARNING_ROOT.rglob("*.md")
+            if "pic" not in path.parts
+        ),
+        key=machine_learning_order,
+    )
+    real_analysis_paths = sorted(
+        (
+            path
+            for path in REAL_ANALYSIS_ROOT.rglob("*.md")
+            if "pic" not in path.parts
+        ),
+        key=real_analysis_order,
+    )
+
+    markdown_paths = oi_markdown_paths + machine_learning_paths + real_analysis_paths
     slugs = unique_slugs(markdown_paths)
-    article_urls = build_article_url_map(markdown_paths, slugs)
-    image_map = collect_images()
+    article_urls = build_article_url_map(oi_markdown_paths, slugs)
+    oi_image_map = collect_images()
+    machine_learning_image_map = collect_tree_images(MACHINE_LEARNING_ROOT, MACHINE_LEARNING_IMAGE_DIR)
+    real_analysis_image_map = collect_tree_images(REAL_ANALYSIS_ROOT, REAL_ANALYSIS_IMAGE_DIR)
 
     POSTS_DIR.mkdir(parents=True, exist_ok=True)
     for existing in POSTS_DIR.glob("*.md"):
@@ -526,41 +803,44 @@ def migrate() -> None:
 
     missing_images: set[str] = set()
     for source_path in markdown_paths:
-        rel = source_path.relative_to(SOURCE_ROOT)
         raw_content = source_path.read_text(encoding="utf-8-sig").replace("\r\n", "\n").replace("\r", "\n")
-        content = rewrite_images(raw_content, image_map, missing_images)
+        if source_path in oi_markdown_paths:
+            image_map = oi_image_map
+            source_root = SOURCE_ROOT
+            asset_prefix = "/assets/images/blog/"
+        elif source_path in machine_learning_paths:
+            image_map = machine_learning_image_map
+            source_root = MACHINE_LEARNING_ROOT
+            asset_prefix = "/assets/images/machine-learning/"
+        else:
+            image_map = real_analysis_image_map
+            source_root = REAL_ANALYSIS_ROOT
+            asset_prefix = "/assets/images/real-analysis/"
+
+        content = rewrite_images(raw_content, image_map, missing_images, source_path, source_root, asset_prefix)
         content = rewrite_article_links(content, article_urls)
         content = normalize_inline_math(content)
-        title = title_from_content(source_path, content)
-        date = post_date(source_path)
-        tags = [part for part in rel.parent.parts if part and part != "."]
-        oi_category, oi_category_slug = oi_category_for(source_path)
+        if source_path in oi_markdown_paths:
+            article = build_oi_article(source_path, oi_image_map, article_urls, content)
+        elif source_path in machine_learning_paths:
+            article = build_machine_learning_article(source_path, machine_learning_image_map, content)
+        else:
+            article = build_real_analysis_article(source_path, real_analysis_image_map)
+
         slug = slugs[source_path]
-        summary = summary_for(content, title)
-        front_matter = "\n".join(
-            [
-                "---",
-                "layout: post",
-                f"title: {yaml_string(title)}",
-                f"archive_title: {yaml_string(archive_title_for(source_path))}",
-                f"section: {yaml_string(MIGRATED_SECTION)}",
-                f"section_slug: {yaml_string(MIGRATED_SECTION_SLUG)}",
-                f"oi_category: {yaml_string(oi_category)}",
-                f"oi_category_slug: {yaml_string(oi_category_slug)}",
-                f"date: {date}",
-                "tags: [" + ", ".join(yaml_string(tag) for tag in tags) + "]",
-                f"summary: {yaml_string(summary)}",
-                f"math: {'true' if has_math(content) else 'false'}",
-                "---",
-                "",
-            ]
-        )
+        summary = summary_for(content, article.title)
+        front_matter = front_matter_text(article, content, summary)
         body = "{% raw %}\n" + content.lstrip().rstrip() + "\n{% endraw %}\n"
-        target = POSTS_DIR / f"{date}-{slug}.md"
+        target = POSTS_DIR / f"{article.date}-{slug}.md"
         target.write_text(front_matter + body, encoding="utf-8")
 
     print(f"Migrated {len(markdown_paths)} posts")
-    print(f"Copied {len(list(IMAGE_DIR.iterdir()))} images")
+    print(f"- OI: {len(oi_markdown_paths)}")
+    print(f"- Machine Learning: {len(machine_learning_paths)}")
+    print(f"- Real Analysis: {len(real_analysis_paths)}")
+    print(f"Copied {len(list(OI_IMAGE_DIR.iterdir()))} OI images")
+    print(f"Copied {len(list(MACHINE_LEARNING_IMAGE_DIR.rglob('*')))} Machine Learning image paths")
+    print(f"Copied {len(list(REAL_ANALYSIS_IMAGE_DIR.rglob('*')))} Real Analysis image paths")
     if missing_images:
         print("Missing local images:")
         for item in sorted(missing_images):

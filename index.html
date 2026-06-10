@@ -5,13 +5,14 @@ title: Home
 
 {% assign oi_posts = site.posts | where: "section_slug", "oi" %}
 {% assign math_posts = site.posts | where: "section_slug", "math" %}
+{% assign machine_learning_posts = site.posts | where: "section_slug", "machine-learning" %}
 
 <section class="hero">
   <p class="eyebrow">Technical notebooks</p>
   <h1>Alex's Blog</h1>
   <p class="hero-copy">
-    Notes organized by root topic, with contest programming in OI and a quiet
-    home ready for future math writing.
+    Notes organized by root topic, with contest programming, mathematics, and
+    machine learning kept in separate notebooks.
   </p>
 </section>
 
@@ -35,7 +36,16 @@ title: Home
         <span>{{ math_posts | size }} post{% if math_posts.size != 1 %}s{% endif %}</span>
       </div>
       <h3>Math</h3>
-      <p>A future home for math essays and notes outside the OI archive.</p>
+      <p>Analysis notes and future mathematical essays outside the OI archive.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/machine-learning/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Root</span>
+        <span>{{ machine_learning_posts | size }} post{% if machine_learning_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Machine Learning</h3>
+      <p>Regression, neural networks, support vector machines, clustering, and model notes.</p>
     </a>
   </div>
 </section>

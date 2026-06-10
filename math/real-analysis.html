@@ -1,0 +1,61 @@
+---
+layout: default
+title: Real Analysis
+permalink: /math/real-analysis/
+---
+
+{% assign chapter_0_posts = site.posts | where: "math_chapter_slug", "ch0" %}
+{% assign chapter_1_posts = site.posts | where: "math_chapter_slug", "ch1" %}
+{% assign chapter_2_posts = site.posts | where: "math_chapter_slug", "ch2" %}
+{% assign chapter_3_posts = site.posts | where: "math_chapter_slug", "ch3" %}
+
+<section class="hero">
+  <p class="eyebrow">Math category</p>
+  <h1>Real Analysis</h1>
+  <p class="hero-copy">
+    Real analysis notes grouped into chapter shelves.
+  </p>
+</section>
+
+<section class="section-directory" aria-labelledby="real-analysis-chapters-title">
+  <p class="section-kicker">Chapters</p>
+  <h2 id="real-analysis-chapters-title">Choose a chapter</h2>
+
+  <div class="directory-grid">
+    <a class="directory-card" href="{{ '/math/real-analysis/ch0/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Real Analysis</span>
+        <span>{{ chapter_0_posts | size }} post{% if chapter_0_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Chapter 0</h3>
+      <p>Number systems and the construction of the real numbers.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/math/real-analysis/ch1/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Real Analysis</span>
+        <span>{{ chapter_1_posts | size }} post{% if chapter_1_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Chapter 1</h3>
+      <p>Countability, sigma algebras, measures, and measurable constructions.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/math/real-analysis/ch2/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Real Analysis</span>
+        <span>{{ chapter_2_posts | size }} post{% if chapter_2_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Chapter 2</h3>
+      <p>Reserved for the next chapter of the real analysis notes.</p>
+    </a>
+
+    <a class="directory-card" href="{{ '/math/real-analysis/ch3/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Real Analysis</span>
+        <span>{{ chapter_3_posts | size }} post{% if chapter_3_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Chapter 3</h3>
+      <p>Reserved for future real analysis notes.</p>
+    </a>
+  </div>
+</section>

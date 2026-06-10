@@ -4,12 +4,28 @@ title: Math
 permalink: /math/
 ---
 
-{% include archive.html
-  section_slug="math"
-  section_title="Math"
-  eyebrow="Math archive"
-  title="Math"
-  heading="All Math posts"
-  description="A separate shelf for future math notes and essays."
-  placeholder="Try topology, analysis, algebra, latex"
-%}
+{% assign real_analysis_posts = site.posts | where: "math_category_slug", "real-analysis" %}
+
+<section class="hero">
+  <p class="eyebrow">Math notebook</p>
+  <h1>Math</h1>
+  <p class="hero-copy">
+    Mathematical notes outside the OI archive, grouped by subject.
+  </p>
+</section>
+
+<section class="section-directory" aria-labelledby="math-categories-title">
+  <p class="section-kicker">Categories</p>
+  <h2 id="math-categories-title">Choose a math category</h2>
+
+  <div class="directory-grid">
+    <a class="directory-card" href="{{ '/math/real-analysis/' | relative_url }}">
+      <div class="directory-meta">
+        <span>Math</span>
+        <span>{{ real_analysis_posts | size }} post{% if real_analysis_posts.size != 1 %}s{% endif %}</span>
+      </div>
+      <h3>Real Analysis</h3>
+      <p>Introductory real analysis notes organized by chapter.</p>
+    </a>
+  </div>
+</section>
