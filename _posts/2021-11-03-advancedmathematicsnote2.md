@@ -15,32 +15,70 @@ math: true
 # 微分
 ## 定义
 &emsp; 设函数 $y = f(x)$ 在 x 的领域内有定义， 如果函数的增量 $\Delta y = y(x + \Delta x) - f(x)$  可以表示为：
-$$ \Delta y = A \Delta x + \omicron(\Delta x) $$
+
+
+$$
+\Delta y = A \Delta x + \omicron(\Delta x)
+$$
+
+
 
 &emsp; 那么称函数 $f(x)$ 在 $x$ 处可微。且 $A\Delta x$ 称为函数在点 $x$ 相应于因变量增量的微分，记做 $dy$，即 $dy = A \Delta x$。
 
 &emsp; 通常把自变量 $x$ 的增量 $\Delta x$ 称为自变量的微分，记作 $dx$，即 $dx = \Delta x$。于是函数 $y = f(x)$ 的微分又可记作 $dy = f'(x)dx$。函数因变量的微分与自变量的微分之商等于该函数的导数。因此，导数也叫做微商。
 
 ## 运算
-$$ dy = f'(x)dx $$
+
+
+$$
+dy = f'(x)dx
+$$
+
+
 
 ----------
 # 不定积分
 ## 定义
 &emsp; 设函数 $f$ 和 $F$ 在区间 $I$ 上都有定义，若
-$$ F'(x) = f(x) \qquad x \in I $$
+
+
+$$
+F'(x) = f(x) \qquad x \in I
+$$
+
+
 
 &emsp; 则称 $F$ 为 $f$ 的**原函数**
 
 &emsp; 现在已知 $F$ 是 $f$ 的原函数，函数 $f$ 在区间 $I$ 上的全体原函数被称为 $f$ 在 $I$ 上的不定积分，记为：
-$$ \int f(x)dx $$
+
+
+$$
+\int f(x)dx
+$$
+
+
 
 &emsp; 其中 $\int$ 被称为积分符号，$f(x)$ 为被积函数， $f(x)dx$ 为被积表达式，$x$ 为积分变量。根据上面的定义，我们有：
 
-$$ \int f(x)dx = F(x) +C $$
-$$ \left[\int f(x)dx\right] = f(x) $$
+
+
+$$
+\int f(x)dx = F(x) +C
+$$
+
+
+
+
+$$
+\left[\int f(x)dx\right] = f(x)
+$$
+
+
 
 ## 一些常见的积分
+
+
 $$
 \begin{aligned}
 & \int 0dx = C \\ 
@@ -60,29 +98,45 @@ $$
 \end{aligned}
 $$
 
+
+
 ## 线性运算法则
+
+
 $$
 \begin{aligned}
 \int \left[ k_1 f(x) + k_2 g(x) \right]dx = k_1\int f(x)dx + k_2 \int g(x)dx
 \end{aligned}
 $$
 
+
+
 ### 题(们)
 1.
+
+
 $$
 \begin{aligned}
 \int (1 - x + x^3 - \frac 1{\sqrt[3]{x^2}})dx = 0 - \frac12x^2 + \frac 14x^4 - 3\sqrt[3]x + C
 \end{aligned}
 $$
 
+
+
 2.
+
+
 $$
 \begin{aligned}
 \int (x - \frac 1 {\sqrt{x}})^2dx = \int (x^2 - 2x^{\frac 12} + x ^{-1})dx = \frac{x^2}3 + \frac 43 x^{\frac 32} + \ln x + C
 \end{aligned}
 $$
 
+
+
 3.
+
+
 $$
 \begin{aligned}
 \int \sin^2 x dx = & \frac 12 \int 2\sin^2 xdx = \frac 12\int (1-cos2x)dx \\
@@ -90,7 +144,11 @@ $$
 \end{aligned}
 $$
 
+
+
 4.
+
+
 $$
 \begin{aligned}
 \int \frac{\cos 2x}{\cos x - \sin x}dx = & \int \frac{\cos^2 x - \sin^2 x}{\cos x - \sin x}dx\\
@@ -99,7 +157,11 @@ $$
 \end{aligned}
 $$
 
+
+
 5.
+
+
 $$
 \begin{aligned}
 \int \frac{\cos 2x}{\cos^2 x \cdot \sin^2 x}dx = & \int \frac{\cos^2 x - \sin^2 x}{\cos^2 x \cdot \sin^2x}dx\\
@@ -108,24 +170,58 @@ $$
 \end{aligned}
 $$
 
+
+
 ## 换元积分
 &emsp; 设 $g(u)$ 在 $[\alpha, \beta]$ 上有定义，$u = \varphi(x)$ 在 $[a, b]$ 上可导，且 $\alpha \leq \varphi(x) \leq \beta$，$x \in [a, b]$，并记：
 
-$$ f(x) = g(\varphi(x))\varphi'(x)，x \in [a, b] $$
+
+
+$$
+f(x) = g(\varphi(x))\varphi'(x)，x \in [a, b]
+$$
+
+
 
 1. 如果 $g(u)$ 在 $[\alpha, \beta]$ 上存在原函数 $G(u)$，则 $f(x)$ 在 $[a, b]$ 上也存在原函数 $F(x)$，$F(x) = G(\varphi(x)) + C$，即：
-$$ \int f(x)dx = \int g(\varphi(x))\varphi'(x)dx = \int g(u)du = G(u) + C = G(\varphi(x)) + C $$
+
+
+$$
+\int f(x)dx = \int g(\varphi(x))\varphi'(x)dx = \int g(u)du = G(u) + C = G(\varphi(x)) + C
+$$
+
+
 
 2. 如果 $\varphi(x) \neq 0$，$x \in [a, b]$，则上述命题可逆。即当 $f(x)$ 在 $[a, b]$ 上存在原函数 $F(x)$ 时，$g(u)$ 在 $[\alpha, \beta]$ 上也存在原函数 $G(u)$，且 $G(u) = F(\varphi^{-1}(u)) + C$，即：
-$$ \int g(u)du = \int g(\varphi(x))\varphi'(x) = \int f(x)dx = F(x) + C = F(\varphi^{-1}(u)) + C $$
+
+
+$$
+\int g(u)du = \int g(\varphi(x))\varphi'(x) = \int f(x)dx = F(x) + C = F(\varphi^{-1}(u)) + C
+$$
+
+
 
 &emsp; 证明：复合函数求导法则：
-$$ \frac d{dx}G(\varphi(x)) = G'(\varphi(x))\varphi'(x) = g(\varphi(x))\varphi'(x) = f(x) $$
+
+
+$$
+\frac d{dx}G(\varphi(x)) = G'(\varphi(x))\varphi'(x) = g(\varphi(x))\varphi'(x) = f(x)
+$$
+
+
 &emsp; 所以 $f(x)$ 以 $G(\varphi(x))$ 为其原函数，第一条成立。
 
 &emsp; 在 $\varphi'(x) \neq 0$ 的时候，$u = \varphi(x)$ 存在反函数 $x = \varphi^{-1}(u)$，且：
-$$ \frac{dx}{du} = \frac{1}{\varphi'(x)}\bigg|_{x = \varphi^{-1}(u)} $$
+
+
+$$
+\frac{dx}{du} = \frac{1}{\varphi'(x)}\bigg|_{x = \varphi^{-1}(u)}
+$$
+
+
 &emsp; 于是：
+
+
 $$
 \begin{aligned}
 \frac{d}{du}F(\varphi^{-1}(u)) = &F'(x) \cdot \frac{1}{\varphi'(x)} = f(x) \cdot \frac{1}{\varphi'(x)} \\
@@ -133,51 +229,103 @@ $$
 = & g(\varphi(x)) = g(u)
 \end{aligned}
 $$
+
+
 &emsp; 所以第二条成立。
 &emsp; 证毕。
 
  ### 题(们)
  1.
+
+
 $$
 \begin{aligned}
 \int \tan x dx = & \int \frac{\sin x}{\cos x}dx = -\int \frac 1{\cos x}d(\cos x) = -\ln \mid \cos x \mid + C
 \end{aligned}
 $$
 
+
+
 2.
-$$ \int \cos (3x+4)dx = \frac 13 \int \cos (3x+4)d(3x+4) = \frac 13 \sin(3x+4) + C $$
+
+
+$$
+\int \cos (3x+4)dx = \frac 13 \int \cos (3x+4)d(3x+4) = \frac 13 \sin(3x+4) + C
+$$
+
+
 
 3.
+
+
 $$
 \begin{aligned}
 \int xe^{2x^2}dx = & \frac 14\int e^{2x^2}4xdx = \frac 14 \int e^{2x^2}d(2x^2) = \frac 14 e^{2x^2} + C
 \end{aligned}
 $$
 
+
+
 4.
+
+
 $$
 \begin{aligned}
 \int 2^{2x+3}dx = \frac 12\int 2^{2x+3}d(2x+3) = \frac 12 \frac{2^{2x+3}}{\ln 2} + C
 \end{aligned}
 $$
 
+
+
 ## 分步积分
 &emsp; 若 $u(x)$ 和 $v(x)$ 可导，不定积分 $\int u'(x)v(x)dx$ 存在，则：
-$$ \int u(x)v'(x)dx = u(x)v(x)  - \int u'(x)v(x)dx$$
+
+
+$$
+\int u(x)v'(x)dx = u(x)v(x)  - \int u'(x)v(x)dx
+$$
+
+
 
 &emsp; 简记为
-$$ \int udv = uv - \int vdu $$
+
+
+$$
+\int udv = uv - \int vdu
+$$
+
+
 
 &emsp; 证明：由：
-$$ \left[ u(x)v(x) \right]' = u'(x)v(x) + u(x)v'(x) $$
+
+
+$$
+\left[ u(x)v(x) \right]' = u'(x)v(x) + u(x)v'(x)
+$$
+
+
 &emsp; 得到：
-$$ u(x)v'(x) = [u(x)v(x)]' - u'(x)v(x) $$
+
+
+$$
+u(x)v'(x) = [u(x)v(x)]' - u'(x)v(x)
+$$
+
+
 &emsp; 两边同时取不定积分得：
-$$ \int u(x)v'(x)dx = u(x)v(x)  - \int u'(x)v(x)dx$$
+
+
+$$
+\int u(x)v'(x)dx = u(x)v(x)  - \int u'(x)v(x)dx
+$$
+
+
 &emsp; 证毕。
 
 ### 题(们)
 1.
+
+
 $$
 \begin{aligned}
 \int x\cos xdx = & \int xd(\sin x)\\
@@ -185,14 +333,22 @@ $$
 \end{aligned}
 $$
 
+
+
 2.
+
+
 $$
 \begin{aligned}
 \int \ln x dx = & x \ln x - \int x d(\ln x) = x \ln x - \int x \cdot \frac 1x dx = x \ln x - x + C
 \end{aligned}
 $$
 
+
+
 3.
+
+
 $$
 \begin{aligned}
 \int x^2 \cos x dx = & \int x ^ 2d(\sin x)\\
@@ -203,7 +359,11 @@ $$
 \end{aligned}
 $$
 
+
+
 4.
+
+
 $$
 \begin{aligned}
 \int \frac{\ln x}{x^3}dx= & \int \frac 1{x^3}d(x\ln x - x)\\
@@ -213,7 +373,11 @@ $$
 = & \frac{\ln x - 1}{x^2} + 3\int \frac{\ln x}{x^3}dx - 3 \int \frac{1}{x^3}dx = \frac{\ln x - 1}{x^2} + 3\int \frac{\ln x  - 1}{x^3} + \frac{3}{2x^2}
 \end{aligned}
 $$
+
+
 &emsp; 设 $f(x) = \int \frac{\ln x}{x^3}dx$，就有：
+
+
 $$
 \begin{aligned}
 f(x) &= \frac{\ln x - 1}{x^2} + 3f(x) + \frac{3}{2x^2} \\
@@ -221,25 +385,51 @@ f(x) &= \frac{\ln x - 1}{x^2} + 3f(x) + \frac{3}{2x^2} \\
 \therefore f(x) &= -\frac{3}{4x^2} - \frac{\ln x - 1}{2x^2}
 \end{aligned}
 $$
+
+
 &emsp; 即：
-$$ \int \frac{\ln x}{x^3} = -\frac{3}{4x^2} - \frac{\ln x - 1}{2x^2} +C $$
+
+
+$$
+\int \frac{\ln x}{x^3} = -\frac{3}{4x^2} - \frac{\ln x - 1}{2x^2} +C
+$$
+
+
 
 
 ## 题(们)
 
 1.
+
+
 $$
 \int \frac{dx}{\sqrt{2gx}} = \frac{1}{\sqrt{2g}}\int x^{-\frac12}dx = \frac{1}{\sqrt{2g}}2 x^{\frac 12} + C = \sqrt{\frac{2x}{g}} + C
 $$
 
+
+
 2.
-$$ \int (2^x +3^x)^2 dx = \int (4^x + 2 \times 6 ^ x + 9^x)dx = \frac{4^x}{\ln 4} + \frac{9^x}{\ln 9} + 2\frac{6^x}{\ln 6} + C $$
+
+
+$$
+\int (2^x +3^x)^2 dx = \int (4^x + 2 \times 6 ^ x + 9^x)dx = \frac{4^x}{\ln 4} + \frac{9^x}{\ln 9} + 2\frac{6^x}{\ln 6} + C
+$$
+
+
 
 
 3.
-$$ \int \tan^2 xdx = \int \frac{\sin^2 x}{\cos^2 x}dx = \int \left( \frac{1}{\cos^2 x} - 1 \right)dx = \tan x - x + C $$
+
+
+$$
+\int \tan^2 xdx = \int \frac{\sin^2 x}{\cos^2 x}dx = \int \left( \frac{1}{\cos^2 x} - 1 \right)dx = \tan x - x + C
+$$
+
+
 
 4.
+
+
 $$
 \begin{aligned}
 \int \sqrt{x\sqrt{x\sqrt{x}}}dx = &\int \sqrt{x\sqrt{x \cdot x^{\frac12}}}dx = \int \sqrt{x\sqrt{x^{\frac 32}}}dx \\
@@ -248,18 +438,43 @@ $$
 \end{aligned}
 $$
 
+
+
 5.
-$$ \int 10^t \cdot 3^{2t}dt = \int 10^t \cdot 9 ^ t dt = \int 90 ^ t dt = \frac{90^t}{\ln 90} + C $$
+
+
+$$
+\int 10^t \cdot 3^{2t}dt = \int 10^t \cdot 9 ^ t dt = \int 90 ^ t dt = \frac{90^t}{\ln 90} + C
+$$
+
+
 
 
 6. 
-$$ \int \left( \sqrt{\frac{1+x}{1-x}} + \sqrt{\frac{1-x}{1+x}} \right)dx =  $$
+
+
+$$
+\int \left( \sqrt{\frac{1+x}{1-x}} + \sqrt{\frac{1-x}{1+x}} \right)dx =
+$$
+
+
 
 7.
-$$ \int \frac{x^2}{3(1+x^2)}dx = \frac 13 \int \frac{x^2}{1+x^2}dx = \frac 13 \int \left( 1-\frac{1}{1+x^2} \right)dx = \frac 13 \left( x - \arctan x \right) +C  $$
+
+
+$$
+\int \frac{x^2}{3(1+x^2)}dx = \frac 13 \int \frac{x^2}{1+x^2}dx = \frac 13 \int \left( 1-\frac{1}{1+x^2} \right)dx = \frac 13 \left( x - \arctan x \right) +C
+$$
+
+
 
 ------------
 # 定积分
 
-$$ \int_a ^b f(x)dx = F(x)\bigg|_a^b = F(b) - F(a) $$
+
+
+$$
+\int_a ^b f(x)dx = F(x)\bigg|_a^b = F(b) - F(a)
+$$
+
 {% endraw %}

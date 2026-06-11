@@ -21,13 +21,31 @@ math: true
 2. 如果 $a[i]$ 比之前的元素都要大那么就只能自己形成一条不下降子序列，长度为1.
 
 由此写出动态转移方程:
-$$ f[i] = max\lbrace 1, f[j] + 1 \rbrace ， 其中 j \in \lbrace j \in N^* \mid 1 \leq j < i \rbrace $$
+
+
+$$
+f[i] = max\lbrace 1, f[j] + 1 \rbrace ， 其中 j \in \lbrace j \in N^* \mid 1 \leq j < i \rbrace
+$$
+
+
 
 边界：
-$$ f[i] = 1 (i > j, j \in \lbrace j \in N^* \mid 1 \leq j < i \rbrace) $$
+
+
+$$
+f[i] = 1 (i > j, j \in \lbrace j \in N^* \mid 1 \leq j < i \rbrace)
+$$
+
+
 
 整体时间复杂度 :
-$$ O(n^2) $$
+
+
+$$
+O(n^2)
+$$
+
+
 
 代码请参考 cpp/practice/SeniorHigh1/semester1/September2021/20210910/LIS.cpp
 {% endraw %}

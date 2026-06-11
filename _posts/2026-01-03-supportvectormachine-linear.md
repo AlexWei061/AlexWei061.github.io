@@ -25,7 +25,7 @@ math: true
 
 ![](/assets/images/machine-learning/SupervisedLearning/pic/SVM2.png)
 
-&emsp; 我们看到这三条线 $l_1, l_2$ 和 $l_3$，我们显然可以看出来 $l_1$ 比 $l_2$ 和 $l_3$ 要更优秀，但是我们怎么定义这个所谓的 "优秀" 呢？
+&emsp; 我们看到这三条线 $l\_1, l\_2$ 和 $l\_3$，我们显然可以看出来 $l\_1$ 比 $l\_2$ 和 $l\_3$ 要更优秀，但是我们怎么定义这个所谓的 "优秀" 呢？
 
 ### 间隔 $Margin$ 和 最小化 $&#124;w&#124;$
 
@@ -39,17 +39,35 @@ math: true
 
 &emsp; 我们把这条线根据之前的习惯写成这样：
 
-$$ h(x) = w^Tx $$
+
+
+$$
+h(x) = w^Tx
+$$
+
+
 
 &emsp; 然后我们考虑如何计算出 $margin$。首先对于一个支持向量 $x^{(i)}$ 来说，它到直线的距离可以写成：
 
-$$ d = \frac{\bigg|\sum\limits_{j = 0}^n w_jx^{(i)}_j \bigg|}{\sqrt{\sum\limits_{j = 1}^n w_j^2}} = \frac{\bigg|w^Tx^{(i)}\bigg|}{|w|} $$
+
+
+$$
+d = \frac{\bigg|\sum\limits_{j = 0}^n w_jx^{(i)}_j \bigg|}{\sqrt{\sum\limits_{j = 1}^n w_j^2}} = \frac{\bigg|w^Tx^{(i)}\bigg|}{|w|}
+$$
+
+
 
 &emsp; 然后又因为我们知道，$h(x) = w^Tx$ 和 $h(x) = (aw)^Tx$ 本质上表示的是同一条直线（其中 $a$ 是常数）。所以我们可以用 $a$ 来放缩直线 $h(x)$，使得 $&#124;(aw)^Tx^{(i)}&#124; = 1$。
 
 &emsp; 此时，支持向量 $x^{(i)}$ 到直线的距离就是：
 
-$$ d = \frac1{|w|} $$
+
+
+$$
+d = \frac1{|w|}
+$$
+
+
 
 &emsp; 我们希望 $d$ 最大，那么我们就希望 $&#124;w&#124;$ 最小了。
 
@@ -59,23 +77,49 @@ $$ d = \frac1{|w|} $$
 
 &emsp; 对于其他非支持向量 $x^{(j)}$ 来说，$x^{(j)}$ 到直线的距离显然是大于支持向量 $x^{(i)}$ 的，所以我们有：
 
-$$ d_{x^{(j)}} = \frac{\bigg|w^Tx^{(j)}\bigg|}{|w|} > d_{x^{(i)}} = \frac 1{|w|} $$
+
+
+$$
+d_{x^{(j)}} = \frac{\bigg|w^Tx^{(j)}\bigg|}{|w|} > d_{x^{(i)}} = \frac 1{|w|}
+$$
+
+
 
 &emsp; 于是我们有：
 
-$$ \bigg|w^Tx^{(j)}\bigg| > 1 $$
+
+
+$$
+\bigg|w^Tx^{(j)}\bigg| > 1
+$$
+
+
 
 &emsp; 那么对于所有向量来说：
 
-$$ \bigg|w^Tx\bigg| \ge 1 $$
+
+
+$$
+\bigg|w^Tx\bigg| \ge 1
+$$
+
+
 
 &emsp; 如果把绝对值去掉的话，我们就要分是 $y$ 属于 $1$ 类还是 $-1$ 类了。而经过分类讨论我们会发现，对于所有向量 $x$，我们都有：
 
-$$ y^{(i)}[w^Tx^{(i)}] \ge 1 \;\;\;\;\;\;\;(i = 1 \sim m) $$
+
+
+$$
+y^{(i)}[w^Tx^{(i)}] \ge 1 \;\;\;\;\;\;\;(i = 1 \sim m)
+$$
+
+
 
 ### 总结
 
 &emsp; 于是我们可以得到支持向量机想要我们做的事就是这样的：
+
+
 
 $$
 \begin{aligned}
@@ -83,4 +127,5 @@ $$
 &s.t. \; \;y^{(i)}[w^Tx^{(i)}] \ge 1
 \end{aligned}
 $$
+
 {% endraw %}

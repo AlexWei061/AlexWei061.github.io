@@ -17,6 +17,8 @@ math: true
 
 ----
 ## 傅里叶级数公式：
+
+
 $$
 f(t) = A_0 + \sum_{n=1}^{\infty}\Big[ a_ncos(n\omega t) + b_nsin(n\omega t) \Big] ，
 \begin{cases}
@@ -25,7 +27,11 @@ a_n = \frac{1}{2\pi} \int_{-\pi}^{\pi}cos(n\omega t)f(t)dt \\
 b_n = \frac{1}{2\pi} \int_{-\pi}^{\pi}sin(n\omega t)f(t)dt
 \end{cases}
 $$
+
+
 &emsp; 推导：首先我们把一个周期函数用一堆正弦函数来表达：
+
+
 $$
 \begin{aligned}
 f(t) = &A_0 + \sum_{n=1}^{\infty} sin(n\omega t + \varphi_n) \\
@@ -37,13 +43,21 @@ f(t) = &A_0 + \sum_{n = 1}^{\infty}[a_ncos(n\omega t) + b_nsin(n\omega t)] \\
 \int_{-\pi}^{\pi}f(t)dt = & \int_{-\pi}^{\pi}A_0dt + \int_{-\pi}^{\pi}\sum_{n=1}^{\infty}[a_ncos(n\omega t) + b_nsin(n\omega t)]dt
 \end{aligned}
 $$
+
+
 &emsp; 我们先把这一项算出来：
+
+
 $$
 \begin{aligned}
 \int_{-\pi}^{\pi}\sum_{n=1}^{\infty}[a_ncos(n\omega t) + b_nsin(n\omega t)]dt 
 \end{aligned}
 $$
+
+
 &emsp; 要计算这一项，只需要知道求和里面的东西等于几，也就是：
+
+
 $$
 \begin{aligned}
 &\int_{-\pi}^{\pi}[a_ncos(n\omega t) + b_nsin(n\omega t)]dt \\
@@ -53,11 +67,19 @@ $$
 = & \frac{a_n}{n\omega}[sin(n\omega \pi) - sin(-n\omega\pi)] + \frac{b_n}{n\omega}[cos(-n\omega \pi) - cos(n\omega\pi)]
 \end{aligned}
 $$
+
+
 &emsp; 因为 $sink\pi = 0$ 且 $cosx = cox(-x)$，所以上面那一项总体就是 0。即：
+
+
 $$
 \int_{-\pi}^{\pi}[a_ncos(n\omega t) + b_nsin(n\omega t)]dt  = 0
 $$
+
+
 &emsp; 所以原式可以化为：
+
+
 $$
 \begin{aligned}
 \int_{-\pi}^{\pi}f(t)dt = & \int_{-\pi}^{\pi}A_0dt + \int_{-\pi}^{\pi}\sum_{n=1}^{\infty}[a_ncos(n\omega t) + b_nsin(n\omega t)]dt \\
@@ -65,27 +87,43 @@ $$
 \therefore A_0 = \frac{1}{2\pi}\int_{-\pi}^{\pi}&f(t)dt
 \end{aligned}
 $$
-&emsp; 然后我们来求 $a_n$ 和 $b_n$。等式两边同时乘上 $cos(k\omega t)$得到了：
+
+
+&emsp; 然后我们来求 $a\_n$ 和 $b\_n$。等式两边同时乘上 $cos(k\omega t)$得到了：
+
+
 $$
 \begin{aligned}
 f(t)cos(k\omega t) = &A_0cos(k\omega t) + \sum_{n = 1}^{\infty}[a_ncos(n\omega t)cos(k\omega t) + b_nsin(n\omega t)cos(k\omega t)]\\
 \end{aligned}
 $$
+
+
 &emsp; 两边同时积分得到了：
+
+
 $$
 \begin{aligned}
 \int_{-\pi}^{\pi} f(t)cos(k\omega t)dt = &A_0\int_{-\pi}^{\pi}cos(k\omega t)dt +\\
  \sum_{n = 1}^{\infty}[a_n\int_{-\pi}^{\pi}&cos(n\omega t)cos(k\omega t)dt + b_n\int_{-\pi}^{\pi}sin(n\omega t)cos(k\omega t)dt]\\
 \end{aligned}
 $$
+
+
 &emsp; 又因为这些项都是 0：
-$$  
+
+
+$$
 \begin{aligned}
 A_0\int_{-\pi}^{\pi}cos(k\omega t)dt = A_0 \cdot \frac{1}{k\omega}sin(k\omega t)\bigg|_{-\pi}^{\pi} = 0\\
 b_n\int_{-\pi}^{\pi}sin(n\omega t)cos(k\omega t)dt = b_n \cdot -\frac{1}{n\omega}cos(\omega t)\frac{1}{k\omega}sin(k\omega t)\bigg|_{-\pi}^{\pi} = 0
 \end{aligned}
 $$
+
+
 &emsp; 所以：
+
+
 
 $$
 \begin{aligned}
@@ -95,11 +133,19 @@ $$
 = & \frac{a_n}{2} \Big[\int_{-\pi}^{\pi}1dt + \int_{-\pi}^{\pi}cos(2n\omega t)dt \Big]
 \end{aligned}
 $$
+
+
 &emsp; 又因为：
+
+
 $$
 \int_{-\pi}^{\pi}cos(2n\omega t)dt = -\frac{1}{2n\omega}sin(2n\omega t)\bigg|_{-\pi}^{\pi} = 0
 $$
+
+
 &emsp; 所以：
+
+
 $$
 \begin{aligned}
 &\int_{-\pi}^{\pi} f(t)cos(k\omega t)dt = a_n\sum_{n = 1}^{\infty}\int_{-\pi}^{\pi}cos(n\omega t)cos(k\omega t)dt \\
@@ -107,29 +153,59 @@ $$
 \therefore &a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(t)cos(n\omega t)dt \qquad \qquad \qquad \qquad (n=k)
 \end{aligned}
 $$
-&emsp; 计算 $b_n$ 的方法和计算 $a_n$ 的基本相同，可以得到：
-$$ b_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(t)sin(n\omega t)dt \qquad \qquad \qquad \qquad \quad (n = k) $$
+
+
+&emsp; 计算 $b\_n$ 的方法和计算 $a\_n$ 的基本相同，可以得到：
+
+
+$$
+b_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(t)sin(n\omega t)dt \qquad \qquad \qquad \qquad \quad (n = k)
+$$
+
+
 
 ## 傅里叶指数形式：
-$$ f(t) = \frac{1}{T}\sum_{n = -\infty}^{+\infty}\int_{t_0}^{t_o+T}e^{-in\omega t}dt \; \cdot \; e^{in\omega t} $$
+
+
+$$
+f(t) = \frac{1}{T}\sum_{n = -\infty}^{+\infty}\int_{t_0}^{t_o+T}e^{-in\omega t}dt \; \cdot \; e^{in\omega t}
+$$
+
+
 &emsp; 推导如下：
 &emsp; 由欧拉公式($e^{ix} = cosx + isinx$)我们可以推出：
-$$ cosx = \frac{e^{ix} + e^{-ix}}{2} \qquad sinx = -i \cdot \frac{e^{ix} - e^{-ix}}{2} $$
+
+
+$$
+cosx = \frac{e^{ix} + e^{-ix}}{2} \qquad sinx = -i \cdot \frac{e^{ix} - e^{-ix}}{2}
+$$
+
+
 &emsp; 将两式带入傅里叶级数得到：
+
+
 $$
 \begin{aligned}
 f(t) = &A_0 + \sum_{n = 1}^{\infty}[a_n\frac{e^{in\omega t} + e^{-in\omega t}}{2} + b_n \cdot (-i)\frac{e^{in\omega t} - e^{-in\omega t}}{2} ]\\
 = &A_0 + \sum_{n = 1}^{\infty}[\frac{a_n-ib_n}{2}e^{in\omega t } + \frac{a_n + ib_n}{2}e^{-in\omega t}]\\
 \end{aligned}
 $$
+
+
 &emsp; 又因为：
+
+
 $$
 \begin{aligned}
 a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(t)cos(n\omega t)dt \qquad \qquad \qquad \qquad (n=k)\\
 b_n = \frac{1}{\pi}\int_{-\pi}^{\pi}f(t)sin(k\omega t)dt \qquad \qquad \qquad \qquad \quad (n = k)
 \end{aligned}
 $$
+
+
 &emsp; 所以：
+
+
 $$
 \begin{aligned}
 \frac{a_n - ib_n}{2} = &\frac{1}{2} \cdot \Bigg[ \frac{1}{\pi}\int_{-\pi}^{\pi} f(t)cos(n\omega t)dt - i \cdot \frac{1}{\pi}\int_{-\pi}^{\pi}f(t)sin(k\omega t)dt \Bigg] \\
@@ -139,6 +215,10 @@ $$
 = & \frac{1}{T} \cdot \int _{t_0}^{t_0+T}f(t)e^{-in\omega t}dt
 \end{aligned}
 $$
+
+
+
+
 $$
 \begin{aligned}
 \frac{a_n + ib_n}{2} = &\frac{1}{2} \cdot \Bigg[ \frac{1}{\pi}\int_{-\pi}^{\pi} f(t)cos(n\omega t)dt + i \cdot \frac{1}{\pi}\int_{-\pi}^{\pi}f(t)sin(k\omega t)dt \Bigg] \\
@@ -148,7 +228,11 @@ $$
 = & \frac{1}{T} \cdot \int _{t_0}^{t_0+T}f(t)e^{in\omega t}dt
 \end{aligned}
 $$
+
+
 &emsp; 然后再带回去：
+
+
 $$
 \begin{aligned}
 f(t) = &A_0 + \sum_{n = 1}^{\infty}[\frac{a_n-ib_n}{2}e^{in\omega t } + \frac{a_n + ib_n}{2}e^{-in\omega t}]\\
@@ -157,35 +241,72 @@ f(t) = &A_0 + \sum_{n = 1}^{\infty}[\frac{a_n-ib_n}{2}e^{in\omega t } + \frac{a_
 = & \frac{1}{T}\sum_{n=-\infty}^{+\infty}\int_{t_0}^{t_0+T}f(t)e^{-in\omega t}dt \cdot e^{in \omega t}
 \end{aligned}
 $$
+
+
 ## 傅里叶变换和傅里叶逆变换
 &emsp; 傅里叶变换：
+
+
 $$
 \begin{aligned}
 F(\omega_x) = \int_{-\infty}^{+\infty}f(t)s^{-i\omega_x t}dt
 \end{aligned}
 $$
+
+
 &emsp; 傅里叶逆变换：
+
+
 $$
 \begin{aligned}
 f(t) = \frac{1}{2\pi}\int_{-\infty}^{+\infty}F(\omega_x)e^{i\omega_x t}d\omega
 \end{aligned}
 $$
+
+
 &emsp; 其中 $F(\omega)$ 叫做 $f(t)$ 的像函数，$f(t)$ 叫做$F(\omega)$ 的像原函数。$F(\omega)$ 是 $f(t)$ 的像。$f(t)$ 是 $F(\omega)$ 原像。
 &emsp; 推导过程如下：
 &emsp; 令：
-$$ \omega_x = n\omega \qquad F(\omega_x) = \int_{-\infty}^{+\infty}f(t)s^{-i\omega_x t}dt $$
+
+
+$$
+\omega_x = n\omega \qquad F(\omega_x) = \int_{-\infty}^{+\infty}f(t)s^{-i\omega_x t}dt
+$$
+
+
 &emsp; 又因为：
-$$ f(t) = \frac{1}{T}\sum_{n=-\infty}^{+\infty}\int_{t_0}^{t_0+T}f(t)e^{-in\omega t}dt \cdot e^{in \omega t} $$
+
+
+$$
+f(t) = \frac{1}{T}\sum_{n=-\infty}^{+\infty}\int_{t_0}^{t_0+T}f(t)e^{-in\omega t}dt \cdot e^{in \omega t}
+$$
+
+
 &emsp; 所以：
+
+
 $$
 \begin{aligned}
 f(t) = &\frac{1}{T}\sum_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}f(t)e^{-i\omega_xt}dt \cdot e^{i\omega_xt} \\
 = &\frac{1}{T} \sum_{-\infty}^{+\infty}[F(\omega_x)e^{i\omega_xt}] = \frac{1}{2\pi}\int_{-\infty}^{+\infty}F(\omega_x)e^{i\omega_xt}d\omega_x
 \end{aligned}
 $$
+
+
 ## 离散傅里叶变换
 &emsp; 离散傅里叶变换：
-$$ F(n) = \sum_{n = 0}^{N}f(t)e^{i\frac{2\pi n}{N}t} $$
+
+
+$$
+F(n) = \sum_{n = 0}^{N}f(t)e^{i\frac{2\pi n}{N}t}
+$$
+
+
 &emsp; 逆离散傅里叶变换：
-$$ f(t) = \sum_{n=0}^{N}\frac{1}{N}F(n)e^{i\frac{2\pi n}{N}t} $$
+
+
+$$
+f(t) = \sum_{n=0}^{N}\frac{1}{N}F(n)e^{i\frac{2\pi n}{N}t}
+$$
+
 {% endraw %}

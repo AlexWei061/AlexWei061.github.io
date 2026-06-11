@@ -18,13 +18,31 @@ math: true
 ## 向量
 
 &emsp; ~~众所周知~~ n 维向量是一个长这样的东西：
-$$ \begin{bmatrix} a \\ b \\ c \\ \vdots \\ n \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} a \\ b \\ c \\ \vdots \\ n \end{bmatrix}
+$$
+
+
 
 &emsp; 而且它遵循着两种最基本的运算规则，两个向量的和和向量与标量的乘法：
-$$ \begin{bmatrix} a_1 \\  b_1 \\ c_1 \\ \vdots \\ n_1 \end{bmatrix} + \begin{bmatrix} a_2 \\  b_2 \\ c_2 \\ \vdots \\ n_2 \end{bmatrix} = \begin{bmatrix} a_1+a_2 \\  b_1+b_2 \\ c_1+c_2 \\ \vdots \\ n_1+n_2 \end{bmatrix},\qquad m\begin{bmatrix} a_1 \\  b_1 \\ c_1 \\ \vdots \\ n_1 \end{bmatrix} = \begin{bmatrix} ma_1 \\  mb_1 \\ mc_1 \\ \vdots \\ mn_1 \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} a_1 \\  b_1 \\ c_1 \\ \vdots \\ n_1 \end{bmatrix} + \begin{bmatrix} a_2 \\  b_2 \\ c_2 \\ \vdots \\ n_2 \end{bmatrix} = \begin{bmatrix} a_1+a_2 \\  b_1+b_2 \\ c_1+c_2 \\ \vdots \\ n_1+n_2 \end{bmatrix},\qquad m\begin{bmatrix} a_1 \\  b_1 \\ c_1 \\ \vdots \\ n_1 \end{bmatrix} = \begin{bmatrix} ma_1 \\  mb_1 \\ mc_1 \\ \vdots \\ mn_1 \end{bmatrix}
+$$
+
+
 
 &emsp; 为了说清楚这两种运算，我们来看看在二维坐标系中的向量们。首先想想一个从原点出发的箭头，它指向平面直角坐标系中的一个点 $(a, b)$，这样一个箭头我们称它为向量 $\vec{A}$，然后同样想象一个向量 $\vec{B}$，它从原点出发，指向一个坐标 $(c,d)$。我们就可以把它们写成这样：
-$$ \vec{A} = \begin{bmatrix} a \\ b \end{bmatrix}, \vec{B} = \begin{bmatrix} c \\ d \end{bmatrix} $$
+
+
+$$
+\vec{A} = \begin{bmatrix} a \\ b \end{bmatrix}, \vec{B} = \begin{bmatrix} c \\ d \end{bmatrix}
+$$
+
+
 
 &emsp; 如果在平面直角坐标系中表示出来就是这样：
 
@@ -53,12 +71,24 @@ $$ \vec{A} = \begin{bmatrix} a \\ b \end{bmatrix}, \vec{B} = \begin{bmatrix} c \
 
 &emsp; 从这两个向量出发，我们可以用前面说到的两个运算（向量之间的加法和标量和向量之间的乘法）来表示出整个平面上所有的向量。举个例子：比如我们要表示 $\vec{A}$，我们需要对 $\hat{i}$ 和 $\hat{j}$ 做以下操作：把 $\hat{i}$ 拉长为原来的 a 倍，得到一个从原点出发，长度为 a，方向指向 x 轴正方向的向量。然后把 $\hat{j}$ 拉长为原来的 b 倍，得到一个从原点出发，长度为 b，方向指向 y 轴正方向的向量。然后我们把这两个向量相加，便得到了 $\vec{A}$。用公式写出来就是这样：
 
-$$ \vec{A} = \begin{bmatrix} a \\ b \end{bmatrix} = a\hat{i} + b\hat{j} $$
+
+
+$$
+\vec{A} = \begin{bmatrix} a \\ b \end{bmatrix} = a\hat{i} + b\hat{j}
+$$
+
+
 
 &emsp; 这个其实也是很好理解，用运动来解释就是这样：$a\hat{i}$ 是 一个点沿着 x 轴正方向(右边)走 a 个单位长度。$b\hat{j}$ 是一个点沿着 y 轴正方向走 b 个单位长度。把他俩加起来就是一个点先沿着 x 轴正方向(右边)走 a 个单位长度，再着 y 轴正方向走 b 个单位长度。这和 $\vec{A}$ 的运动方式就完全一样了。
 
 &emsp; 同理我们也可以把 $\vec{B}$ 用 $\hat{i}$ 和 $\hat{j}$ 表示出来，就是这样：
-$$ \vec{B} = \begin{bmatrix} c \\ d \end{bmatrix} = c\hat{i} + d\hat{j} $$
+
+
+$$
+\vec{B} = \begin{bmatrix} c \\ d \end{bmatrix} = c\hat{i} + d\hat{j}
+$$
+
+
 
 &emsp; 这样以来，我们看一个向量的时候就可以把它想象成两个向量在经历各种伸缩之后的和，这样的两个向量我们把它们叫做这个二维平面的基。特别的我们把 $\hat{i}$ 和 $\hat{j}$ 叫做 "正交基"。
 
@@ -68,7 +98,13 @@ $$ \vec{B} = \begin{bmatrix} c \\ d \end{bmatrix} = c\hat{i} + d\hat{j} $$
 &emsp; 这个概念理解起来也非常容易，就是说向上面那样把两个向量写成 $a\vec{U} + b\vec{V}$ 的样子所得到的向量 $\vec{W}$，就是 $\vec{U}$ 和 $\vec{V}$ 的线性组合。
 
 &emsp; 再重复一遍 ~~不知道为什么就是想多写一遍qwq，可能是因为这部分太短了吧~~ 想这样的一个向量 $\vec{W}$，写成一下的这种形式：
-$$ \vec{W} = a\vec{U} + b\vec{V} $$
+
+
+$$
+\vec{W} = a\vec{U} + b\vec{V}
+$$
+
+
 
 &emsp; 就称 $\vec{W}$ 是 $\vec{U}$ 和 $\vec{V}$ 的线性组合。
 
@@ -95,7 +131,13 @@ $$ \vec{W} = a\vec{U} + b\vec{V} $$
 
 &emsp; 我们可以用坐标的方式表示二维平边的正交基，像这样：
 
-$$ \hat{i} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}，\hat{j} = \begin{bmatrix} 0 \\ 1 \end{bmatrix} $$
+
+
+$$
+\hat{i} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}，\hat{j} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
+$$
+
+
 
 &emsp; 然后对于一个线性变换来说，它会对整个平面进行**旋转**和**伸缩**，然后改变我们的两个正交基。经过线性变换的两个正交基在彼此的眼中位置关系始终保持不变，但是在我们看来（原空间的视角）这两个正交基可能已经变成了下面这样：
 
@@ -122,13 +164,31 @@ $$ \hat{i} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}，\hat{j} = \begin{bmatrix} 0 
 2. 我们把变换后的 $\hat{j'}$ 的坐标竖着抄在矩阵的第二列
 
 &emsp; 然后我们就得到了这样一个矩阵来表示一个线性变换（假设变换后 $\hat{i'} = \begin{bmatrix} a \\ b \end{bmatrix}$，$\hat{j'} = \begin{bmatrix} c \\ d \end{bmatrix}$）
-$$ M = \begin{bmatrix} a && c \\ b && d \end{bmatrix} $$
 
-&emsp; 而这个矩阵作用在一个向量 $\vec{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}$ 上（也就是一个向量进行一个线性变换）时，就可以被写成这样：
-$$ M\vec{x} = \begin{bmatrix} a && c \\ b && d \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} $$
 
-&emsp; 而又根据我们在上文讲到过的经过变换得到的新的向量 $\vec{x'} = x_1\hat{i'} + x_2\hat{j'}$，且 $\hat{i'} = \begin{bmatrix} a \\ b \end{bmatrix}$，$\hat{j'} = \begin{bmatrix} c \\ d \end{bmatrix}$。我们就可以得到一个矩阵与一个向量的乘法的运算法则：
-$$ M\vec{x} = \begin{bmatrix} a && c \\ b && d \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = x_1\hat{i'} + x_2\hat{j'} = x_1 \begin{bmatrix} a \\ b \end{bmatrix} + x_2\begin{bmatrix} c \\ d \end{bmatrix} = \begin{bmatrix} ax_1 \\ bx_1 \end{bmatrix} + \begin{bmatrix} cx_2 \\ dx_2 \end{bmatrix} = \begin{bmatrix} ax_1+cx_2 \\ bx_1 + dx_2 \end{bmatrix} $$
+$$
+M = \begin{bmatrix} a && c \\ b && d \end{bmatrix}
+$$
+
+
+
+&emsp; 而这个矩阵作用在一个向量 $\vec{x} = \begin{bmatrix} x\_1 \\ x\_2 \end{bmatrix}$ 上（也就是一个向量进行一个线性变换）时，就可以被写成这样：
+
+
+$$
+M\vec{x} = \begin{bmatrix} a && c \\ b && d \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
+$$
+
+
+
+&emsp; 而又根据我们在上文讲到过的经过变换得到的新的向量 $\vec{x'} = x\_1\hat{i'} + x\_2\hat{j'}$，且 $\hat{i'} = \begin{bmatrix} a \\ b \end{bmatrix}$，$\hat{j'} = \begin{bmatrix} c \\ d \end{bmatrix}$。我们就可以得到一个矩阵与一个向量的乘法的运算法则：
+
+
+$$
+M\vec{x} = \begin{bmatrix} a && c \\ b && d \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = x_1\hat{i'} + x_2\hat{j'} = x_1 \begin{bmatrix} a \\ b \end{bmatrix} + x_2\begin{bmatrix} c \\ d \end{bmatrix} = \begin{bmatrix} ax_1 \\ bx_1 \end{bmatrix} + \begin{bmatrix} cx_2 \\ dx_2 \end{bmatrix} = \begin{bmatrix} ax_1+cx_2 \\ bx_1 + dx_2 \end{bmatrix}
+$$
+
+
 
 ### 几个基本的线性变换
 
@@ -137,11 +197,23 @@ $$ M\vec{x} = \begin{bmatrix} a && c \\ b && d \end{bmatrix}\begin{bmatrix} x_1 
 #### 旋转
 
 &emsp; 我们先来看一个特殊的旋转：把一个向量向左旋转 90 度。如我们前面所说，在一个线性变换中，我们只需要关心两个正交基 $\hat{i}$ 和 $\hat{j}$ 分别怎么变化，我们就能得到平面内所有向量的变化。所以我们来看：在向左旋转 90 度的过程中，$\hat{i}$ 从 $\begin{bmatrix} 1 \\ 0 \end{bmatrix}$ 变成了 $\begin{bmatrix} 0 \\ 1 \end{bmatrix}$，$\hat{j}$ 从 $\begin{bmatrix} 0 \\ 1 \end{bmatrix}$ 变为 $\begin{bmatrix} -1 \\ 0 \end{bmatrix}$。所以左旋 90 度的矩阵就应该是这样：
-$$ \begin{bmatrix} 0 && -1 \\ 1 && 0 \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} 0 && -1 \\ 1 && 0 \end{bmatrix}
+$$
+
+
 
 &emsp; 我们来验算一下这个式子，我们现在有一个向量 $\vec{A} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$，我们很容易手算出它向左旋转 90 度之后的向量 $\vec{A'} = \begin{bmatrix} -2 \\ 1 \end{bmatrix}$。而如果我们把之前我们推出来的旋转矩阵作用在这个向量上我们就得到了：
 
-$$  \begin{bmatrix} 0 && -1 \\ 1 && 0 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix} + 2 \begin{bmatrix} -1 \\ 0 \end{bmatrix} = \begin{bmatrix}-2 \\ 1\end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} 0 && -1 \\ 1 && 0 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix} + 2 \begin{bmatrix} -1 \\ 0 \end{bmatrix} = \begin{bmatrix}-2 \\ 1\end{bmatrix}
+$$
+
+
 
 &emsp; 是同样的结果。图解如下：
 
@@ -149,7 +221,13 @@ $$  \begin{bmatrix} 0 && -1 \\ 1 && 0 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{
 
 &emsp; 同理，我们也可以推出右旋 90 度的矩阵：
 
-$$ \begin{bmatrix} 0 && 1 \\ -1 && 0 \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} 0 && 1 \\ -1 && 0 \end{bmatrix}
+$$
+
+
 
 &emsp; 感兴趣的可以自己推一下。
 
@@ -160,18 +238,42 @@ $$ \begin{bmatrix} 0 && 1 \\ -1 && 0 \end{bmatrix} $$
 
 &emsp; 我们和上面的思路一样，找出 $\hat{i}$ 和 $\hat{j}$ 经过变换之后的坐标。，根据我们~~在小学二年级就~~学习过的三角函数知识，我们可以~~轻易~~的推导到：
 
-$$ \hat{i'} = \begin{bmatrix} cos\alpha \\ sin\alpha \end{bmatrix}，\hat{j'} = \begin{bmatrix} cos(\alpha + \frac{\pi}{2}) \\ sin(\alpha + \frac{\pi}{2}) \end{bmatrix} = \begin{bmatrix} -sin\alpha \\ cos\alpha \end{bmatrix} $$
+
+
+$$
+\hat{i'} = \begin{bmatrix} cos\alpha \\ sin\alpha \end{bmatrix}，\hat{j'} = \begin{bmatrix} cos(\alpha + \frac{\pi}{2}) \\ sin(\alpha + \frac{\pi}{2}) \end{bmatrix} = \begin{bmatrix} -sin\alpha \\ cos\alpha \end{bmatrix}
+$$
+
+
 
 &emsp; 所以我们得到了逆时针旋转任意角度 $\alpha$ 的旋转矩阵：
-$$ \begin{bmatrix} cos\alpha && -sin\alpha \\ sin\alpha && cos\alpha \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} cos\alpha && -sin\alpha \\ sin\alpha && cos\alpha \end{bmatrix}
+$$
+
+
 
 &emsp; 旋转后的向量就变成了：
-$$ \begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} cos\alpha && -sin\alpha \\ sin\alpha && cos\alpha \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} cos\alpha && -sin\alpha \\ sin\alpha && cos\alpha \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}
+$$
+
+
 
 #### 伸缩
 
 &emsp; 在这里我们只讨论一下一种最简单的伸缩：$\hat{i}$ 不变，$\hat{j}$ 被向右拉伸到了 (1, 1)。我们得到的拉伸矩阵就是这个：
-$$ \begin{bmatrix} 1 && 1 \\ 0 &&1 \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} 1 && 1 \\ 0 &&1 \end{bmatrix}
+$$
+
+
 
 &emsp;图解：
 
@@ -184,12 +286,20 @@ $$ \begin{bmatrix} 1 && 1 \\ 0 &&1 \end{bmatrix} $$
 
 &emsp; 我们说过，我们可以吧一个变换当做一个函数，那么如果我们需要用两个函数先后作用在同一个数字上，那就会产生一个新的函数，这个函数写出来就是这样（我们设前两个函数分别为 $f(x)$ 和 $g(x)$）：$h(x) = f(g(x))$。在此时这 $f(x)$ 和 $g(x)$ 两个函数先后作用在 x 身上的效果就和 $h(x)$ 作用在 x 身上的效果是完全一样的了。
 
-&emsp; 那么同样的，我们如果需要先给一个向量施加一个变换，这个变幻用矩阵 $M_1$ 表示，在给变换后的向量施加一个变换，这个变幻用矩阵 $M_2$ 表示。那么是不是可以找到一个矩阵 $M$ 使得 $M_1$ 和 $M_2$ 先后作用在这个向量上的结果和单独一个 $M$ 作用在这个向量上的结果相同。那么我们就称这个矩阵为那两个矩阵的积。
-$$ M_2M_1\vec{x} = M\vec{x} \rightarrow M_2M_1 = M $$
+&emsp; 那么同样的，我们如果需要先给一个向量施加一个变换，这个变幻用矩阵 $M\_1$ 表示，在给变换后的向量施加一个变换，这个变幻用矩阵 $M\_2$ 表示。那么是不是可以找到一个矩阵 $M$ 使得 $M\_1$ 和 $M\_2$ 先后作用在这个向量上的结果和单独一个 $M$ 作用在这个向量上的结果相同。那么我们就称这个矩阵为那两个矩阵的积。
 
-&emsp; 值得注意的是，这里的 $M_2M_1\vec{x}$ 是现将 $M_1$ 作用在 $\vec{x}$ 上，再将 $M_2$ 作用在变换后的 $\vec{x}$ 上。是从右往左来看的。
 
-&emsp; 下面就是我们的运算法则的问题了：我们先看看如果按变换的顺序分别运算会得到怎样的结果（设 $\vec{x} = \begin{bmatrix}x_1\\x_2\end{bmatrix}$,$M_1=\begin{bmatrix} a & c \\ b & d \end{bmatrix}$, $M_2 = \begin{bmatrix}e & g \\ f & h\end{bmatrix}$）：
+$$
+M_2M_1\vec{x} = M\vec{x} \rightarrow M_2M_1 = M
+$$
+
+
+
+&emsp; 值得注意的是，这里的 $M\_2M\_1\vec{x}$ 是现将 $M\_1$ 作用在 $\vec{x}$ 上，再将 $M\_2$ 作用在变换后的 $\vec{x}$ 上。是从右往左来看的。
+
+&emsp; 下面就是我们的运算法则的问题了：我们先看看如果按变换的顺序分别运算会得到怎样的结果（设 $\vec{x} = \begin{bmatrix}x\_1\\x\_2\end{bmatrix}$,$M\_1=\begin{bmatrix} a & c \\ b & d \end{bmatrix}$, $M\_2 = \begin{bmatrix}e & g \\ f & h\end{bmatrix}$）：
+
+
 
 $$
 \begin{aligned}
@@ -198,24 +308,44 @@ M_2M_1\vec{x} = &\begin{bmatrix}e & g \\ f & h\end{bmatrix}\begin{bmatrix} a & c
 =  \begin{bmatrix}(ae+bg)x_1 + (ce+dg)x_2 \\ (af+bh)x_1 + (cf+dh)x_2 \end{bmatrix}
 \end{aligned}
 $$
+
+
 &emsp; 所以我们得到矩阵 $M$ 应该长这样：
-$$ M = \begin{bmatrix}e & g \\ f & h\end{bmatrix}\begin{bmatrix} a & c \\ b & d \end{bmatrix} = \begin{bmatrix} ae+bg & ce+dg \\ af+bh & cf+dh \end{bmatrix} $$
+
+
+$$
+M = \begin{bmatrix}e & g \\ f & h\end{bmatrix}\begin{bmatrix} a & c \\ b & d \end{bmatrix} = \begin{bmatrix} ae+bg & ce+dg \\ af+bh & cf+dh \end{bmatrix}
+$$
+
+
 
 &emsp; 用这种方法我们虽然把矩阵乘法（仅二维形式）的运算公式给推到出来了，但是这种方法需要大量的运算和配凑的方法，我们认为它不够富有数学之美qwq。所以这里我给出另外一个推导公式的方法，就是关注两个正交基。
 
 &emsp;还是这句话，**在线性变换中，我们只需要考虑有关正交基经过变换之后的坐标，我们就能知道这对正交基张成的空间中的所有的向量在这个变换之后的坐标。** 所以我们现在考虑在两个变换叠加之后，两个正交基的坐标会怎样变换。
 
 &emsp; 在第一个矩阵作用在正交基上之后，两个正交基肯定就变成了 $\hat{i'} = \begin{bmatrix} a \\ b \end{bmatrix}$， $\hat{j'} = \begin{bmatrix} c \\ d \end{bmatrix}$（前面讲的矩阵乘向量的定义就这样来的）。然后我们再把第二个矩阵 $\begin{bmatrix} e & g \\ f & h \end{bmatrix}$ 作用在在这两个变换之后的正交基上，那么这两个正交基就会变成：
-$$ \hat{i''} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\hat{i'} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} ae+bg \\ af+bh \end{bmatrix}，\hat{j''} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\hat{j'} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\begin{bmatrix} c \\ d \end{bmatrix} = \begin{bmatrix} ce+dg \\ cf+dh \end{bmatrix} $$
+
+
+$$
+\hat{i''} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\hat{i'} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} ae+bg \\ af+bh \end{bmatrix}，\hat{j''} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\hat{j'} = \begin{bmatrix} e & g \\ f & h \end{bmatrix}\begin{bmatrix} c \\ d \end{bmatrix} = \begin{bmatrix} ce+dg \\ cf+dh \end{bmatrix}
+$$
+
+
 
 &emsp; 然后把两个正交基分别抄下来，得到矩阵 $M$：
-$$ M = \begin{bmatrix} ae+dg & ce+dg \\ af+bh & cf+dh \end{bmatrix} $$
+
+
+$$
+M = \begin{bmatrix} ae+dg & ce+dg \\ af+bh & cf+dh \end{bmatrix}
+$$
+
+
 
 &emsp; 这就和我们上面凑出来的公式是完全一样的了。
 
 ### 矩阵乘法的运算律
 
-&emsp; 从上文我们可以看出矩阵乘法肯定是符合结合律的（这应该不用解释了吧）。但是它是不符合交换律的。也就是说 $M_2M_1 \neq M_1M_2$。就好像我们把一个向量先旋转在拉伸，和先拉伸再旋转所得到的的新的向量是不同的。我们也可以把矩阵理解成函数，那么 $f(g(x))$ 显然不等于 $g(f(x))$。
+&emsp; 从上文我们可以看出矩阵乘法肯定是符合结合律的（这应该不用解释了吧）。但是它是不符合交换律的。也就是说 $M\_2M\_1 \neq M\_1M\_2$。就好像我们把一个向量先旋转在拉伸，和先拉伸再旋转所得到的的新的向量是不同的。我们也可以把矩阵理解成函数，那么 $f(g(x))$ 显然不等于 $g(f(x))$。
 
 ----
 ## 行列式
@@ -223,7 +353,13 @@ $$ M = \begin{bmatrix} ae+dg & ce+dg \\ af+bh & cf+dh \end{bmatrix} $$
 &emsp; 在前面，我们说了一些关于线性变换的知识，我们也知道了如何用矩阵来表示一个线性变换。虽然我们只说了二维的情况，但是线性代数肯定不止二维的变换，读者可以自己通过思考把上面的内容试着推广到三维 ~~甚至四维、五维...~~。
 
 &emsp; 现在我们来看看下面这个变换（其实就是一个矩阵）：
-$$ \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} $$
+
+
+$$
+\begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix}
+$$
+
+
 
 &emsp; 根据我们前面的学习，我们知道在这个变换里我们将 $\hat{i}$ 变成了 $\begin{bmatrix} 5 \\ 0 \end{bmatrix}$，并且把 $\hat{j}$ 变成了 $\begin{bmatrix} 0 \\ 3 \end{bmatrix}$。如下图：
 
@@ -232,10 +368,22 @@ $$ \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} $$
 &emsp; 我们看到，在这个变换里，我们的 "单位小方格"（应该都知道我在说啥吧）的面积从 1 变成了 15。而且我们可以用微元法推出在这个平面上的所有图形的面积在变换前和变换后的面积比都是 $1 : 15$。而在不同的线性变换中，平面上的一块图形的面积的变化率都是不同的（在三维的矩阵中就是单位小立方体体积的变化率，在四维矩阵中就是单位小超立方体的我也不知道叫啥积的变化率~~懂得都懂qwq~~）。所以我们需要一个运算来帮助我们得到这些面积，体积，我也不知道叫啥积等等的变化率。这种运算就是行列式。
 
 &emsp; 根据这个定义，我们在上面记得例子中的矩阵的行列式就是：
-$$\begin{vmatrix} 5 & 0 \\ 0 & 3 \end{vmatrix} = det\Bigg(\begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix}\Bigg) = 15$$
+
+
+$$
+\begin{vmatrix} 5 & 0 \\ 0 & 3 \end{vmatrix} = det\Bigg(\begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix}\Bigg) = 15
+$$
+
+
 
 &emsp; 二维中的矩阵的行列式的公式我们也很容易推导出来：
-$$ \begin{vmatrix} a & c \\ b & d \end{vmatrix} = ad - bc $$
+
+
+$$
+\begin{vmatrix} a & c \\ b & d \end{vmatrix} = ad - bc
+$$
+
+
 
 &emsp; 图解如下：
 
@@ -249,6 +397,8 @@ $$ \begin{vmatrix} a & c \\ b & d \end{vmatrix} = ad - bc $$
 
 &emsp; 线性方程自是指像这样的式子：
 
+
+
 $$
 \begin{cases}
 1x_1 + 3x_2 + 5x_3  =  -3 \\
@@ -257,17 +407,25 @@ $$
 \end{cases}
 $$
 
+
+
 &emsp; 在这些式子中，我们不允许未知数的高次项、三角函数、指数、对数、这些论七八糟的非线性的式子出现，我们只有一次项。我们就把长成这样的方程组叫做线性方程组。
 
 ### 线性方程组与矩阵乘法
 
 &emsp; 根据我们上面对线性方程组的描述，我们可以知道，前面的线性方程组可以写成矩阵乘法的形式：
 
-$$ \begin{cases} 1x_1 + 3x_2 + 5x_3  =  -3 \\ 7x_1 + 0x_2 + 6x_3 = 0 \\ 2x_1 + 3x_2 + 1x_3 = 7 \end{cases} \rightarrow \begin{bmatrix} 1 & 3 & 5 \\ 7 & 0 & 6 \\ 2 & 3 & 1 \end{bmatrix}\begin{bmatrix} x_1\\x_2\\x_3 \end{bmatrix} = \begin{bmatrix}-3\\0\\7\end{bmatrix} $$
+
+
+$$
+\begin{cases} 1x_1 + 3x_2 + 5x_3  =  -3 \\ 7x_1 + 0x_2 + 6x_3 = 0 \\ 2x_1 + 3x_2 + 1x_3 = 7 \end{cases} \rightarrow \begin{bmatrix} 1 & 3 & 5 \\ 7 & 0 & 6 \\ 2 & 3 & 1 \end{bmatrix}\begin{bmatrix} x_1\\x_2\\x_3 \end{bmatrix} = \begin{bmatrix}-3\\0\\7\end{bmatrix}
+$$
+
+
 
 &emsp; 后者（矩阵形式）用我们在上文提到的矩阵和向量的积的运算公式展开就能在数值上得到前者（方程组形式）。而我们从后者又能找到一个对于解方程的新的解释：我们现在已知一个线性变换，而且已知一个向量经过这个变换之后所得到的新的向量，让我们反过来求解没有变换时的向量是长啥样的。**而通过这种几何上的理解，我们可以来判断这个方程组是否有解，和我们该如何求解这个方程组。**
 
-&emsp; 我们就以上面的方程组为例，在一个三维的空间中有一个向量 $\vec{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}$。我们给他一个变幻矩阵 $A = \begin{bmatrix} 1 & 3 & 5 \\ 7 & 0 & 6 \\ 2 & 3 & 1 \end{bmatrix}$。这个矩阵作用在 $\vec{x}$ 上之后会得到一个新的向量 $\vec{b} = \begin{bmatrix}-3\\0\\7\end{bmatrix}$，也就是说向量 $\vec{x}$在经历了一次线性变换之后变成了 $\vec{b}$，现在我们要在三维空间中找到这个向量 $\vec{x}$。这个过程也就是求解 $x_1, x_2, x_3$ 的过程。
+&emsp; 我们就以上面的方程组为例，在一个三维的空间中有一个向量 $\vec{x} = \begin{bmatrix} x\_1 \\ x\_2 \\ x\_3 \end{bmatrix}$。我们给他一个变幻矩阵 $A = \begin{bmatrix} 1 & 3 & 5 \\ 7 & 0 & 6 \\ 2 & 3 & 1 \end{bmatrix}$。这个矩阵作用在 $\vec{x}$ 上之后会得到一个新的向量 $\vec{b} = \begin{bmatrix}-3\\0\\7\end{bmatrix}$，也就是说向量 $\vec{x}$在经历了一次线性变换之后变成了 $\vec{b}$，现在我们要在三维空间中找到这个向量 $\vec{x}$。这个过程也就是求解 $x\_1, x\_2, x\_3$ 的过程。
 
 ### 矩阵的秩
 
@@ -288,10 +446,22 @@ $$ \begin{cases} 1x_1 + 3x_2 + 5x_3  =  -3 \\ 7x_1 + 0x_2 + 6x_3 = 0 \\ 2x_1 + 3
 #### 定义
 
 &emsp; 既然我们知道一个变换 A 可以将 $\vec{x}$ 转化为 $\vec{b}$（简记为 $A\vec{x} = \vec{b}$）。那么我们就应该想到，有另一种线性变换能把 $\vec{b}$ 转化成 $\vec{x}$，很显然这个未知的矩阵和前面那个矩阵 A 互为对方的逆。也就是说一个矩阵 A 作用在一个向量 $\vec{x}$ 之后，再让矩阵 A 的逆作用在矩阵 A  作用后的向量上，我们就得到了原来的向量（我们把 A 的逆记做 $A^{-1}$）：
-$$ A^{-1}A\vec{x} = \vec{x} $$
+
+
+$$
+A^{-1}A\vec{x} = \vec{x}
+$$
+
+
 
 &emsp; 由此再加上矩阵乘法的结合律，我们可以很容易的得到（I 为单位矩阵）：
-$$ A^{-1}A = AA^{-1} = I，其中 I = \begin{bmatrix}1 & 0 & 0 & \cdots & 0 \\ 0 & 1 & 0 & \cdots & 0 \\ 0 & 0 & 1 & \cdots & 0 \\ \vdots & \vdots & \vdots &  \ddots & \vdots \\ 0 & 0 & 0 & \cdots & 1  \end{bmatrix} $$
+
+
+$$
+A^{-1}A = AA^{-1} = I，其中 I = \begin{bmatrix}1 & 0 & 0 & \cdots & 0 \\ 0 & 1 & 0 & \cdots & 0 \\ 0 & 0 & 1 & \cdots & 0 \\ \vdots & \vdots & \vdots &  \ddots & \vdots \\ 0 & 0 & 0 & \cdots & 1  \end{bmatrix}
+$$
+
+
 
 &emsp; 我们的 $I$ 是单位矩阵，他长的样子非常好记，从左上到右下这一个对角线全是 1，其余地方全是 0。这个矩阵他有一个非常神奇的性质，那就是任何矩阵和他相乘得到的都是原矩阵（$IA = AI = A$）。其实这个矩阵就是将 n 维空间中的 n 个正交基直接写到一个矩阵里面，所有正交基都没动，自然经过这变换之后向量的坐标也不会改变。我们也可以知道，这个矩阵的逆就是他自己 $I^{-1} = I$
 
@@ -300,9 +470,17 @@ $$ A^{-1}A = AA^{-1} = I，其中 I = \begin{bmatrix}1 & 0 & 0 & \cdots & 0 \\ 0
 #### 关于增广矩阵
 
 &emsp; 为什么要在这里写这个东西呢，因为下面将求解一个矩阵的逆的时候需要用到。一个增广矩阵可以被简单的理解成两个矩阵 "拼凑" 在一起，比如一个非常简单的例子：
-$$ A = \begin{bmatrix} a & c \\ b & d \end{bmatrix}，B = \begin{bmatrix} e & g \\ f & h \end{bmatrix} $$
+
+
+$$
+A = \begin{bmatrix} a & c \\ b & d \end{bmatrix}，B = \begin{bmatrix} e & g \\ f & h \end{bmatrix}
+$$
+
+
 
 &emsp; 他俩的增广矩阵记为 $(A \mid B)$，写成这样：
+
+
 $$
 (A \mid B) = 
 \left[
@@ -312,6 +490,8 @@ b & d & f & h
 \end{array}
 \right]
 $$
+
+
 
 &emsp; 是不是很简单，就是把两个简单的 "拼在一起"。然后中间再加一个竖线就成了他们俩的增广矩阵。
 
@@ -325,7 +505,13 @@ $$
 3. 此时的 B 就是 A 的逆矩阵，即 $B = A^{-1}$
 
 &emsp; 但是为什么是这样呢？我们知道开始消元时的矩阵应该是这样的：$(A\mid I)$，我们在这个矩阵的左边乘上 A 的逆：
-$$ A^{-1}(A\mid I) = (AA^{-1}\mid A^{-1}I) = (I\mid A^{-1}) $$
+
+
+$$
+A^{-1}(A\mid I) = (AA^{-1}\mid A^{-1}I) = (I\mid A^{-1})
+$$
+
+
 
 &emsp; 所以我们知道，存在一种线性变换，使得我们能将 A 与 I 的增广矩阵变成 I 与 $A^{-1}$ 的增广矩阵。而初等行变换的本质就是一种线性变换（因为它可以想写成矩阵乘法的形式），所以我们通过初等行变换把 A 消成 I 之后，剩下的部分自然就是 $A^{-1}$ 了。
 {% endraw %}

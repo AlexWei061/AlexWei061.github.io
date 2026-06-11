@@ -46,10 +46,30 @@ layout: default
   <script>
     window.MathJax = {
       loader: {
-        load: ["[tex]/color"]
+        load: ["[tex]/color", "[tex]/ams"]
       },
       tex: {
-        packages: {"[+]": ["color"]},
+        packages: {"[+]": ["color", "ams"]},
+        macros: {
+          exist: "\\exists",
+          hash: "\\#",
+          argmax: "\\operatorname*{arg\\,max}",
+          argmin: "\\operatorname*{arg\\,min}",
+          bm: ["\\mathbf{#1}", 1],
+          Alpha: "\\mathrm{Α}",
+          Beta: "\\mathrm{Β}",
+          Epsilon: "\\mathrm{Ε}",
+          Zeta: "\\mathrm{Ζ}",
+          Eta: "\\mathrm{Η}",
+          Iota: "\\mathrm{Ι}",
+          Kappa: "\\mathrm{Κ}",
+          Mu: "\\mathrm{Μ}",
+          Nu: "\\mathrm{Ν}",
+          Omicron: "\\mathrm{Ο}",
+          Rho: "\\mathrm{Ρ}",
+          Tau: "\\mathrm{Τ}",
+          Chi: "\\mathrm{Χ}"
+        },
         inlineMath: [["$", "$"], ["\\(", "\\)"]],
         displayMath: [["$$", "$$"], ["\\[", "\\]"]]
       },

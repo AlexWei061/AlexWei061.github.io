@@ -8,12 +8,12 @@ oi_category: "Graph Theory"
 oi_category_slug: "graph"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "lca"]
-summary: "设 f {i, j} 表示节点 i 向上的 2^j 辈祖先，我们就能得到： f {i, j} = f {f{i, j-1}, j-1} 我们据此来初始化一个 f，如果节点x, y 在 2^j 辈中有公共祖先那么我们就可以用 O(j) （j一般来说取30就够用了） 的复杂度求出 LCA(x, y)。"
+summary: "设 f\\ i, j 表示节点 i 向上的 2^j 辈祖先，我们就能得到： f\\ i, j = f\\ f i, j-1 , j-1 我们据此来初始化一个 f，如果节点x, y 在 2^j 辈中有公共祖先那么我们就可以用 O(j) （j一般来说取30就够用了） 的复杂度求出 LCA(x, y)。"
 math: true
 ---
 {% raw %}
 # 1. 倍增求 LCA
-&emsp; 设 $f_{i, j}$ 表示节点 i 向上的 $2^j$ 辈祖先，我们就能得到：$f_{i, j} = f_{f{i, j-1}, j-1}$我们据此来初始化一个 f，如果节点x, y 在 $2^j$ 辈中有公共祖先那么我们就可以用 $O(j)$（j一般来说取30就够用了） 的复杂度求出 LCA(x, y)。
+&emsp; 设 $f\_{i, j}$ 表示节点 i 向上的 $2^j$ 辈祖先，我们就能得到：$f\_{i, j} = f\_{f{i, j-1}, j-1}$我们据此来初始化一个 f，如果节点x, y 在 $2^j$ 辈中有公共祖先那么我们就可以用 $O(j)$（j一般来说取30就够用了） 的复杂度求出 LCA(x, y)。
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;

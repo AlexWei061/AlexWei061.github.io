@@ -25,36 +25,84 @@ math: true
 &emsp; 注意最后一句话 "内能减为最小"，这就是我们要模拟的东西了，我们把要的解看成内能，然后模拟一遍金属的退火过程就能得到 "内能" 的最小值。
 
 ### 物理过程
-&emsp; 根据蒙特卡洛准则，我们知道当材料的内能要从 $E_i$，转化成 $E_j$ 时，分两种情况：
+&emsp; 根据蒙特卡洛准则，我们知道当材料的内能要从 $E\_i$，转化成 $E\_j$ 时，分两种情况：
 
-1. 如果 $E_j < E_i$，那么 100% 的 $E_i$ 会转变成 $E_j$。
-2. 如果 $E_j \geq E_i$，那么 $E_i$ 就会有 $p(\Delta E) = e^{\frac{\Delta E}{kT}}$ 的概率转成 $E_j$。这里的 $\Delta E = E_i - E_j$，$k$ 是玻尔兹曼常数，$T$ 是当前的温度。
+1. 如果 $E\_j < E\_i$，那么 100% 的 $E\_i$ 会转变成 $E\_j$。
+2. 如果 $E\_j \geq E\_i$，那么 $E\_i$ 就会有 $p(\Delta E) = e^{\frac{\Delta E}{kT}}$ 的概率转成 $E\_j$。这里的 $\Delta E = E\_i - E\_j$，$k$ 是玻尔兹曼常数，$T$ 是当前的温度。
 
 &emsp; 而在热平衡状态下，材料在状态 $i$ 的概率是满足玻尔兹曼分布的，也就是：
-$$ P(X = i) = \frac{e^{\frac{-E_i}{kT}}}{\sum\limits_{j\in S} e^{\frac{-E_j}{kT}}} $$
+
+
+$$
+P(X = i) = \frac{e^{\frac{-E_i}{kT}}}{\sum\limits_{j\in S} e^{\frac{-E_j}{kT}}}
+$$
+
+
 
 &emsp; 这里的 $S$ 是一个集合，表示状态空间，$X$ 是材料当前状态的随机变量。这里我们假设 $T$ 很大（就取个极限嘛），每一个状态的概率就是：
-$$ P(X = i) = \lim_{T\to \infty} \frac{e^{\frac{-E_i}{kT}}}{\sum\limits_{j\in S} e^{\frac{-E_j}{kT}}} = \frac{1}{\sum\limits_{j\in S}1} = \frac{1}{\mid S \mid} $$
+
+
+$$
+P(X = i) = \lim_{T\to \infty} \frac{e^{\frac{-E_i}{kT}}}{\sum\limits_{j\in S} e^{\frac{-E_j}{kT}}} = \frac{1}{\sum\limits_{j\in S}1} = \frac{1}{\mid S \mid}
+$$
+
+
 
 &emsp; 这里的 $\mid S \mid$ 表示状态空间 $S$ 的大小。这个结论也就表明在温度很大的时候所有状态的出现的可能性几乎就是一样的。也就是说在一开始模拟退火的时候，我们的当前状态会在整个函数上到处乱跑。
 
 &emsp; 然后温度慢慢地也会降下来，我们来看看温度很低的时候（再取个极限 qwq）这个概率分布会变成什么样子：
-$$ P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S} e^{\frac{E_{min}-E_j}{kT}}} = \lim_{T\to 0}\frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}} + \sum\limits_{j \notin S_{min}}e^{\frac{E_{min}-E_j}{kT}}} $$
 
-&emsp; 这里的 $S_{min}$ 表示内能取到最低的时候的集合，然后当 $T$ 趋近于 0，那么 $\frac{-E_j}{kT}$ 就趋近于正无穷，那么：
-$$ \lim_{T\to 0}\sum_{j \notin S_{min}}e^{\frac{E_{min}-E_j}{kT}} = 0 $$
 
-&emsp; 为什么只有这一项可以消为 0 呢？因为这一项中的 $E_{min}-E_j$ 绝对不为 0。所以：
-$$ P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}} + 0} = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} $$
+$$
+P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S} e^{\frac{E_{min}-E_j}{kT}}} = \lim_{T\to 0}\frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}} + \sum\limits_{j \notin S_{min}}e^{\frac{E_{min}-E_j}{kT}}}
+$$
 
-&emsp; 我们发现，当 $i \notin S_{min}$ 的时候上面的那一项也可以消为 0，就是这样：
-$$ \lim_{T\to0} e^{\frac{E_{min}-e_i}{kT}} = 0 $$
+
+
+&emsp; 这里的 $S\_{min}$ 表示内能取到最低的时候的集合，然后当 $T$ 趋近于 0，那么 $\frac{-E\_j}{kT}$ 就趋近于正无穷，那么：
+
+
+$$
+\lim_{T\to 0}\sum_{j \notin S_{min}}e^{\frac{E_{min}-E_j}{kT}} = 0
+$$
+
+
+
+&emsp; 为什么只有这一项可以消为 0 呢？因为这一项中的 $E\_{min}-E\_j$ 绝对不为 0。所以：
+
+
+$$
+P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}} + 0} = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}}
+$$
+
+
+
+&emsp; 我们发现，当 $i \notin S\_{min}$ 的时候上面的那一项也可以消为 0，就是这样：
+
+
+$$
+\lim_{T\to0} e^{\frac{E_{min}-e_i}{kT}} = 0
+$$
+
+
 
 &emsp; 所以这个时候我们就有：
-$$ P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} = \lim_{T\to 0} \frac{0}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} = 0 $$
 
-&emsp; 所以只有在 $i \in S_{min}$ 的时候 $P(X = i)$ 才可能有不为 0 的值，也就是：
-$$ P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} = \frac{1}{\mid S_{min} \mid} $$
+
+$$
+P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} = \lim_{T\to 0} \frac{0}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} = 0
+$$
+
+
+
+&emsp; 所以只有在 $i \in S\_{min}$ 的时候 $P(X = i)$ 才可能有不为 0 的值，也就是：
+
+
+$$
+P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in S_{min}} e^{\frac{E_{min}-E_j}{kT}}} = \frac{1}{\mid S_{min} \mid}
+$$
+
+
 
 &emsp; 所以说当温度低的时候，内能大概率会进到最低的状态。在模拟退火中就是当 $T$ 很小的时候我们就有很大可能找到全局最优解。
 
@@ -63,11 +111,17 @@ $$ P(X = i) = \lim_{T\to 0} \frac{e^{\frac{E_{min}-E_i}{kT}}}{\sum\limits_{j\in 
 ### 算法流程
 &emsp; 算法流程其实就是模拟金属的退火，首先一层循环模拟温度，然后通过随机扰动产生新的解，并通过上述的蒙特卡洛准则来决定是否接受新解。当然，温度开始的时候应该要很高，这样就几乎所有的新解都能被接受，然后缓慢的降低温度，并得到最优解。具体流程如下：
 
-1. 令初始温度 $T = T_0$，然后随机产生一个初始解 $x_0$，并带进原函数中计算 $E_{x_0}$ 
+1. 令初始温度 $T = T\_0$，然后随机产生一个初始解 $x\_0$，并带进原函数中计算 $E\_{x\_0}$ 
 2. 令 $T = kT$，其中 $k \in (0, 1)$ 表示温度的下降速率。
-3. 对当前的 $x_T$ 产生一个随机扰动，在它的附近得到一个新解 $x_T'$，然后根据蒙特卡洛法则决定是否接受新解。蒙特卡洛准则如下：
-$$p(\Delta E) = \begin{cases} 1 \;\qquad \Delta E < 0 \\ e^{\frac{\Delta E}{kT}} \quad \Delta E \geq 0 \end{cases}$$
-其中 $\Delta E = E_{x_T'} - E_{x_T}$。
+3. 对当前的 $x\_T$ 产生一个随机扰动，在它的附近得到一个新解 $x\_T'$，然后根据蒙特卡洛法则决定是否接受新解。蒙特卡洛准则如下：
+
+
+$$
+p(\Delta E) = \begin{cases} 1 \;\qquad \Delta E < 0 \\ e^{\frac{\Delta E}{kT}} \quad \Delta E \geq 0 \end{cases}
+$$
+
+
+其中 $\Delta E = E\_{x\_T'} - E\_{x\_T}$。
 4. 在每一个温度 $T$ 下，执行 $L$ 次扰动并重复执行步骤 3。
 5. 判断温度是否足够低，能否终止，如果不能终止，就返回步骤 2。
 
@@ -76,7 +130,7 @@ $$p(\Delta E) = \begin{cases} 1 \;\qquad \Delta E < 0 \\ e^{\frac{\Delta E}{kT}}
 
 1. $k$ ：温度下降的速率
 2.  $L$ ：每个 $T$ 中的扰动次数
-3. $T_0$：初始温度
+3. $T\_0$：初始温度
 4. 另一个 $k$：玻尔兹曼常数
 
 &emsp; 这里面除了玻尔兹曼常数是定值之外，其他的常数都不知道是多少，这就需要算法设计者自己慢慢调节这些参数，使得得到正确的解的概率最大化。而且在调参的过程中，某一个常数一点点的改动就可能导致很大的误差，所以调参是一个非常烦人但是必不可少的工作。

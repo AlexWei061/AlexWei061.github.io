@@ -8,26 +8,38 @@ oi_category: "Graph Theory"
 oi_category_slug: "graph"
 date: 2022-08-31
 tags: ["GraghTheory", "Tree", "重心和直径"]
-summary: "设 d x 表示以 x 为根节点到这棵树中最远的距离，显然有："
+summary: "设 d\\ x 表示以 x 为根节点到这棵树中最远的距离，显然有："
 math: true
 ---
 {% raw %}
 # 树的直径
 
-&emsp; 设 $d_x$ 表示以 $x$ 为根节点到这棵树中最远的距离，显然有：
+&emsp; 设 $d\_x$ 表示以 $x$ 为根节点到这棵树中最远的距离，显然有：
 
-$$ d_x = \max_{e_{x \; to \; y_i} \in E_x} \{ d_{y_i} + value(e) \} $$
 
-&emsp; 设 $f_x$ 表示经过 $x$ 的最长链的长度，我们可以发现他就可以拆成四个部分：
 
-1. $x \; to \; y_i$
-2. $y_i$ 到以 $y_i$ 为根的最长距离
-3. $x \; to \; y_j$
-4. $y_j$ 到以 $y_j$ 为根的最长距离
+$$
+d_x = \max_{e_{x \; to \; y_i} \in E_x} \{ d_{y_i} + value(e) \}
+$$
+
+
+
+&emsp; 设 $f\_x$ 表示经过 $x$ 的最长链的长度，我们可以发现他就可以拆成四个部分：
+
+1. $x \; to \; y\_i$
+2. $y\_i$ 到以 $y\_i$ 为根的最长距离
+3. $x \; to \; y\_j$
+4. $y\_j$ 到以 $y\_j$ 为根的最长距离
 
 &emsp; 那么就有：
 
-$$ f_x = \max_{e_{i_{x \; to \; y_i}} \in E, e_{j_{x \; to \;y_j}} \in E} \{ d_{y_i} + d_{y_j} + value(e_i) + value(e_j) \} $$
+
+
+$$
+f_x = \max_{e_{i_{x \; to \; y_i}} \in E, e_{j_{x \; to \;y_j}} \in E} \{ d_{y_i} + d_{y_j} + value(e_i) + value(e_j) \}
+$$
+
+
 
 ```cpp
 #include<bits/stdc++.h>

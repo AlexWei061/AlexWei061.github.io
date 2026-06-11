@@ -83,6 +83,39 @@ GENERIC_TITLES = re.compile(
     re.IGNORECASE,
 )
 
+UNSUPPORTED_UPPERCASE_GREEK = {
+    "Alpha": r"\mathrm{Α}",
+    "Beta": r"\mathrm{Β}",
+    "Epsilon": r"\mathrm{Ε}",
+    "Zeta": r"\mathrm{Ζ}",
+    "Eta": r"\mathrm{Η}",
+    "Iota": r"\mathrm{Ι}",
+    "Kappa": r"\mathrm{Κ}",
+    "Mu": r"\mathrm{Μ}",
+    "Nu": r"\mathrm{Ν}",
+    "Omicron": r"\mathrm{Ο}",
+    "Rho": r"\mathrm{Ρ}",
+    "Tau": r"\mathrm{Τ}",
+    "Chi": r"\mathrm{Χ}",
+}
+
+BARE_TEX_COMMANDS = (
+    "mathbb",
+    "mathcal",
+    "gamma",
+    "notin",
+    "subset",
+    "Sigma",
+    "sigma",
+    "mu",
+    "infty",
+    "cup",
+    "cap",
+    "bigcup",
+    "overline",
+    "varnothing",
+)
+
 PERSONAL_CSDN_ARTICLE_URLS = {
     "120826541": "/posts/mobiusinversion/",
     "121114692": "/posts/bst/",
@@ -328,6 +361,12 @@ def strip_markdown(value: str) -> str:
     value = re.sub(r"`([^`]+)`", r"\1", value)
     value = re.sub(r"<[^>]+>", " ", value)
     value = value.replace("$", " ")
+    value = re.sub(r"\\mathbb\s*\{?\s*([A-Za-z])\s*\}?", r"\1", value)
+    value = re.sub(r"\\mathcal\s*\{?\s*([^{}\s]+)\s*\}?", r"\1", value)
+    value = re.sub(r"\\(?:text|mathrm)\s*\{([^{}]*)\}", r"\1", value)
+    value = re.sub(r"\\[A-Za-z]+(?=[^A-Za-z]|$)", " ", value)
+    value = re.sub(r"\\[;,! ]", " ", value)
+    value = value.replace("{", " ").replace("}", " ")
     value = re.sub(r"[*_~#>]+", " ", value)
     value = re.sub(r"\s+", " ", value).strip()
     return value
@@ -379,72 +418,343 @@ def find_unescaped(value: str, needle: str, start: int) -> int:
         cursor = index + len(needle)
 
 
-def normalize_inline_math(content: str) -> str:
+def escape_math_hashes(value: str) -> str:
     result: list[str] = []
     index = 0
-    while index < len(content):
-        if content.startswith("```", index):
-            end = content.find("```", index + 3)
-            if end == -1:
-                result.append(content[index:])
-                break
-            result.append(content[index : end + 3])
-            index = end + 3
+    while index < len(value):
+        if value[index] != "#" or is_escaped(value, index):
+            result.append(value[index])
+            index += 1
+            continue
+        entity_tail = re.match(r"\d+;", value[index + 1 :])
+        if index > 0 and value[index - 1] == "&" and entity_tail:
+            result.append(value[index])
+        else:
+            result.append(r"\hash")
+        index += 1
+    return "".join(result)
+
+
+def escape_markdown_sensitive_math(value: str) -> str:
+    result: list[str] = []
+    for index, char in enumerate(value):
+        if char in {"_", "*"} and not is_escaped(value, index):
+            result.append("\\")
+        result.append(char)
+    return "".join(result)
+
+
+def normalize_math_segment(value: str, escape_pipes: bool = False) -> str:
+    value = re.sub(r"(?<!\\)\\exist\b", r"\\exists", value)
+    value = re.sub(r"(?<!\\)\\color\{\s*a\s*\}", r"\\color{black}", value)
+    value = re.sub(r"(?<!\\)\\#", r"\\hash", value)
+    for command, replacement in UNSUPPORTED_UPPERCASE_GREEK.items():
+        value = re.sub(rf"(?<!\\)\\{command}\b", lambda _: replacement, value)
+    value = escape_math_hashes(value)
+    if escape_pipes:
+        value = escape_markdown_sensitive_math(value)
+        value = value.replace("|", "&#124;")
+    return value
+
+
+def display_math_block(opener: str, body: str, closer: str) -> str:
+    return "\n\n" + opener + "\n" + normalize_math_segment(body).strip() + "\n" + closer + "\n\n"
+
+
+def looks_like_math(value: str) -> bool:
+    return bool(re.search(r"\\|[_^=<>+\-*/]|\b(?:xor|mod|forall|exists|in)\b", value))
+
+
+def count_inline_dollars(value: str) -> int:
+    count = 0
+    index = 0
+    while index < len(value):
+        if value.startswith("$$", index) and not is_escaped(value, index):
+            index += 2
+            continue
+        if value[index] == "$" and not is_escaped(value, index):
+            count += 1
+        index += 1
+    return count
+
+
+def join_broken_inline_math_lines(text: str) -> str:
+    result: list[str] = []
+    pending = ""
+    for line in text.split("\n"):
+        if pending:
+            if not line.strip():
+                result.append(pending + "$")
+                result.append(line)
+                pending = ""
+                continue
+            separator = "" if pending.endswith((" ", "(", "{", "[")) or not line else " "
+            pending += separator + line.lstrip()
+            if count_inline_dollars(pending) % 2 == 0:
+                result.append(pending)
+                pending = ""
             continue
 
-        if content[index] == "`":
-            end = content.find("`", index + 1)
-            if end == -1:
-                result.append(content[index:])
+        stripped = line.strip()
+        if stripped in {"$$", "\\[", "\\]"}:
+            result.append(line)
+            continue
+        if count_inline_dollars(line) % 2 == 1:
+            pending = line.rstrip()
+            continue
+        result.append(line)
+
+    if pending:
+        result.append(pending)
+    return "\n".join(result)
+
+
+BARE_TEX_COMMAND_RE = re.compile(r"(?<!\\)\\(?:" + "|".join(BARE_TEX_COMMANDS) + r")\b")
+
+
+def looks_like_standalone_math_line(value: str) -> bool:
+    stripped = value.strip()
+    if not stripped or re.search(r"[\u4e00-\u9fff]", stripped):
+        return False
+    if "$" in stripped or re.match(r"\d+\.\s+", stripped):
+        return False
+    if stripped.startswith(("#", "-", "*", ">", "|", "!", "[", "<", "{%")):
+        return False
+    return bool(BARE_TEX_COMMAND_RE.search(stripped) and looks_like_math(stripped))
+
+
+def wrap_bare_tex_chunk(value: str) -> str:
+    result: list[str] = []
+    index = 0
+    while index < len(value):
+        match = BARE_TEX_COMMAND_RE.search(value, index)
+        if not match:
+            result.append(value[index:])
+            break
+
+        start = match.start()
+        while start > index and re.match(r"[A-Za-z0-9_{}^()+\-*/=<>.,:;]", value[start - 1]):
+            start -= 1
+
+        end = match.end()
+        while end < len(value):
+            char = value[end]
+            if char in "，。；、！？\n" or re.match(r"[\u4e00-\u9fff]", char):
                 break
-            result.append(content[index : end + 1])
+            end += 1
+
+        fragment = value[start:end].rstrip()
+        trailing = value[start + len(fragment) : end]
+        if not fragment:
+            result.append(value[index:match.end()])
+            index = match.end()
+            continue
+
+        result.append(value[index:start])
+        result.append("$")
+        result.append(normalize_math_segment(fragment, escape_pipes=True))
+        result.append("$")
+        result.append(trailing)
+        index = end
+    return "".join(result)
+
+
+def wrap_bare_tex_in_prose(line: str) -> str:
+    result: list[str] = []
+    index = 0
+    while index < len(line):
+        if line[index] == "`":
+            end = line.find("`", index + 1)
+            if end == -1:
+                result.append(line[index:])
+                break
+            result.append(line[index : end + 1])
             index = end + 1
             continue
 
-        if content.startswith("$$", index) and not is_escaped(content, index):
-            end = find_unescaped(content, "$$", index + 2)
+        if line.startswith("$$", index) and not is_escaped(line, index):
+            end = find_unescaped(line, "$$", index + 2)
             if end == -1:
-                result.append(content[index:])
+                result.append(line[index:])
                 break
-            result.append(content[index : end + 2])
+            result.append(line[index : end + 2])
             index = end + 2
             continue
 
-        if content.startswith("\\[", index) and not is_escaped(content, index):
-            end = find_unescaped(content, "\\]", index + 2)
+        if line[index] == "$" and not is_escaped(line, index):
+            end = find_unescaped(line, "$", index + 1)
             if end == -1:
-                result.append(content[index:])
+                result.append(line[index:])
                 break
-            result.append(content[index : end + 2])
+            result.append(line[index : end + 1])
+            index = end + 1
+            continue
+
+        if line.startswith("\\(", index) and not is_escaped(line, index):
+            end = find_unescaped(line, "\\)", index + 2)
+            if end == -1:
+                result.append(line[index:])
+                break
+            result.append(line[index : end + 2])
             index = end + 2
             continue
 
-        if content[index] == "$" and not is_escaped(content, index):
-            end = find_unescaped(content, "$", index + 1)
+        next_markers = [
+            marker
+            for marker in [
+                line.find("`", index),
+                find_unescaped(line, "$", index),
+                find_unescaped(line, "\\(", index),
+            ]
+            if marker != -1
+        ]
+        next_index = min(next_markers) if next_markers else len(line)
+        result.append(wrap_bare_tex_chunk(line[index:next_index]))
+        index = next_index
+    return "".join(result)
+
+
+def normalize_display_math(text: str) -> str:
+    lines = text.split("\n")
+    result: list[str] = []
+    display_body: list[str] = []
+    display_closer = ""
+
+    def flush_display(opener: str, closer: str) -> None:
+        result.append(display_math_block(opener, "\n".join(display_body), closer))
+        display_body.clear()
+
+    for line in lines:
+        stripped = line.strip()
+        if display_closer:
+            if stripped == display_closer:
+                flush_display("$$" if display_closer == "$$" else "\\[", display_closer)
+                display_closer = ""
+                continue
+            if stripped.endswith(display_closer):
+                display_body.append(stripped[: -len(display_closer)].rstrip())
+                flush_display("$$" if display_closer == "$$" else "\\[", display_closer)
+                display_closer = ""
+                continue
+            display_body.append(line)
+            continue
+
+        for opener, closer in [("$$", "$$"), ("\\[", "\\]")]:
+            if not stripped.startswith(opener):
+                continue
+            body = stripped[len(opener) :].strip()
+            if body.endswith(closer):
+                flush_body = body[: -len(closer)].strip()
+                result.append(display_math_block(opener, flush_body, closer))
+            else:
+                display_body = [body] if body else []
+                display_closer = closer
+            break
+        else:
+            result.append(line)
+
+    if display_closer:
+        result.append(display_closer)
+        result.extend(display_body)
+    return "\n".join(result)
+
+
+def normalize_inline_math_line(line: str) -> str:
+    line = re.sub(
+        r"\$\$([A-Za-z0-9_{}\\,\s+\-*/^]+?)(?=\s*[\u4e00-\u9fff])",
+        r"$\1$",
+        line,
+    )
+    result: list[str] = []
+    index = 0
+    while index < len(line):
+        if line[index] == "`":
+            end = line.find("`", index + 1)
             if end == -1:
-                result.append(content[index])
+                result.append(line[index:])
+                break
+            result.append(line[index : end + 1])
+            index = end + 1
+            continue
+
+        if line[index] == "$" and not is_escaped(line, index):
+            end = find_unescaped(line, "$", index + 1)
+            if end == -1:
+                body = line[index + 1 :]
+                if looks_like_math(body):
+                    result.append("$")
+                    result.append(normalize_math_segment(body, escape_pipes=True))
+                    result.append("$")
+                    break
+                result.append(line[index])
                 index += 1
                 continue
             result.append("$")
-            result.append(content[index + 1 : end].replace("|", "&#124;"))
+            result.append(normalize_math_segment(line[index + 1 : end], escape_pipes=True))
             result.append("$")
             index = end + 1
             continue
 
-        if content.startswith("\\(", index) and not is_escaped(content, index):
-            end = find_unescaped(content, "\\)", index + 2)
+        if line.startswith("\\(", index) and not is_escaped(line, index):
+            end = find_unescaped(line, "\\)", index + 2)
             if end == -1:
-                result.append(content[index])
+                result.append(line[index])
                 index += 1
                 continue
             result.append("\\(")
-            result.append(content[index + 2 : end].replace("|", "&#124;"))
+            result.append(normalize_math_segment(line[index + 2 : end], escape_pipes=True))
             result.append("\\)")
             index = end + 2
             continue
 
-        result.append(content[index])
+        result.append(line[index])
         index += 1
+    return wrap_bare_tex_in_prose("".join(result))
+
+
+def normalize_non_code_math(text: str) -> str:
+    text = join_broken_inline_math_lines(text)
+    text = normalize_display_math(text)
+    lines: list[str] = []
+    in_display_math = False
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if stripped == "$$":
+            in_display_math = not in_display_math
+            lines.append(line)
+            continue
+        if stripped == "\\[":
+            in_display_math = True
+            lines.append(line)
+            continue
+        if stripped == "\\]":
+            in_display_math = False
+            lines.append(line)
+            continue
+        if in_display_math:
+            lines.append(normalize_math_segment(line))
+        elif looks_like_standalone_math_line(line):
+            lines.append(display_math_block("$$", line.strip(), "$$").rstrip())
+        else:
+            lines.append(normalize_inline_math_line(line))
+    return "\n".join(lines)
+
+
+def normalize_inline_math(content: str) -> str:
+    result: list[str] = []
+    index = 0
+    while index < len(content):
+        fence = content.find("```", index)
+        if fence == -1:
+            result.append(normalize_non_code_math(content[index:]))
+            break
+        result.append(normalize_non_code_math(content[index:fence]))
+        end = content.find("```", fence + 3)
+        if end == -1:
+            result.append(content[fence:])
+            break
+        result.append(content[fence : end + 3])
+        index = end + 3
     return "".join(result)
 
 
@@ -830,7 +1140,10 @@ def migrate() -> None:
         slug = slugs[source_path]
         summary = summary_for(content, article.title)
         front_matter = front_matter_text(article, content, summary)
-        body = "{% raw %}\n" + content.lstrip().rstrip() + "\n{% endraw %}\n"
+        body_content = content.lstrip().rstrip()
+        if body_content.endswith(("$$", "\\]")):
+            body_content += "\n"
+        body = "{% raw %}\n" + body_content + "\n{% endraw %}\n"
         target = POSTS_DIR / f"{article.date}-{slug}.md"
         target.write_text(front_matter + body, encoding="utf-8")
 

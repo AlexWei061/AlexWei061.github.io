@@ -21,9 +21,15 @@ math: true
 
 ### 对线性回归进行修改
 
-&emsp; 在线性回归中，我们有 $h(x) = w^Tx$（这里写的是增加了 $x^{(i)}_0$ 和 $w_0$ 的），而在逻辑回归中，我们希望 $h(x) \in [0, 1]$，而 $h(x)$ 的值具体代表着 $y = 1$ 的概率，所以我们需要引入一个函数：$sigmoid \; function$，也叫 $logistic \; function$：
+&emsp; 在线性回归中，我们有 $h(x) = w^Tx$（这里写的是增加了 $x^{(i)}\_0$ 和 $w\_0$ 的），而在逻辑回归中，我们希望 $h(x) \in [0, 1]$，而 $h(x)$ 的值具体代表着 $y = 1$ 的概率，所以我们需要引入一个函数：$sigmoid \; function$，也叫 $logistic \; function$：
 
-$$ g(t) = \frac{1}{1 + e^{-t}} $$
+
+
+$$
+g(t) = \frac{1}{1 + e^{-t}}
+$$
+
+
 
 &emsp; 图像长这样：
 
@@ -33,7 +39,13 @@ $$ g(t) = \frac{1}{1 + e^{-t}} $$
 
 &emsp; 我们考虑把 $h(x)$ 改成这样：
 
-$$ h(x^{(i)}) = g(w^Tx^{(i)}) = P(y = 1 | x ; w) $$
+
+
+$$
+h(x^{(i)}) = g(w^Tx^{(i)}) = P(y = 1 | x ; w)
+$$
+
+
 
 &emsp; 如果我们考虑将概率超过 $\frac 12$ 的归为 $y = 1$ 的一类，并把概率小于 $\frac 12$ 的归为 $y = 0$ 的这一类的话，我们会发现一件事：
 
@@ -55,11 +67,23 @@ $$ h(x^{(i)}) = g(w^Tx^{(i)}) = P(y = 1 | x ; w) $$
 
 &emsp; 同样的，我们考虑和线性回归一样构造一个表示差异程度的函数，然后用 $GD$ 最小化它就解决了，这里，我们有：
 
-$$ cost(x, y) = \left\{ \begin{array}{} -\ln (h(x)) & if \;\; y = 1 \\ -\ln (1 - h(x)) & if \;\; y = 0 \end{array}\right. $$
+
+
+$$
+cost(x, y) = \left\{ \begin{array}{} -\ln (h(x)) & if \;\; y = 1 \\ -\ln (1 - h(x)) & if \;\; y = 0 \end{array}\right.
+$$
+
+
 
 &emsp; 也可以写成：
 
-$$ cost(x, y) = -\bigg[y\ln h(x) + (1 - y)\ln (1 - h(x))\bigg] $$
+
+
+$$
+cost(x, y) = -\bigg[y\ln h(x) + (1 - y)\ln (1 - h(x))\bigg]
+$$
+
+
 
 &emsp; 我们来分类讨论一下：
 
@@ -70,7 +94,13 @@ $$ cost(x, y) = -\bigg[y\ln h(x) + (1 - y)\ln (1 - h(x))\bigg] $$
 
 &emsp; 然后我们就有我们的 $cost \; function$：
 
-$$ J(w) = -\sum_{i = 1}^m \bigg[y\ln h(x) + (1 - y)\ln (1 - h(x))\bigg] $$
+
+
+$$
+J(w) = -\sum_{i = 1}^m \bigg[y\ln h(x) + (1 - y)\ln (1 - h(x))\bigg]
+$$
+
+
 
 &emsp; 之后 $gd$ 就搞定了
 {% endraw %}

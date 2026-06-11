@@ -32,11 +32,11 @@ math: true
 
 &emsp; 但是对于更一般的情况就只能通过求解一次同余方程来求得乘法逆元了。下面我们来说线性同余方程的解法：
 
-&emsp; 对于这个方程：$ax \equiv b \pmod m$，它等价于 $m \mid (ax-b)$。我们令 ax - b = -ym。则有 ax + my = b。根据在扩展欧几里得算法里面讲过的 $B\acute{e}zout$ 定理及其推论，当且仅当 $gcd(a, m) \mid b$ 时，方程有解。在有解时，我们先用 exgcd 求出ax + my = gcd(a, m) 的一组特解 $x_0, y_0$。然后 $x = x_0 \frac{b}{gcd(a, m)}$就是原方程的一个解了。
+&emsp; 对于这个方程：$ax \equiv b \pmod m$，它等价于 $m \mid (ax-b)$。我们令 ax - b = -ym。则有 ax + my = b。根据在扩展欧几里得算法里面讲过的 $B\acute{e}zout$ 定理及其推论，当且仅当 $gcd(a, m) \mid b$ 时，方程有解。在有解时，我们先用 exgcd 求出ax + my = gcd(a, m) 的一组特解 $x\_0, y\_0$。然后 $x = x\_0 \frac{b}{gcd(a, m)}$就是原方程的一个解了。
 
-&emsp; 在求解乘法逆元时就是求解方程：$ax \equiv 1\pmod b$时,先改写方程为$ax + by = 1$，所以我们知道方程当且仅当 a, b 互质时有解。先用 exgcd 得求出方程的一组特解 $x_0, y_0$。则 $x_0$ 就是原方程的一个解。
+&emsp; 在求解乘法逆元时就是求解方程：$ax \equiv 1\pmod b$时,先改写方程为$ax + by = 1$，所以我们知道方程当且仅当 a, b 互质时有解。先用 exgcd 得求出方程的一组特解 $x\_0, y\_0$。则 $x\_0$ 就是原方程的一个解。
 
-&emsp; 通解也很好想出来就是模 b 与 $x_0$ 同余的所有整数。所以我们如果想要 x 的最小整数解，我们就可以利用取模运算把 $x_0$ 移动到 [1, b) 的区间内：$x_0 = ((x_0 \;mod \; b) + b) \; mod \;b$
+&emsp; 通解也很好想出来就是模 b 与 $x\_0$ 同余的所有整数。所以我们如果想要 x 的最小整数解，我们就可以利用取模运算把 $x\_0$ 移动到 [1, b) 的区间内：$x\_0 = ((x\_0 \;mod \; b) + b) \; mod \;b$
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
@@ -75,24 +75,60 @@ int main(){
 &emsp; 扩展欧几里得常用于求解单个数的逆元，而如果我们需要一堆数的逆元的话，我们一般就是用递推的方法进行求解。推导过程如下：
 
 &emsp; 设：
-$$ ik + r = p \rightarrow ik + r \equiv 0 \pmod p $$
+
+
+$$
+ik + r = p \rightarrow ik + r \equiv 0 \pmod p
+$$
+
+
 
 &emsp; 两边同时乘上 $i^{-1}r^{-1}$ 得到：
-$$ ik\times i^{-1}r^{-1} + r\times i^{-1}r^{-1} \equiv 0 \pmod p \rightarrow kr^{-1} + i^{-1} \pmod p $$
+
+
+$$
+ik\times i^{-1}r^{-1} + r\times i^{-1}r^{-1} \equiv 0 \pmod p \rightarrow kr^{-1} + i^{-1} \pmod p
+$$
+
+
 
 &emsp; 所以：
-$$ i^{-1} \equiv -kr^{-1} \pmod p $$
+
+
+$$
+i^{-1} \equiv -kr^{-1} \pmod p
+$$
+
+
 
 &emsp; 因为我们设的是$ik + r = p$，所以 $r \in (0, i)$，r < i。所以在递推的过程中， $r^{-1}$ 肯定在之前就被求出来了。所以我们就可以由此确定 $i^{-1}$。下面证明递推式：
 
 &emsp; 因为 $ik + r = p$ 所以 $k = \lfloor\frac{p}{i}\rfloor，r = p\mod i$，所以：
-$$ i^{-1} \equiv - \lfloor \frac{p}{i} \rfloor \times (p \; mod \; i)^{-1} \pmod p$$
+
+
+$$
+i^{-1} \equiv - \lfloor \frac{p}{i} \rfloor \times (p \; mod \; i)^{-1} \pmod p
+$$
+
+
 
 &emsp; 然后我们就可以得到递推式：
-$$ i^{-1} = - \lfloor \frac{p}{i} \rfloor \times (p \; mod \; i) $$
+
+
+$$
+i^{-1} = - \lfloor \frac{p}{i} \rfloor \times (p \; mod \; i)
+$$
+
+
 
 &emsp; 如果我们要得到最小整数解，我们可以在乘法的第一项加上一个 p，就是这样：
-$$ i^{-1} = (p - \lfloor \frac{p}{i} \rfloor) \times (p \; mod \; i) $$
+
+
+$$
+i^{-1} = (p - \lfloor \frac{p}{i} \rfloor) \times (p \; mod \; i)
+$$
+
+
 
 &emsp; 代码如下：
 ```c

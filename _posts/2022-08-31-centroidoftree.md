@@ -23,7 +23,7 @@ math: true
 以上内容摘自 [树的重心 OI Wiki](https://oi-wiki.org/graph/tree-centroid/)
 
 &emsp; ​
-我们要求得一棵树的重心，我们就需要一个 $size[MAXN]$ 数组。而这个数组的值需要从叶子结点往上来进行统计。对于叶子结点，我们知道 "以它为根的子树的大小是1" ，而对于非叶子节点 $x$ 来说，$x$ 有 $k$ 个子节点 $y_1 ~ y_k$，并且以$y_1 ~ y_k$为根的子树的大小分别为 $size[y_1]$，$size[y_2]$，$\cdots$，$size[y_k]$。则$size[x] =  size[1] + size[2] +\cdots+ size[k] +1$。如下图：
+我们要求得一棵树的重心，我们就需要一个 $size[MAXN]$ 数组。而这个数组的值需要从叶子结点往上来进行统计。对于叶子结点，我们知道 "以它为根的子树的大小是1" ，而对于非叶子节点 $x$ 来说，$x$ 有 $k$ 个子节点 $y\_1 ~ y\_k$，并且以$y\_1 ~ y\_k$为根的子树的大小分别为 $size[y\_1]$，$size[y\_2]$，$\cdots$，$size[y\_k]$。则$size[x] =  size[1] + size[2] +\cdots+ size[k] +1$。如下图：
 
 ![](/assets/images/blog/cnterTree.png)
 

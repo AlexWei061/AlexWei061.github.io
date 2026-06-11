@@ -37,15 +37,33 @@ math: true
 
 &emsp; 然后我们发现，这个系统中只需要考虑重力势能，于是我们令桌面为零势面，绳长为 $L$，节点坐标为 $(x, y)$,于是就是让这个式子取到最小值：
 
-$$ \sum_{i = 1}^n \left(\sqrt{(x - x_i)^1 + (y - y_i)^2} - L \right) m_i g $$
+
+
+$$
+\sum_{i = 1}^n \left(\sqrt{(x - x_i)^1 + (y - y_i)^2} - L \right) m_i g
+$$
+
+
 
 &emsp; 稍微化简一下：
 
-$$ = \sum_{i = 1}^n \left(\sqrt{(x - x_i)^2 + (y - y_i)^2}\right)m_ig - \sum_{i = 1}^n m_igL $$
+
+
+$$
+= \sum_{i = 1}^n \left(\sqrt{(x - x_i)^2 + (y - y_i)^2}\right)m_ig - \sum_{i = 1}^n m_igL
+$$
+
+
 
 &emsp; 然后我们就会发现，后面减掉的那一坨就是个常数，所以不用管，于是我们就只需要让下面这个式子最小就可以了：
 
-$$ \sum_{i = 1}^n \left(\sqrt{(x - x_i)^2 + (y - y_i)^2}\right)m_i $$
+
+
+$$
+\sum_{i = 1}^n \left(\sqrt{(x - x_i)^2 + (y - y_i)^2}\right)m_i
+$$
+
+
 
 &emsp; 但是这个函数的性质我们也是完全不知道，要求出这个玩意儿的最小值看起来用正常的方法就有一点困难了，于是我们可以考虑模拟退火，具体来说就是这样：
 

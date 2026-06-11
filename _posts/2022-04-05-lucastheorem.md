@@ -18,7 +18,13 @@ math: true
 
 &emsp; 结论很简单，就是一个简单的式子（$p$ 是质数）：
 
-$$ C_n^m \equiv C_{n \mod p}^{m \mod p} \times C_{\frac{n}{p}}^{\frac{m}{p}} \pmod p $$
+
+
+$$
+C_n^m \equiv C_{n \mod p}^{m \mod p} \times C_{\frac{n}{p}}^{\frac{m}{p}} \pmod p
+$$
+
+
 
 &emsp; 根据这个式子，我们就能快速计算 $p$ 较小的组合数了。
 
@@ -43,7 +49,7 @@ int C(int n, int m, int p){                                               // 正
 }
 ```
 
-&emsp; 然后根据我们上面给出的式子，我们发现 $C_{n \mod p}^{m \mod p}$ 是可以用 $C$ 这个函数解决的。那么我们很自然的想到递归计算 $C_{\frac np}^{\frac mp}$。就像这样：
+&emsp; 然后根据我们上面给出的式子，我们发现 $C\_{n \mod p}^{m \mod p}$ 是可以用 $C$ 这个函数解决的。那么我们很自然的想到递归计算 $C\_{\frac np}^{\frac mp}$。就像这样：
 
 ```cpp
 int lucas(int n, int m, int p){                                           // lucas 求组合数 
@@ -55,15 +61,29 @@ int lucas(int n, int m, int p){                                           // luc
 
 ## 式子的证明
 
-&emsp; 	考虑 $C_p^n \mod p$ 的取值，注意到：
+&emsp; 	考虑 $C\_p^n \mod p$ 的取值，注意到：
 
-$$ C_p^n = \frac{p!}{n!(p - n)!	} $$
+
+
+$$
+C_p^n = \frac{p!}{n!(p - n)!	}
+$$
+
+
 
 &emsp; 分子的质因数分解中 $p$ 次项恰好为 $1$。所以只有 $n = 0 \lor n = p$ 的时候 $n!(p - n)!$ 的质因子含有 $p$。所以我们得到以下式子：
 
-$$ C_p^n \mod p = [n = 0 \lor n = p] $$
+
+
+$$
+C_p^n \mod p = [n = 0 \lor n = p]
+$$
+
+
 
 &emsp; 进而：
+
+
 
 $$
 \begin{aligned}
@@ -73,7 +93,11 @@ $$
 \end{aligned}
 $$
 
+
+
 &emsp; 这个式子不仅适用于整数，还适用于多项式，比如说考虑二项式 $f^p(x) = (ax^n + bx^m)^p \mod p$ 的结果：
+
+
 
 $$
 \begin{aligned}
@@ -82,11 +106,24 @@ f^p(x) \equiv (ax^n + bx^m)^p & \equiv a^px^{pn} + b^px^{pm} \\
 \end{aligned}
 $$
 
-&emsp; 考虑二项式 $(1 + x) ^ n \mod p$，那么 $C_n^m$ 就是在求 $x^m$ 次项的系数。使用上面证明过的引理，我们可以得到：
 
-$$ (1 + x)^n \equiv (1 + x)^{p\lfloor \frac np \rfloor}(1 + x)^{n \mod p} \equiv (1 + x^p)^{\lfloor \frac np \rfloor}(1 + x)^{n \mod p} \pmod p $$
+
+&emsp; 考虑二项式 $(1 + x) ^ n \mod p$，那么 $C\_n^m$ 就是在求 $x^m$ 次项的系数。使用上面证明过的引理，我们可以得到：
+
+
+
+$$
+(1 + x)^n \equiv (1 + x)^{p\lfloor \frac np \rfloor}(1 + x)^{n \mod p} \equiv (1 + x^p)^{\lfloor \frac np \rfloor}(1 + x)^{n \mod p} \pmod p
+$$
+
+
 
 &emsp; 注意前面那一坨只有在 $p$ 的倍数的时候才会有取值，后面那一坨的最高此项是 $n \mod p \leq p - 1$，所以这俩玩意儿的卷积在任何一个位置最多有一种方式进行贡献，也就是说前者去 $p$ 的倍数次项，后者取余数次项，也就是上面最初给出的式子：
 
-$$ C_n^m \equiv C_{\frac np}^{\frac mp} \times C_{n \mod p}^{m \mod p} \pmod p $$
+
+
+$$
+C_n^m \equiv C_{\frac np}^{\frac mp} \times C_{n \mod p}^{m \mod p} \pmod p
+$$
+
 {% endraw %}

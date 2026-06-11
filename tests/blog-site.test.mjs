@@ -67,6 +67,9 @@ function inlineMathSegments(value) {
     if (value[index] === "$" && !isEscaped(value, index)) {
       const end = (() => {
         for (let cursor = index + 1; cursor < value.length; cursor += 1) {
+          if (value[cursor] === "\n") {
+            return -1;
+          }
           if (value[cursor] === "$" && !isEscaped(value, cursor)) {
             return cursor;
           }
@@ -89,6 +92,93 @@ function inlineMathSegments(value) {
     }
   }
   return segments;
+}
+
+function mathSegments(value) {
+  const segments = [];
+  for (let index = 0; index < value.length; index += 1) {
+    if (value.startsWith("$$", index) && !isEscaped(value, index)) {
+      const end = value.indexOf("$$", index + 2);
+      if (end !== -1) {
+        segments.push(value.slice(index + 2, end));
+        index = end + 1;
+      }
+      continue;
+    }
+
+    if (value.startsWith("\\[", index) && !isEscaped(value, index)) {
+      const end = value.indexOf("\\]", index + 2);
+      if (end !== -1) {
+        segments.push(value.slice(index + 2, end));
+        index = end + 1;
+      }
+      continue;
+    }
+
+    if (value[index] === "$" && !isEscaped(value, index)) {
+      const end = (() => {
+        for (let cursor = index + 1; cursor < value.length; cursor += 1) {
+          if (value[cursor] === "\n") {
+            return -1;
+          }
+          if (value[cursor] === "$" && !isEscaped(value, cursor)) {
+            return cursor;
+          }
+        }
+        return -1;
+      })();
+      if (end !== -1) {
+        segments.push(value.slice(index + 1, end));
+        index = end;
+      }
+      continue;
+    }
+
+    if (value.startsWith("\\(", index) && !isEscaped(value, index)) {
+      const end = value.indexOf("\\)", index + 2);
+      if (end !== -1) {
+        segments.push(value.slice(index + 2, end));
+        index = end + 1;
+      }
+    }
+  }
+  return segments;
+}
+
+function stripMathContent(value) {
+  return value
+    .replace(/\$\$[\s\S]*?\$\$/g, "")
+    .replace(/\\\[[\s\S]*?\\\]/g, "")
+    .replace(/\$[^$\n]*\$/g, "")
+    .replace(/\\\([^)]*\\\)/g, "");
+}
+
+function hasUnsafeMathHash(segment) {
+  for (let index = 0; index < segment.length; index += 1) {
+    if (segment[index] !== "#" || isEscaped(segment, index)) {
+      continue;
+    }
+    const entityTail = segment.slice(index + 1).match(/^\d+;/);
+    if (segment[index - 1] === "&" && entityTail) {
+      continue;
+    }
+    return true;
+  }
+  return false;
+}
+
+function countInlineDollarDelimiters(line) {
+  let count = 0;
+  for (let index = 0; index < line.length; index += 1) {
+    if (line.startsWith("$$", index) && !isEscaped(line, index)) {
+      index += 1;
+      continue;
+    }
+    if (line[index] === "$" && !isEscaped(line, index)) {
+      count += 1;
+    }
+  }
+  return count;
 }
 
 const index = await read("index.html");
@@ -250,7 +340,16 @@ assert.match(postLayout, /page\.math_chapter_slug/, "post layout should prefer M
 assert.match(postLayout, /page\.math_category_slug/, "post layout should support Math category return links");
 assert.match(postLayout, /Back to {{ archive_label }}/, "post layout should label the return link with the resolved archive label");
 assert.match(postLayout, /\[tex\]\/color/, "MathJax should load color support for migrated textcolor formulas");
+assert.match(postLayout, /\[tex\]\/ams/, "MathJax should load AMS support for cases environments");
 assert.match(postLayout, /packages:[\s\S]*color/, "MathJax tex packages should include color support");
+assert.match(postLayout, /packages:[\s\S]*ams/, "MathJax tex packages should include AMS support");
+assert.match(postLayout, /macros:[\s\S]*exist:[\s\S]*\\\\exists/, "MathJax should alias legacy exist macros to exists");
+assert.match(postLayout, /macros:[\s\S]*hash:[\s\S]*\\\\#/, "MathJax should provide a hash macro that survives Markdown escaping");
+assert.match(postLayout, /macros:[\s\S]*argmax/, "MathJax should define argmax for future math notes");
+assert.match(postLayout, /macros:[\s\S]*argmin/, "MathJax should define argmin for future math notes");
+assert.match(postLayout, /macros:[\s\S]*bm:/, "MathJax should define bm for future math notes");
+assert.match(postLayout, /macros:[\s\S]*Alpha:/, "MathJax should alias nonstandard uppercase Greek Alpha");
+assert.match(postLayout, /macros:[\s\S]*Beta:/, "MathJax should alias nonstandard uppercase Greek Beta");
 
 const css = await read("assets/css/main.css");
 assert.match(css, /overflow-x:\s*hidden/, "layout should prevent accidental mobile horizontal scrolling");
@@ -321,11 +420,52 @@ assert.deepEqual(mathCategoryCounts, { "real-analysis": 11 }, "Math posts should
 assert.deepEqual(mathChapterCounts, { ch0: 5, ch1: 6 }, "Real Analysis posts should be distributed into existing chapters");
 
 const inlineMathPipeIssues = [];
+const inlineMathMarkdownIssues = [];
+const displayMathBlockIssues = [];
+const inlineMathLineIssues = [];
 for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
-  const content = stripCodeContent(await read(`_posts/${file}`));
+  const rawContent = await read(`_posts/${file}`);
+  const rawLines = rawContent.split(/\r?\n/);
+  let inFence = false;
+  let inDisplayMath = false;
+  for (const [index, line] of rawLines.entries()) {
+    if (line.trim().startsWith("```")) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence || !line.includes("$$")) {
+      if (!inFence && !inDisplayMath && countInlineDollarDelimiters(line) % 2 === 1) {
+        inlineMathLineIssues.push(`${file}:${index + 1}: inline $ math should not span lines`);
+      }
+      continue;
+    }
+    if (line.trim() !== "$$") {
+      displayMathBlockIssues.push(`${file}:${index + 1}: display $$ should be isolated on its own line`);
+      continue;
+    }
+    if (!inDisplayMath) {
+      if (index > 0 && rawLines[index - 1].trim() !== "") {
+        displayMathBlockIssues.push(`${file}:${index + 1}: display $$ opener should be preceded by a blank line`);
+      }
+    } else if (index + 1 < rawLines.length && rawLines[index + 1].trim() !== "") {
+      displayMathBlockIssues.push(`${file}:${index + 1}: display $$ closer should be followed by a blank line`);
+    }
+    inDisplayMath = !inDisplayMath;
+  }
+  if (inDisplayMath) {
+    displayMathBlockIssues.push(`${file}: unclosed display $$ block`);
+  }
+
+  const content = stripCodeContent(rawContent);
   for (const segment of inlineMathSegments(content)) {
     if (segment.includes("|")) {
       inlineMathPipeIssues.push(`${file}: ${segment.replace(/\s+/g, " ").trim().slice(0, 100)}`);
+    }
+    for (let index = 0; index < segment.length; index += 1) {
+      if ((segment[index] === "_" || segment[index] === "*") && !isEscaped(segment, index)) {
+        inlineMathMarkdownIssues.push(`${file}: ${segment[index]} in ${segment.replace(/\s+/g, " ").trim().slice(0, 100)}`);
+        break;
+      }
     }
   }
 }
@@ -334,6 +474,61 @@ assert.deepEqual(
   [],
   "inline math should not contain raw | characters because kramdown can parse them as table separators",
 );
+assert.deepEqual(
+  inlineMathMarkdownIssues,
+  [],
+  "inline math should escape Markdown emphasis characters before kramdown sees them",
+);
+assert.deepEqual(
+  displayMathBlockIssues,
+  [],
+  "display $$ math should be isolated with blank lines so kramdown does not fold it into paragraphs",
+);
+assert.deepEqual(
+  inlineMathLineIssues,
+  [],
+  "inline $ math should be closed on the same line so MathJax does not pair it with a later paragraph",
+);
+
+const legacyExistIssues = [];
+const invalidColorIssues = [];
+const unsafeMathHashIssues = [];
+const unsupportedUppercaseGreekIssues = [];
+const bareTexCommandIssues = [];
+const unsupportedUppercaseGreekPattern = /\\(?:Alpha|Beta|Epsilon|Zeta|Eta|Iota|Kappa|Mu|Nu|Omicron|Rho|Tau|Chi)\b/;
+const bareTexCommandPattern = /\\(?:mathbb|mathcal|gamma|notin|subset|Sigma|sigma|mu|infty|cup|cap|bigcup|overline|varnothing)\b/;
+for (const file of postFiles.filter((item) => item.endsWith(".md"))) {
+  const content = stripCodeContent(await read(`_posts/${file}`));
+  for (const [index, line] of content.split(/\r?\n/).entries()) {
+    if (/(?<!\\)\\exist\b/.test(line)) {
+      legacyExistIssues.push(`${file}:${index + 1}: ${line.trim().slice(0, 120)}`);
+    }
+    if (/(?<!\\)\\color\{a\}/.test(line)) {
+      invalidColorIssues.push(`${file}:${index + 1}: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  for (const segment of mathSegments(content)) {
+    if (hasUnsafeMathHash(segment)) {
+      unsafeMathHashIssues.push(`${file}: ${segment.replace(/\s+/g, " ").trim().slice(0, 120)}`);
+    }
+    const unsupportedGreek = segment.match(unsupportedUppercaseGreekPattern);
+    if (unsupportedGreek) {
+      unsupportedUppercaseGreekIssues.push(`${file}: ${unsupportedGreek[0]} in ${segment.replace(/\s+/g, " ").trim().slice(0, 120)}`);
+    }
+  }
+  const proseContent = stripMathContent(content);
+  for (const [index, line] of proseContent.split(/\r?\n/).entries()) {
+    const bareTex = line.match(bareTexCommandPattern);
+    if (bareTex) {
+      bareTexCommandIssues.push(`${file}:${index + 1}: ${line.trim().slice(0, 160)}`);
+    }
+  }
+}
+assert.deepEqual(legacyExistIssues, [], "legacy \\exist should be normalized to \\exists in migrated posts");
+assert.deepEqual(invalidColorIssues, [], "invalid \\color{a} should be normalized to a safe color");
+assert.deepEqual(unsafeMathHashIssues, [], "math fragments should escape raw # because MathJax treats it as a macro parameter");
+assert.deepEqual(unsupportedUppercaseGreekIssues, [], "nonstandard uppercase Greek commands should be normalized before MathJax sees posts");
+assert.deepEqual(bareTexCommandIssues, [], "obvious TeX command fragments should be wrapped in math mode");
 
 const blogImages = await listFiles("assets/images/blog");
 assert.equal(blogImages.length, 92, "all blog images plus two external practice images should be copied");
@@ -437,6 +632,10 @@ const realAnalysisSixPostName = postFiles.find((file) => file.includes("实分�
 assert.ok(realAnalysisSixPostName, "Real Analysis chapter 1 sixth post should be generated");
 const realAnalysisSixPost = await read(`_posts/${realAnalysisSixPostName}`);
 assert.match(realAnalysisSixPost, /\/assets\/images\/real-analysis\/CH1--%E6%B5%8B%E5%BA%A6%E7%90%86%E8%AE%BA\/pic\/1\.png/, "Real Analysis local image 1.png should be rewritten");
+assert.match(realAnalysisSixPost, /\\hash\([^)]*\\mathbb\{N\}/, "Real Analysis cardinality notation should use a MathJax hash macro");
+
+const gcdPost = await read("_posts/2022-08-16-gcd.md");
+assert.doesNotMatch(gcdPost, /\\Alpha|\\Beta/, "legacy uppercase Greek commands in GCD should be normalized");
 
 const tarjanDccPost = await read("_posts/2021-11-03-tarjananddcc.md");
 assert.match(tarjanDccPost, /\[Tarjan求强连通分量\]\(\/posts\/tarjanandscc\/\)/, "old GitHub OI links should point at migrated posts");

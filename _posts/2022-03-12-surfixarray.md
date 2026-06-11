@@ -108,7 +108,13 @@ int main(){
 
 &emsp; 废话不多说，我们直接来一个例子来看一下如何构造吧。比如说下面这个字符串：
 
-$$ aababababb $$
+
+
+$$
+aababababb
+$$
+
+
 
 &emsp; 首先我们知道，以 $a$ 开头的后缀是必定比以 $b$ 开头的后缀要小的。所以我们把所有的 $a$ 位置上标上一个数组 "1"，把所有 $b$ 标上一个数字 “2”，就像这样：
 
@@ -260,59 +266,153 @@ int main(){
 
 &emsp; 我们可以很容易发现，在表的上半部分中，每一行中的数字都是单调递减的，而且每一列中，所有数都是单调递增的。如果这样的规律是普遍适用的话，我们就能得到这样一个式子（$1 \leq i < j  \leq n$）：
 
+
+
 $$
 \begin{aligned}
 \forall 1≤i<j<k≤n,lcp(sa[i],sa[k])=\min\{ lcp(sa[j],sa[k])\}
 \end{aligned}
 $$
 
-&emsp; 于是我们就能推出一下的式子（设 $h_i = lcp(sa[i-1], sa[i])$）：
 
-$$ \forall 1 \leq i < j \leq n, lcp(sa[i], sa[k]) = \min_{k=i+1}^j lcp(sa[k-1], sa[k]) = \min_{k=i+1}^j h_k $$
+
+&emsp; 于是我们就能推出一下的式子（设 $h\_i = lcp(sa[i-1], sa[i])$）：
+
+
+
+$$
+\forall 1 \leq i < j \leq n, lcp(sa[i], sa[k]) = \min_{k=i+1}^j lcp(sa[k-1], sa[k]) = \min_{k=i+1}^j h_k
+$$
+
+
 
 &emsp; 证明我就不写了，因为证明很简单，反证(~~反正~~)大家都能证书来qwq。（~~其实就是因为我懒~~）。有了这个式子，我们就把求两个后缀的 $lcp$ 的问题转化成了一个区间最小值的问题。是不是很神奇呢？	用 st 表就能做到 $O(n\log n)$ 预处理， $O(1)$ 查询了。
 
-&emsp; 现在我们的问题是如何快速求解 $h_i$ 这个数组。其实这个也很简单，我们先暴力计算（就是一位一位的比较） $h_2 = lcp(sa[1], sa[2]) = 3$。然后我们把 $sa[1]$ 和 $sa[2]$ 都退掉一个第一个字符：
+&emsp; 现在我们的问题是如何快速求解 $h\_i$ 这个数组。其实这个也很简单，我们先暴力计算（就是一位一位的比较） $h\_2 = lcp(sa[1], sa[2]) = 3$。然后我们把 $sa[1]$ 和 $sa[2]$ 都退掉一个第一个字符：
 
-$$ sa[1] = aababaabb \rightarrow ababaabb = sa[4] $$
 
-$$ sa[2] = aabb \rightarrow abb = sa[5] $$
 
-&emsp; 于是我们知道 $h_5 = lcp(sa[4], sa[5])$ 就是 $3 - 1 = 2$。然后我们继续退：
+$$
+sa[1] = aababaabb \rightarrow ababaabb = sa[4]
+$$
 
-$$ sa[4] = abababb \rightarrow babaabb = sa[8] $$
 
-$$ sa[5] = abb \rightarrow bb = sa[9] $$
 
-&emsp; 然后我们就知道 $h_9 = lcp(sa[8], sa[9])$ 就是 $2 - 1 = 1$。和上面一样，接着退：
 
-$$ sa[8] = bababb \rightarrow abaabb = sa[3] $$
 
-$$ sa[9] = bb \rightarrow b = sa[6] $$
+$$
+sa[2] = aabb \rightarrow abb = sa[5]
+$$
 
-&emsp; 于是我们就知道 $lcp(sa[3], sa[6])$ 就是 $1 - 1 = 0$。但是我们要求的显然是相邻的两个后缀的 $lcp$ 所以我们根据上面的式子（就是这个： $\forall 1 \leq i < j \leq n, lcp(sa[i], sa[k]) = \min\limits_{k=i+1}^j lcp(sa[k-1], sa[k]) = \min\limits_{k=i+1}^j h_k$）可以知道 $lcp(sa[3], sa[4]) \geq lcp(sa[3], sa[6])$，所以我们就从 0 暴力扩展求出 $lcp(sa[3], sa[4]) = 3$。然后继续退：
 
-$$ sa[3] = abaabb \rightarrow baabb = sa[7] $$
 
-$$ sa[4] = ababaabb \rightarrow babaabb = sa[8] $$
+&emsp; 于是我们知道 $h\_5 = lcp(sa[4], sa[5])$ 就是 $3 - 1 = 2$。然后我们继续退：
+
+
+
+$$
+sa[4] = abababb \rightarrow babaabb = sa[8]
+$$
+
+
+
+
+
+$$
+sa[5] = abb \rightarrow bb = sa[9]
+$$
+
+
+
+&emsp; 然后我们就知道 $h\_9 = lcp(sa[8], sa[9])$ 就是 $2 - 1 = 1$。和上面一样，接着退：
+
+
+
+$$
+sa[8] = bababb \rightarrow abaabb = sa[3]
+$$
+
+
+
+
+
+$$
+sa[9] = bb \rightarrow b = sa[6]
+$$
+
+
+
+&emsp; 于是我们就知道 $lcp(sa[3], sa[6])$ 就是 $1 - 1 = 0$。但是我们要求的显然是相邻的两个后缀的 $lcp$ 所以我们根据上面的式子（就是这个： $\forall 1 \leq i < j \leq n, lcp(sa[i], sa[k]) = \min\limits\_{k=i+1}^j lcp(sa[k-1], sa[k]) = \min\limits\_{k=i+1}^j h\_k$）可以知道 $lcp(sa[3], sa[4]) \geq lcp(sa[3], sa[6])$，所以我们就从 0 暴力扩展求出 $lcp(sa[3], sa[4]) = 3$。然后继续退：
+
+
+
+$$
+sa[3] = abaabb \rightarrow baabb = sa[7]
+$$
+
+
+
+
+
+$$
+sa[4] = ababaabb \rightarrow babaabb = sa[8]
+$$
+
+
 
 &emsp; 所以 $lcp(sa[7], sa[8])$ 显然就是 $3 - 1 = 2$，然后继续向下扩展发现扩展不了所以 $lcp(sa[7], sa[8]) = 2$，然后继续：
 
-$$ sa[7] = baabb \rightarrow aabb = sa[2] $$
 
-$$ sa[8] = babaabb \rightarrow abaabb = sa[3] $$
+
+$$
+sa[7] = baabb \rightarrow aabb = sa[2]
+$$
+
+
+
+
+
+$$
+sa[8] = babaabb \rightarrow abaabb = sa[3]
+$$
+
+
 
 &emsp; 所以我们知道 $lcp(sa[2], sa[3]) = 2 - 1 = 1$。然后继续退：
 
-$$ sa[2] = aabb \rightarrow abb = sa[5] $$
 
-$$ sa[3] = abaabb \rightarrow baabb = sa[7] $$
+
+$$
+sa[2] = aabb \rightarrow abb = sa[5]
+$$
+
+
+
+
+
+$$
+sa[3] = abaabb \rightarrow baabb = sa[7]
+$$
+
+
 
 &emsp; 所以我们知道 $lcp(sa[5], sa[7]) = 1 - 1 = 0$。然后和上面计算 $lcp(sa[3], sa[4])$ 时同理： $lcp(sa[5], sa[6]) \geq lcp(sa[5], sa[7])$。所以我们就接着暴力扩展得出 $lcp(sa[5], sa[6]) = 0$。然后接着退：
 
-$$ sa[5] = abb \rightarrow bb = sa[9] $$
 
-$$ sa[6] = b \rightarrow NULL = 啥也不是 $$
+
+$$
+sa[5] = abb \rightarrow bb = sa[9]
+$$
+
+
+
+
+
+$$
+sa[6] = b \rightarrow NULL = 啥也不是
+$$
+
+
 
 &emsp; 我们发现现在退出来什么都不是了，那么我们就直接从没有求解过的地方直接暴力计算 $lcp(sa[6], sa[7]) = 1$。
 

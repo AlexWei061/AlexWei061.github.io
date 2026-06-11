@@ -18,12 +18,14 @@ math: true
 
 ### 定义
 
-&emsp; $m > 1, m \in Z, gcd(a, m) = 1, \exist r \in[1, m - 1]$ 使得 $a^{r} \equiv 1 \pmod m$，满足条件的 $r$ 中最小的一个就是 $a$ 模 $m$ 的阶
+&emsp; $m > 1, m \in Z, gcd(a, m) = 1, \exists r \in[1, m - 1]$ 使得 $a^{r} \equiv 1 \pmod m$，满足条件的 $r$ 中最小的一个就是 $a$ 模 $m$ 的阶
 
 
 ### 一些性质
 
 &emsp; 因为 $gcd(a, m) = 1$ 所以 $a^0, a^1, a^2, \cdots, a^{m -1}$ 都与 $m$ 互质（这里有 $m$ 个数）。又因为：
+
+
 
 $$
 \begin{cases}
@@ -35,11 +37,19 @@ a^{m -1} \mod m
 \end{cases}
 $$
 
-&emsp; 这些数一共有 $m - 1$ 种取值（因为都互质），所以一定 $\exist i \leq j \in [0, m - 1]$，使得 $a^i \equiv a^j \pmod m$ 也就是 $a^{i - j} \equiv 1 \pmod m$，所以 $r = i - j, r \in[1, m - 1]$，有了这个我们就可以在 $O(m\log m)$ 的时间内求出 $r$ 了。
+
+
+&emsp; 这些数一共有 $m - 1$ 种取值（因为都互质），所以一定 $\exists i \leq j \in [0, m - 1]$，使得 $a^i \equiv a^j \pmod m$ 也就是 $a^{i - j} \equiv 1 \pmod m$，所以 $r = i - j, r \in[1, m - 1]$，有了这个我们就可以在 $O(m\log m)$ 的时间内求出 $r$ 了。
 
 &emsp; 根据原根的定义我们可以知道如果 $a^N \equiv 1 \pmod m$ 那么 $r &#124; N$。又因为欧拉定理长这样：
 
-$$ a^{\varphi(m)} \equiv 1 \pmod m $$
+
+
+$$
+a^{\varphi(m)} \equiv 1 \pmod m
+$$
+
+
 
 &emsp; 所以我们又能知道一定有 $r &#124; \varphi(m)$。
 
@@ -58,7 +68,13 @@ $$ a^{\varphi(m)} \equiv 1 \pmod m $$
 
 &emsp; 根据上面的定义我们知道：
 
-$$ g^{\varphi(m)} \equiv 1 \pmod m $$
+
+
+$$
+g^{\varphi(m)} \equiv 1 \pmod m
+$$
+
+
 
 &emsp; 又因为 $r &#124; \varphi(m)$，所以 $r = \varphi(m)$。那么显然 $\{g^1, g^2, g^3, \cdots, g^{\varphi(m)} \}$ 就是一个简化剩余系。
 {% endraw %}
