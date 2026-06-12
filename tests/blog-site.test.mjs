@@ -531,7 +531,8 @@ assert.deepEqual(unsupportedUppercaseGreekIssues, [], "nonstandard uppercase Gre
 assert.deepEqual(bareTexCommandIssues, [], "obvious TeX command fragments should be wrapped in math mode");
 
 const blogImages = await listFiles("assets/images/blog");
-assert.equal(blogImages.length, 92, "all blog images plus two external practice images should be copied");
+assert.equal(blogImages.length, 91, "referenced blog images plus two external practice images should be copied");
+assert.equal(blogImages.includes("kruskalreconstruction.png"), false, "unreferenced kruskal reconstruction image should stay pruned");
 for (const imagePath of [
   "BST1.png",
   "KMP.png",

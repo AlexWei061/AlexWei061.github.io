@@ -34,6 +34,7 @@ REAL_ANALYSIS_CATEGORY = "Real Analysis"
 REAL_ANALYSIS_CATEGORY_SLUG = "real-analysis"
 
 IMAGE_EXTENSIONS = {".gif", ".jpeg", ".jpg", ".png", ".webp"}
+UNREFERENCED_OI_IMAGES = {"kruskalreconstruction.png"}
 
 MACHINE_LEARNING_ORDER = {
     "SupervisedLearning/LinearRegression.md": 1,
@@ -770,6 +771,8 @@ def collect_images() -> dict[str, str]:
     copied: dict[str, str] = {}
     for source in image_sources:
         if not source.is_file():
+            continue
+        if source.name in UNREFERENCED_OI_IMAGES:
             continue
         target = IMAGE_DIR / source.name
         shutil.copy2(source, target)

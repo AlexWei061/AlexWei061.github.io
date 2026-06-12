@@ -11,6 +11,7 @@ kramdown:
   math_engine: mathjax
 
 exclude:
+  - AGENTS.md
   - tests/
   - tools/
 
